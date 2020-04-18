@@ -7,19 +7,23 @@ import { terser } from 'rollup-plugin-terser';
 import historyApiFallback from 'connect-history-api-fallback'
 import replace from '@rollup/plugin-replace';
 import css from 'rollup-plugin-css-only'
+const rimraf = require('rimraf')
 
+
+// remove folders
+rimraf('./public/build', () => { console.log('public/build removed') })
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
 	input: 'src/main.js',
 	output: {
 		sourcemap: true,
-		format: 'iife',
+		format: 'esm',
 		name: 'app',
-		file: 'public/js/bundle.js'
+		dir: 'public/build/'
 	},
 	plugins: [
-        replace({ CLOUDINARY_API_KEY: process.env.CLOUDINARY_KEY }),
+        replace({ CLOUDINARY_API_KEY: process.env.CLOUDINARY_KEY, HOOK_ATELIER: process.env.HOOK_ATELIER}),
         css({ output: 'public/css/imported.css' }),
 		svelte({
 			// enable run-time checks when not in production
@@ -40,7 +44,7 @@ export default {
 			dedupe: ['svelte']
 		}),
         commonjs(),
-        browsersync({
+        !production && browsersync({
             server: {
                 baseDir: "public",
                 middleware: [ historyApiFallback() ]
