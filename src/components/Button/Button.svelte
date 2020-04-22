@@ -28,7 +28,7 @@ const classSVG = "fill-current stroke-current h-8 w-8 mx-auto mt-2" + couleurSVG
 
 </script>
 
-<button on:click={() => {if (!occupe) {actionBouton()}}} class={classBouton} id="leBouton">
+<button on:click={() => {if (!occupe && !disabled) {actionBouton()}}} class={classBouton} id="leBouton">
     {#if occupe}
         <svg xmlns="http://www.w3.org/2000/svg" class={classSVG} viewBox="0 0 50 50">
             <g fill="none" fill-rule="evenodd" stroke-width="2">

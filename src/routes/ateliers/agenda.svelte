@@ -1,20 +1,18 @@
 <script>
 import {onDestroy} from 'svelte'
-import {buildSiteAtelier} from './../utils/updateNetlify.js'
-import FormAtelier from './../components/FormAtelier.svelte'
-import Dialog from '../components/Dialog.svelte';
-import Busy from '../components/busy.svelte'
+import {buildSiteAtelier} from './../../utils/updateNetlify.js'
+import FormAtelier from './../../components/FormAtelier.svelte'
+import Dialog from '../../components/Dialog.svelte';
+import Busy from '../../components/busy.svelte'
 import {onMount} from 'svelte';
 import { Calendar } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { listeAteliers, majHoraireAtelier } from "./../graphQL/ateliers.js"
-import { auth } from "./../stores/auth.js"
-import { user } from "./../stores/user.js"
+import { listeAteliers, majHoraireAtelier } from "./../../graphQL/ateliers.js"
+import { auth } from "./../../stores/auth.js"
+import { user } from "./../../stores/user.js"
 
-import '@fullcalendar/core/main.css'
-import '@fullcalendar/daygrid/main.css'
-import '@fullcalendar/timegrid/main.css'
 
 let flagDialogAtelier = false;
 let dateDebutAtelier = new Date();
@@ -67,7 +65,6 @@ function updateHoraireAtelier(id, debut, fin) {
 $: {
     if (calendar) {
         calendar.removeAllEvents()
-        let lesEvents = calendar.getEvents()
         lesAteliers.forEach((atelier)=> {
             const atelierEvent = {
                 id: atelier.id,
@@ -87,7 +84,7 @@ onMount(async ()=> {
     calendar = new Calendar(calendarEl, {
         selectable: true,
         editable: true,
-        plugins: [timeGridPlugin, interactionPlugin],
+        plugins: [timeGridPlugin, dayGridPlugin, interactionPlugin],
         defaultView: 'timeGridWeek',
         locale: 'fr',
         firstDay: 1,
@@ -101,8 +98,19 @@ onMount(async ()=> {
             month:    'mois',
             week:     'semaine',
             day:      'jour',
-            list:     'liste'
+            list:     'liste',
+            month: 'vue mois',
+            week: 'vue semaine'
             },
+        headerToolbar: {
+            right: 'prev,next today',
+            center: 'title',
+            left: 'dayGridMonth,timeGridWeek'
+            },
+        weekNumbers: true,
+        weekText: "S",
+        navLinks: true,
+        navLinkDayClick: "timeGridWeek",
         select: function(info) {
             dataAtelier.dateDebut = info.start
             dataAtelier.dateFin = info.end
@@ -122,14 +130,17 @@ onMount(async ()=> {
             flagDialogAtelier = true
         },
         eventContent: function (args) {
-            let leTitre = document.createElement('div')
-            leTitre.classList.add('event-titre-atelier')
-            leTitre.textContent = args.event.title
-            let illustration = document.createElement('img')
-            illustration.src='https://res.cloudinary.com/la-bonne-fabrique/image/upload/c_fill,w_auto,q_40/' + args.event.extendedProps.urlImage
-            illustration.classList.add('event-img-atelier')
-            let arrayOfDomNodes = [ leTitre, illustration ]
-            return { domNodes: arrayOfDomNodes }
+            console.log('args', args)
+            if (args.view.type === "timeGridWeek") {
+                let leTitre = document.createElement('div')
+                leTitre.classList.add('event-titre-atelier')
+                leTitre.textContent = args.event.title
+                let illustration = document.createElement('img')
+                illustration.src='https://res.cloudinary.com/la-bonne-fabrique/image/upload/c_fill,w_auto,q_40/' + args.event.extendedProps.urlImage
+                illustration.classList.add('event-img-atelier')
+                let arrayOfDomNodes = [ leTitre, illustration ]
+                return { domNodes: arrayOfDomNodes }
+            }
         } 
     });
     calendar.render();
@@ -137,7 +148,6 @@ onMount(async ()=> {
 })
 
 onDestroy(()=> {
-    console.log('destroy')
     buildSiteAtelier()
 })
 

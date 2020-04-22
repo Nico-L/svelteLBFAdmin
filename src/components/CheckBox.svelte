@@ -12,7 +12,7 @@ export let cbClasses="";
 let mettreApres = position === "après"
 function check() {
     checked != checked
-    dispatch('change', checked);
+    dispatch('change', !checked);
 }
 </script>
 

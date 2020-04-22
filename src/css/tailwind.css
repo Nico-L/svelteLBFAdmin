@@ -121,7 +121,7 @@ text-indent: -0.5rem;
 }
 
 /* fullCalendar */
-.fc-unthemed td.fc-today {
+.fc-day-today {
   @apply bg-vertLBFT;
 }
 
@@ -135,4 +135,8 @@ text-indent: -0.5rem;
 
 .event-img-atelier {
     @apply rounded-sm mx-auto;
+}
+
+.fc-button-primary {
+    @apply bg-vertLBF text-gray-900;
 }

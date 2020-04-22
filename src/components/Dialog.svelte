@@ -28,11 +28,11 @@ let transitionProps = { duration: 100, easing: quadIn, delay: 0 };
         in:scale={transitionProps}
         out:scale={transitionProps}
         class="items-center z-50 rounded bg-gray-900 dark:bg-dark-400 p-4 elevation-4 max-w-5/6">
-        <div class="text-lg font-bold pb-4">
+        <div class="h3">
             <slot name="title" />
         </div>
         <slot />
-        <div class="flex flex-row w-full justify-end items-center pt-4">
+        <div class="flex flex-row w-full justify-end items-center pt-2 mt-2 border-t-2 border-gray-800">
             <slot name="actions" />
         </div>
         </div>

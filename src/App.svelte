@@ -3,12 +3,24 @@
 
   // Loaders must be registered outside of the render tree.
   const agendaAteliers = register({
-    loader: () => import('./routes/agendaAteliers.svelte'),
+    loader: () => import('./routes/ateliers/agenda.svelte'),
     resolve: () => './agendaAteliers'
   })
   const archivesAteliers = register({
-    loader: () => import('./routes/archivesAteliers.svelte'),
+    loader: () => import('./routes/ateliers/archives.svelte'),
     resolve: () => './archivesAteliers'
+  })
+  const abonnementsMachines = register({
+      loader: () => import('./routes/machines/abonnements.svelte'),
+      resolve: ()=> './machines/abonnements'
+  })
+  const plagesReservations = register({
+      loader: () => import('./routes/machines/plagesHoraires.svelte'),
+      resolve:()=> './machines/plagesHoraires'
+  })
+  const agendaReservations = register({
+      loader: () => import('./routes/machines/agendaReservations.svelte'),
+      resolve: ()=> './machines/agendaReservations'
   })
   const HomeLoader = register({
     loader: () => import('./routes/index.svelte'),
@@ -67,7 +79,6 @@
         console.log('failed to initialize');
     }); 
 
-    // export let name = "bibi";
     export let url = "";
 </script> 
  
@@ -79,15 +90,36 @@
         <Navigation />
     </div>
     <div class="ml-240px p-4 pt-20">
-        <Route path="/agendaAteliers" >
+        <Route path="/ateliers/agenda" >
             <Loadable loader="{agendaAteliers}">
             <div slot="loading">
                 <Chargement>La page se charge, merci de patienter...</Chargement>
             </div>
             </Loadable>
         </Route>
-        <Route path="/archivesAteliers" >
+        <Route path="/ateliers/archives" >
             <Loadable loader="{archivesAteliers}">
+            <div slot="loading">
+                <Chargement>La page se charge, merci de patienter...</Chargement>
+            </div>
+            </Loadable>
+        </Route>
+        <Route path="/machines/abonnements" >
+            <Loadable loader="{abonnementsMachines}">
+            <div slot="loading">
+                <Chargement>La page se charge, merci de patienter...</Chargement>
+            </div>
+            </Loadable>
+        </Route>
+        <Route path="/machines/plagesReservations" >
+            <Loadable loader="{plagesReservations}">
+            <div slot="loading">
+                <Chargement>La page se charge, merci de patienter...</Chargement>
+            </div>
+            </Loadable>
+        </Route>
+        <Route path="/machines/agendaReservations" >
+            <Loadable loader="{agendaReservations}">
             <div slot="loading">
                 <Chargement>La page se charge, merci de patienter...</Chargement>
             </div>
@@ -101,9 +133,3 @@
         </Route>
     </div>
 </Router>
-
-<!-- 
-    
-        <svelte:component this={cmp} />
-    </div>
-    -->
