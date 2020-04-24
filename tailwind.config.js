@@ -27,6 +27,7 @@ module.exports = {
     maxHeight: {
            '0': '0',
            '5/6': '83%',
+           '11/12': '92%',
            'full': '100%',
           },
     colors: {
@@ -37,9 +38,11 @@ module.exports = {
       orangeLBF: "#ee732e",
       orangeLBFT: "#ee732e55",
       bleuLBF: "#4bbcc4",
+      bleuLBFT: "#4bbcc455",
       vertLBF: "#93c021",
       vertLBFT: "#93c02155",
       rougeLBF: "#e02933",
+      rougeLBFT: "#e0293355",
       jauneLBF: "#fcc62d",
       violetLBF: "#5e4b99",
       lbforange: {

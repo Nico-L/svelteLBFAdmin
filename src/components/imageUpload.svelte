@@ -7,6 +7,7 @@ import Dialog from './Dialog.svelte';
 import Bouton from './Button/Button.svelte';
 import Fa from 'svelte-fa'
 import { faCircle, faDotCircle, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 import {listeIllustrationsByEspace, ajoutIllustration, effaceIllustration, effaceCloudinary} from "./../graphQL/illustrations.js"
 import FilePond from "./../components/Filepond.svelte"
@@ -33,6 +34,9 @@ export let altImage = "Une illustration";
 export let espace = "Latelier";
 export let typeIllustration = "Atelier"
 export let classImage = "";
+
+if (nomImage==="") nomImage="logoLBFSeul_a1t4af.png"
+
 const optionsULRThumbs =  [
         { height: '80', width: '80', qualite: '60', cropType: 'fill' }
       ]
@@ -81,9 +85,9 @@ async function effaceImage() {
 
 </script>
 
-<img src={urlImage(nomImage, options)} alt={altImage}} on:click={() => showDialog = true} class={"cursor-pointer " + classImage} />
+<img src={urlImage(nomImage, options)} alt={altImage} on:click={() => showDialog = true} class={"cursor-pointer " + classImage} />
 
-<Dialog bind:visible={showDialog} >
+<Dialog bind:visible={showDialog} on:close={() => showDialog = false}>
     <h4 slot="title">Choix Illustration</h4>
     <div class="flex flex-column flex-wrap justify-around mb-2">
         <div  on:click={() => {nomImage = "logoLBFSeul_a1t4af.png"}} class="p-1">
@@ -118,7 +122,9 @@ async function effaceImage() {
   </div>
   <FilePond on:uploadDone={onUploadDone} />
   <div slot="actions">
-    <Bouton on:actionBouton={() => showDialog = false}>Terminer</Bouton>
+    <Bouton on:actionBouton={() => showDialog = false} largeur="w-10" couleur="text-bleuLBF border-bleuLBF">
+        <Fa icon={faArrowLeft} size="lg"  class="mx-auto" />
+    </Bouton>
   </div>
 </Dialog>
 <!-- confirmation effacer-->

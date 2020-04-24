@@ -14,13 +14,9 @@
     let flagSauvegardeOK = false;
 
     function recupAbonnements() {
-        const variables = {
-            typeTarif: 'abonnement'
-        }
-        listeAbonnements($auth, $user.estAdmin, variables).then((retour)=> {
-            console.log('les abonnements', retour)
-            lesAbonnements = retour[0].lesTarifs.abonnement
-            })
+        listeAbonnements($auth, $user.estAdmin, {typeTarif: 'abonnement'}).then((retour)=> {
+            lesAbonnements = retour
+        })
     }
 
 $: if ($auth && $user) {

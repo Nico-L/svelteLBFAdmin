@@ -1,14 +1,7 @@
-import { vaChercher } from './vaChercher.js'
+import { requeteGraphQL } from './gql.js'
 
 export async function sauveReservation(auth, isAdmin, variables) {
-    var retourResultat;
-    await auth.updateToken(5)
-    .then(async function(refreshed) {
-        const entetes = {
-            Authorization: 'Bearer ' + auth.token,
-            'x-hasura-role': isAdmin ? 'admin': 'user'
-        }
-        const query = `
+    const query = `
             mutation ajoutReservation(
                 $dateDebut: timestamptz
                 $dateFin: timestamptz
@@ -33,24 +26,14 @@ export async function sauveReservation(auth, isAdmin, variables) {
                 }
             }
             `
-        retourResultat = await vaChercher(query, entetes, variables)
-    }
-    ).catch(function() {
-        alert('Failed to refresh the token, or the session has expired');
-        retourResultat = undefined
-    });
-return retourResultat!==undefined?retourResultat.insert_reservationMachines:undefined
-    }
+    return requeteGraphQL(auth, isAdmin, query, variables)
+        .then((resultats)=> {
+            return resultats.insert_reservationMachines
+        })
+}
 
 export async function listeReservations(auth, isAdmin, variables) {
-    var retourResultat;
-    await auth.updateToken(5)
-    .then(async function(refreshed) {
-        const entetes = {
-            Authorization: 'Bearer ' + auth.token,
-            'x-hasura-role': isAdmin ? 'admin': 'user'
-        }
-        const query = `
+    const query = `
                 query listeReservations {
                     __typename
                     reservationMachines {
@@ -70,24 +53,14 @@ export async function listeReservations(auth, isAdmin, variables) {
                     }
                 }
                 `
-        retourResultat = await vaChercher(query, entetes, variables)
-    }
-    ).catch(function() {
-        alert('Failed to refresh the token, or the session has expired');
-        retourResultat = undefined
-    });
-return retourResultat!==undefined?retourResultat.reservationMachines:undefined
-    }
+    return requeteGraphQL(auth, isAdmin, query, variables)
+        .then((resultats)=> {
+            return resultats.reservationMachines
+        })
+}
 
 export async function effaceReservation(auth, isAdmin, variables) {
-    var retourResultat;
-    await auth.updateToken(5)
-    .then(async function(refreshed) {
-        const entetes = {
-            Authorization: 'Bearer ' + auth.token,
-            'x-hasura-role': isAdmin ? 'admin': 'user'
-        }
-        const query = `
+    const query = `
             mutation effaceReservation($idReservation: uuid) {
                 __typename
                 delete_reservationMachines(where: { id: { _eq: $idReservation } }) {
@@ -95,26 +68,17 @@ export async function effaceReservation(auth, isAdmin, variables) {
                     id
                 }
                 }
-            }
+            }buildNeeded
+            }}
             `
-        retourResultat = await vaChercher(query, entetes, variables)
-    }
-    ).catch(function() {
-        alert('Failed to refresh the token, or the session has expired');
-        retourResultat = undefined
-    });
-return retourResultat!==undefined?retourResultat.delete_reservationMachines:undefined
-    }
+    return requeteGraphQL(auth, isAdmin, query, variables)
+        .then((resultats)=> {
+            return resultats.delete_reservationMachines
+        })
+}
 
 export async function majReservation(auth, isAdmin, variables) {
-    var retourResultat;
-    await auth.updateToken(5)
-    .then(async function(refreshed) {
-        const entetes = {
-            Authorization: 'Bearer ' + auth.token,
-            'x-hasura-role': isAdmin ? 'admin': 'user'
-        }
-        const query = `
+    const query = `
             mutation majReservation(
                 $id: uuid
                 $dateDebut: timestamptz
@@ -138,11 +102,8 @@ export async function majReservation(auth, isAdmin, variables) {
                     }
                 }
             `
-        retourResultat = await vaChercher(query, entetes, variables)
-    }
-    ).catch(function() {
-        alert('Failed to refresh the token, or the session has expired');
-        retourResultat = undefined
-    });
-return retourResultat!==undefined?retourResultat.update_reservationMachines:undefined
-    }
+    return requeteGraphQL(auth, isAdmin, query, variables)
+        .then((resultats)=> {
+            return resultats.update_reservationMachines
+        })
+}

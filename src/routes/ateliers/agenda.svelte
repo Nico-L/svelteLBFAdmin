@@ -10,8 +10,10 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { listeAteliers, majHoraireAtelier } from "./../../graphQL/ateliers.js"
+import {setBuildNeeded} from './../../graphQL/build.js'
 import { auth } from "./../../stores/auth.js"
 import { user } from "./../../stores/user.js"
+import { buildNeeded } from "./../../stores/build.js"
 
 
 let flagDialogAtelier = false;
@@ -56,6 +58,7 @@ function updateHoraireAtelier(id, debut, fin) {
     }
     if ($auth && $user) {
         majHoraireAtelier($auth, $user.estAdmin, variables).then((retour) => {
+            buildNeeded.set(true)
             flagMAJAtelier = false
             majListeAteliers()
         })
@@ -130,7 +133,6 @@ onMount(async ()=> {
             flagDialogAtelier = true
         },
         eventContent: function (args) {
-            console.log('args', args)
             if (args.view.type === "timeGridWeek") {
                 let leTitre = document.createElement('div')
                 leTitre.classList.add('event-titre-atelier')
@@ -148,7 +150,10 @@ onMount(async ()=> {
 })
 
 onDestroy(()=> {
-    buildSiteAtelier()
+    if ($buildNeeded) {
+        buildSiteAtelier()
+        buildNeeded.set(false)
+    }
 })
 
 </script>

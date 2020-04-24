@@ -1,9 +1,10 @@
 <script>
 import { onMount, createEventDispatcher} from 'svelte';
 const dispatch = createEventDispatcher();
-import { ajouterAtelier, majAtelier,effacerAtelier } from "./../graphQL/ateliers.js"
+import { ajouterAtelier, majAtelier, effacerAtelier } from "./../graphQL/ateliers.js"
 import { auth } from "./../stores/auth.js"
 import { user } from "./../stores/user.js"
+import { buildNeeded } from "./../stores/build.js"
 import ImageUpload from './imageUpload.svelte';
 import ListeInscrits from './listeInscritsAtelier.svelte'
 import CheckBox from './CheckBox.svelte';
@@ -37,7 +38,6 @@ export let archive = false;
 let editAtelier = {
     ... dataAtelier
 }
-console.log('editAtelier', editAtelier)
 
 let flagSauvegardeEnCours = false;
 let flagDuplicationEnCours = false;
@@ -126,6 +126,7 @@ function sauveAtelier() {
             flagDuplicationSucces = flagDupliquer
             flagSauvegardeEnCours = false
             flagDuplicationEnCours = false
+            buildNeeded.set(true)
             fini()
         })
     }
@@ -163,6 +164,7 @@ function updateAtelier() {
     if ($auth && $user) {
         flagSauvegardeEnCours = true;
         majAtelier($auth, $user.estAdmin, variables).then((result)=> {
+            buildNeeded.set(true)
             flagSauvegardeSucces = true
             flagSauvegardeEnCours = false
             fini()
@@ -206,6 +208,7 @@ function dupliqueAtelier() {
             flagDuplicationSucces = flagDupliquer
             flagSauvegardeEnCours = false
             flagDuplicationEnCours = false
+            buildNeeded.set(true)
             fini()
         })
     }
@@ -258,11 +261,10 @@ function supprimerAtelier() {
     }
     effacerAtelier($auth, $user.estAdmin, variables).then(async ()=>{
         busyEffacerAtelier = false
+        buildNeeded.set(true)
         fini()
     })
 }
-
-
 </script>
 
 <div class="w-480px p-1 bg-gray-900 flex flex-col border-gray-200">

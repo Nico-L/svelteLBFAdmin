@@ -22,6 +22,17 @@
       loader: () => import('./routes/machines/agendaReservations.svelte'),
       resolve: ()=> './machines/agendaReservations'
   })
+
+  const nouvelleMachine = register({
+      loader: () => import('./routes/machines/nouvelleMachine.svelte'),
+      resolve: () => './machines/nouvelleMachine'
+  })
+  
+const listeMachines = register({
+    loader: () => import('./routes/machines/listeMachines.svelte'),
+    resolve: () => './machines/listeMachines'
+})
+
   const HomeLoader = register({
     loader: () => import('./routes/index.svelte'),
     resolve: () => './'
@@ -34,14 +45,20 @@
     import Chargement from './components/chargement.svelte'
 
     import { listeEspacesBF } from './graphQL/espacesBF.js'
+    import { getBuildNeeded, setBuildNeeded } from './graphQL/build.js'
 
     import { auth } from "./stores/auth.js"
     import { user } from "./stores/user.js"
     import { espacesBF } from "./stores/espacesBF.js"
+    import { buildNeeded } from "./stores/build.js"
 
     import Header from './layouts/header.svelte'
     import Navigation from "./layouts/navigation.svelte"
     var flagEspace = false
+    var flagBuildNeeded = false
+    var variableBN = {
+        buildNeeded: false
+    }
 
     $: if ($auth && $user && $espacesBF && !flagEspace) {
         listeEspacesBF($auth, $user.estAdmin).then(async (retour )=>{
@@ -52,6 +69,19 @@
         espacesBF.set(listeEspaces)
         flagEspace = true
     })
+    }
+
+    $: if ($auth && $user && !flagBuildNeeded) {
+        getBuildNeeded($auth, $user.estAdmin).then((retour) => {
+            buildNeeded.set(retour[0].buildNeeded)
+            flagBuildNeeded = true
+            })
+    }
+
+    $: if (flagBuildNeeded) {
+        variableBN.buildNeeded = $buildNeeded
+        setBuildNeeded($auth,false,variableBN)
+        console.log('buildNeeded changed', variableBN)
     }
 
     var keycloak = new Keycloak({
@@ -120,6 +150,20 @@
         </Route>
         <Route path="/machines/agendaReservations" >
             <Loadable loader="{agendaReservations}">
+            <div slot="loading">
+                <Chargement>La page se charge, merci de patienter...</Chargement>
+            </div>
+            </Loadable>
+        </Route>
+        <Route path="/machines/nouvelleMachine" >
+            <Loadable loader={nouvelleMachine}>
+            <div slot="loading">
+                <Chargement>La page se charge, merci de patienter...</Chargement>
+            </div>
+            </Loadable>
+        </Route>
+        <Route path="/machines/listeMachines" >
+            <Loadable loader={listeMachines}>
             <div slot="loading">
                 <Chargement>La page se charge, merci de patienter...</Chargement>
             </div>

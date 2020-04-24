@@ -5,7 +5,7 @@ import { listeArchivesAteliers, effacerAtelier } from "./../../graphQL/ateliers.
 import * as dateFr from "./../../utils/dateFr.js"
 import Fa from 'svelte-fa'
 import { faEuroSign, faUsers } from '@fortawesome/free-solid-svg-icons'
-import { faClock, faEdit, faTrashAlt, faCopy, faUser } from '@fortawesome/free-regular-svg-icons'
+import { faClock, faEdit, faTrashAlt} from '@fortawesome/free-regular-svg-icons'
 import FormAtelier from './../../components/FormAtelier.svelte'
 import Chargement from './../../components/chargement.svelte'
 import Dialog from './../../components/Dialog.svelte';

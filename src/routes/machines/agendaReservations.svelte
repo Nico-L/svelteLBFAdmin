@@ -79,6 +79,7 @@ function getListeReservations() {
 
 function getListeMachines() {
      listeMachines($auth, $user.estAdmin).then((liste)=> {
+         console.log('listeMachine', liste)
          lesMachines = liste
          filtreReservations['tous'] = true
          liste.forEach((machine)=>{

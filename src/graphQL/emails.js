@@ -1,14 +1,7 @@
-import { vaChercher } from './vaChercher.js'
+import { requeteGraphQL } from './gql.js'
 
 export async function envoieEmail(auth, isAdmin, variables) {
-    var retourResultat;
-    await auth.updateToken(5)
-    .then(async function(refreshed) {
-        const entetes = {
-            Authorization: 'Bearer ' + auth.token,
-            'x-hasura-role': isAdmin ? 'admin': 'user'
-        }
-        const query = `mutation envoiMail($email: [String!]!, $template: String, $templateId: String) {
+    const query = `mutation envoiMail($email: [String!]!, $template: String, $templateId: String) {
                     sendEmail(
                     from: "atelierdusappey@gmail.com"
                     to: $email
@@ -18,11 +11,8 @@ export async function envoieEmail(auth, isAdmin, variables) {
                     success
                     }
                 }`
-        retourResultat = await vaChercher(query, entetes, variables)
-    }
-    ).catch(function() {
-        alert('Failed to refresh the token, or the session has expired');
-        retourResultat = undefined
-    });
-return retourResultat!==undefined?retourResultat.sendEmail:undefined
-    }
+    return requeteGraphQL(auth, isAdmin, query, variables)
+        .then((resultats)=> {
+            return resultats.sendEmail
+        })
+}

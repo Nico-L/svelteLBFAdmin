@@ -1,14 +1,7 @@
-import { vaChercher } from './vaChercher.js'
+import { requeteGraphQL } from './gql.js'
 
-export async function listeEspacesBF(auth, isAdmin) {
-    var retourResultat;
-    await auth.updateToken(5)
-    .then(async function(refreshed) {
-        const entetes = {
-            Authorization: 'Bearer ' + auth.token,
-            'x-hasura-role': isAdmin ? 'admin': 'user'
-        }
-        const query = `
+export async function listeEspacesBF(auth, isAdmin, variables) {
+    const query = `
             query espacesBF {
             __typename
             espaceBF {
@@ -16,11 +9,8 @@ export async function listeEspacesBF(auth, isAdmin) {
             }
             }
             `
-        retourResultat = await vaChercher(query, entetes)
-    }
-    ).catch(function() {
-        alert('Failed to refresh the token, or the session has expired');
-        retourResultat = undefined
-    });
-return retourResultat!==undefined?retourResultat.espaceBF:undefined
-    }
+    return requeteGraphQL(auth, isAdmin, query, variables)
+        .then((resultats)=> {
+            return resultats.espaceBF
+        })
+}
