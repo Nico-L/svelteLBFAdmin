@@ -13,10 +13,10 @@
 <h5 class="ml-2 w-5/6 ">Les machines</h5>
 <ul class="ml-2 mb-2 navi">
     <Link to="/machines/agendaReservations"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Agenda des réservations</li></Link>
+    <Link to="/machines/plagesReservations"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Horaires de réservation</li></Link>
     <Link to="/machines/listeMachines"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Liste des machines</li></Link>
     <Link to="/machines/nouvelleMachine"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Nouvelle fiche machine</li></Link>
-    <Link to="/machines/abonnements"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Abonnements</li></Link>
-    <Link to="/machines/plagesReservations"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Horaires de réservation</li></Link>   
+    <Link to="/machines/abonnements"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Abonnements</li></Link>   
 </ul>
 
 
