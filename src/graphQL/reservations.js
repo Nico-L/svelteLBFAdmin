@@ -67,9 +67,7 @@ export async function effaceReservation(auth, isAdmin, variables) {
                 returning {
                     id
                 }
-                }
-            }buildNeeded
-            }}
+                }}
             `
     return requeteGraphQL(auth, isAdmin, query, variables)
         .then((resultats)=> {
