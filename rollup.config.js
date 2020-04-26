@@ -7,6 +7,7 @@ import { terser } from 'rollup-plugin-terser';
 import historyApiFallback from 'connect-history-api-fallback'
 import replace from '@rollup/plugin-replace';
 import css from 'rollup-plugin-css-only'
+import copy from 'rollup-plugin-copy'
 const rimraf = require('rimraf')
 
 
@@ -23,6 +24,11 @@ export default {
 		dir: 'public/build/'
 	},
 	plugins: [
+        copy({
+            targets: [
+                { src: './_redirects', dest: './public' },
+            ]
+        }),
         replace({ CLOUDINARY_API_KEY: process.env.CLOUDINARY_KEY, HOOK_ATELIER: process.env.HOOK_ATELIER}),
         css({ output: 'public/css/imported.css' }),
 		svelte({
