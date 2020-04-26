@@ -23,6 +23,7 @@ import { tableCouleursLBF } from './../../utils/couleursLBF.js'
 
 let calendarEl;
 let calendar;
+let jourDebutCalendrier = (new Date()).getDay()
 let firstSetup = false
 let plagesHoraires = [[], [], [], [], [], [], []]
 let businessHours = []
@@ -145,7 +146,7 @@ onMount(()=> {
         initialView: 'timeGridWeek',
         defaultView: 'timeGridWeek',
         locale: 'fr',
-        firstDay: 1,
+        firstDay: jourDebutCalendrier,
         slotDuration: '00:30',
         scrollTime: '09:00:00',
         slotMinTime: '09:00:00',

@@ -22,6 +22,7 @@ let dateFinAtelier = new Date();
 
 let calendarEl;
 let calendar;
+let jourDebutCalendrier = (new Date()).getDay();
 let lesAteliers=[];
 let flagMAJAtelier = false;
 let flagEdition = false;
@@ -90,7 +91,7 @@ onMount(async ()=> {
         plugins: [timeGridPlugin, dayGridPlugin, interactionPlugin],
         defaultView: 'timeGridWeek',
         locale: 'fr',
-        firstDay: 1,
+        firstDay: jourDebutCalendrier,
         slotDuration: '00:30',
         scrollTime: '09:00:00',
         slotMinTime: '09:00:00',
