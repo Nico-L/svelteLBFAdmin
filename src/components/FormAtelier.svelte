@@ -295,7 +295,7 @@ function supprimerAtelier() {
             <input 
             bind:value= {editAtelier.nbParticipants}
             class="bg-gray-900 text-gray-200 focus:outline-none focus:shadow-outline border border-vertLBF rounded py-2 text-right block w-1/6 appearance-none leading-normal"
-            type="number"
+            type="text"
             id="nbParticipant"
             />
             <div class="ml-2 text-base font-medium">Nb de participants</div>
@@ -367,34 +367,34 @@ function supprimerAtelier() {
         <Editeur bind:contenu={editAtelier.description} couleur="jaune"/>
     </div>
     <div class="mt-4 ">
-        <div class="flex flex-row justify-between mb-2">
+        <div class="flex flex-row justify-between mb-1">
             <div class="text-xl font-medium text-rougeLBF">Tarifs :</div>
             <button class="text-rougeLBF border border-rougeLBF rounded-sm p-1 focus:outline-none" on:click={ajouterTarif}>Ajouter un tarif</button>
         </div>
         <div class="flex flex-row flex-wrap justify-around">
             {#each editAtelier.tarifs as tarif, index}
                 <div class="w-5/12 border border-rougeLBF rounded p-1 mx-2 my-2">
-                    <div class="flex flex-row items-center my-2">
-                        <Fa icon={faEuroSign} size="lg" class="mx-1 w-8"/>
+                    <div class="w-full flex flex-row justify-start items-center my-2">
+                        <Fa icon={faEuroSign} fw size="lg" class="mx-1 w-8"/>
                         <input 
-                            class="bg-gray-800 text-gray-200 focus:outline-none rounded p-0 px-1 block w-full appearance-none leading-normal"
+                            class="min-w-16 bg-gray-800 text-gray-200 focus:outline-none rounded p-0 px-1 appearance-none leading-normal"
                             type="text" 
                             bind:value={tarif[1]}/>
+                    </div>
+                    <div class="flex flex-row items-center my-2">
+                        <Fa icon={faEdit} fw size="lg" class="mx-1 w-8"/>
+                        <input 
+                            class="min-w-16 bg-gray-800 text-gray-200 focus:outline-none rounded p-0 px-1 block w-full appearance-none leading-normal"
+                            type="text" 
+                            bind:value={tarif[0]}/>
+                    </div>
+                    <div class="flex flex-row justify-between items-center my-2 ml-2">
+                        <CheckBox label="QF ?" cbClasses="text-gray-200" bind:checked={tarif[2]}/>
                         {#if index>0}
                             <div class="text-rougeLBF cursor-pointer focus:outline-none" on:click={() => {effacerTarif(index)}}>
                                 <Fa icon={faTrashAlt} size="lg"  class="mx-1 w-8" />
                             </div>
                         {/if}
-                    </div>
-                    <div class="flex flex-row items-center my-2">
-                        <Fa icon={faEdit} size="lg" class="mx-1 w-8"/>
-                        <input 
-                            class="bg-gray-800 text-gray-200 focus:outline-none rounded p-0 px-1 block w-full appearance-none leading-normal"
-                            type="text" 
-                            bind:value={tarif[0]}/>
-                    </div>
-                    <div class="flex flex-row items-center my-2 ml-2">
-                        <CheckBox label="QF ?" cbClasses="text-gray-200" bind:checked={tarif[2]}/>
                     </div>
                 </div>
             {/each}
