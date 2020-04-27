@@ -294,7 +294,7 @@ function supprimerAtelier() {
         <label for="nbParticipants" class="w-1/2 flex flex-row items-center text-vertLBF">
             <input 
             bind:value= {editAtelier.nbParticipants}
-            class="bg-gray-900 text-gray-200 focus:outline-none focus:shadow-outline border border-vertLBF rounded py-2 text-right block w-1/6 appearance-none leading-normal"
+            class="bg-gray-900 text-gray-200 focus:outline-none focus:shadow-outline border border-vertLBF rounded py-2 text-center block w-1/6 appearance-none leading-normal"
             type="text"
             id="nbParticipant"
             />
