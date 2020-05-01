@@ -48,6 +48,12 @@ let flagEnvoieMailOK = false;
 let flagMAJReservation = false;
 let flagOverlap = false;
 let flagGetReservation = false;
+const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+    };
 
 function getlistePlages() {
     listePlagesHoraires($auth, $user.estAdmin).then((retour)=>{
@@ -213,6 +219,7 @@ onMount(()=> {
                 dateFin: resa.dateFin, 
                 idMachine: resa.machine.id,
                 titreMachine: resa.machine.titre,
+                tag: resa.machine.tag,
                 urlImage: resa.machine.urlImage
             }
             resaOverlap = []
@@ -235,6 +242,13 @@ function sauverReservation() {
     busySauverReservation = true
     if ($auth && $user) {
         sauveReservation($auth, $user.estAdmin, nouvelleReservation).then((retour)=> {
+            let machineChoisie = lesMachines.filter((machine) => machine.id === nouvelleReservation.idMachine)
+            nouvelleReservation = {
+                ...nouvelleReservation,
+                ...machineChoisie[0]
+            }
+            console.log('def nouvel', nouvelleReservation)
+            mailConfirmation(retour.id)
             getListeReservations()
             busySauverReservation = false
             flagNouvelleReservation = false
@@ -256,6 +270,7 @@ function updateReservation() {
         }
         if($auth && $user) {
             majReservation($auth, $user.estAdmin, variables).then((retour)=> {
+                mailConfirmation(nouvelleReservation.id)
                 flagMAJReservation = false
                 busySauverReservation = false
                 finiResa()
@@ -308,9 +323,39 @@ function envoyerEmail() {
                 flagEnvoieMailOK = true;
             }).catch((error) => {console.log('error', error)})
         }
+    }    
+}
+
+function mailConfirmation(idResa) {
+    let tempDuree = (nouvelleReservation.dateDebut - nouvelleReservation.dateFin)/1000/60
+    let dureeString = Math.floor(tempDuree/60) + "h"
+    dureeString += tempDuree % 60 === 0 ? "00" : tempDuree % 60
+    let dateDebut = new Date(nouvelleReservation.dateDebut)
+    let arrayMails = [];
+    arrayMails.push(nouvelleReservation.email);
+    let envoiMail = {
+        machine: nouvelleReservation.titreMachine,
+        prenom: nouvelleReservation.prenom,
+        duration: dureeString,
+        jour: dateDebut
+            .toLocaleDateString("fr-fr", options)
+            .replace(":", "h"),
+        urlDelete:
+            "https://atelier.labonnefabrique.fr/reservations/" + nouvelleReservation.tag + 
+            "/?idReservation=" +
+            idResa,
+        altMachine: nouvelleReservation.titreMachine,
+        urlImageMail:
+            "https://res.cloudinary.com/la-bonne-fabrique/image/upload/ar_1.5,w_200,c_fill/" +
+            nouvelleReservation.urlImage
+    };
+    let variables = {
+        email: arrayMails,
+        template: JSON.stringify(envoiMail),
+        templateId: "d-08bb9e1b96ac4d56a9210660cac6cd07"
     }
-    
-    
+    console.log('var mail confirmation', variables)
+    envoieEmail($auth, $user.estAdmin,variables)
 }
 
 function resetFiltre(status) {
@@ -339,7 +384,7 @@ function resetFiltre(status) {
 
 <div bind:this={calendarEl} ></div>
 </main>
-<!-- Liste des inscrits-->
+<!-- form reservation -->
 <Dialog bind:visible={flagNouvelleReservation} on:close={() => finiResa()}>
     <div slot="title">Nouvelle Réservation</div>
         <div class="mb-2">
@@ -401,6 +446,7 @@ function resetFiltre(status) {
     </div>
     <div class="mt-4">
         <h4>Envoyer un message</h4>
+        <div class="font-medium">destinataire : {nouvelleReservation.email}</div>
             <label for="sujetEmail" class="mt-2">
             <div class="text-base text-bleuLBF">Sujet</div>
                     <input 

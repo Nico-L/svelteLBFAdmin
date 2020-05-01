@@ -3,7 +3,7 @@ import { requeteGraphQL } from './gql.js'
 export async function envoieEmail(auth, isAdmin, variables) {
     const query = `mutation envoiMail($email: [String!]!, $template: String, $templateId: String) {
                     sendEmail(
-                    from: "atelierdusappey@gmail.com"
+                    from: "atelier@labonnefabrique.fr"
                     to: $email
                     templateId: $templateId
                     dynamic_template_data: $template

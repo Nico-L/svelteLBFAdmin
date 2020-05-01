@@ -28,7 +28,7 @@ export async function sauveReservation(auth, isAdmin, variables) {
             `
     return requeteGraphQL(auth, isAdmin, query, variables)
         .then((resultats)=> {
-            return resultats.insert_reservationMachines
+            return resultats.insert_reservationMachines.returning[0]
         })
 }
 
