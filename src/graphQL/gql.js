@@ -4,18 +4,20 @@ export async function requeteGraphQL(auth, isAdmin, query, variables) {
     if (variables!== undefined) {
         body.variables = variables
     }
-    const entetes = {
-        Authorization: 'Bearer ' + auth.token,
-        'x-hasura-role': isAdmin ? 'admin': 'user'
-    }
-    var options = {
-        method: "POST",
-        headers: entetes,
-        cache: "no-cache",
-        body: JSON.stringify(body)
-    }
     return auth.updateToken(5)
-        .then( (refreshed) => {return fetch("https://graphql.labonnefabrique.fr/v1/graphql", options)})
+        .then( (refreshed) => {
+            const entetes = {
+                Authorization: 'Bearer ' + auth.token,
+                'x-hasura-role': isAdmin ? 'admin': 'user'
+            }
+            var options = {
+                method: "POST",
+                headers: entetes,
+                cache: "no-cache",
+                body: JSON.stringify(body)
+            }
+            return fetch("https://graphql.labonnefabrique.fr/v1/graphql", options)
+        })
         .then((retourFetch)=>{
             return retourFetch.json()
         })
