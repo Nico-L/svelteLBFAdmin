@@ -1,15 +1,18 @@
 <script>
 import {onMount, tick } from 'svelte'
-import { auth } from "./../stores/auth.js"
+//import { auth } from "./../stores/auth.js"
 import { user } from "./../stores/user.js"
-import { urlImage } from './../utils/urlImages.js'
+//import { urlImage } from './../utils/urlImages.js'
 import Dialog from './Dialog.svelte';
 import Bouton from './Button/Button.svelte';
 import Fa from 'svelte-fa'
 import { faCircle, faDotCircle, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
-import {listeIllustrationsByEspace, ajoutIllustration, effaceIllustration, effaceCloudinary} from "./../graphQL/illustrations.js"
+import {listeIllustrationsByEspace, ajoutIllustration, effaceCloudinary} from "./../graphQL/illustrations.js"
+import {listeImgByEspaceEtTag, effaceIllustration} from "./../strapi/illustrations.js"
+//import {imgproxyURL} from "../apollo/imgproxyUrl.js"
+import {imgProxyUrl} from "../strapi/imgProxy.js"
 import FilePond from "./../components/Filepond.svelte"
 
 var showDialog = false;
@@ -18,83 +21,72 @@ var flagSuppressionImage = false;
 var suppressionId = "";
 var suppressionImageId="";
 
-export let nomImage = "logoLBFSeul_a1t4af.png"
-export let options = [
-        {
-          ar: '16:9',
-          cropType: 'fill'
-        },
-        {
-          width: 'auto',
-          qualite: 'auto',
-          cropType: 'scale'
-        }
-      ]
-export let altImage = "Une illustration";
-export let espace = "Latelier";
-export let typeIllustration = "Atelier"
-export let classImage = "";
-
-if (nomImage==="") nomImage="logoLBFSeul_a1t4af.png"
-
-const optionsULRThumbs =  [
-        { height: '80', width: '80', qualite: '60', cropType: 'fill' }
-      ]
-
-var choixImage = "logoLBFSeul_a1t4af.png"
-var listeIllustrations = []
-
-async function getListeIllustrations() {
-		var variables = {
-            espace: espace,
-            typeIllustration: typeIllustration
-        }
-        listeIllustrations = await listeIllustrationsByEspace($auth, $user.estAdmin, variables)
-    };
-
-$: if ($auth && $user) {
-    getListeIllustrations()
-    }
-
-async function onUploadDone(event) {
-    var variables = {
-            espace: espace,
-            typeIllustration: typeIllustration, 
-            ...event.detail.fileProps
-        }
-    await ajoutIllustration($auth, $user.estAdmin, variables)
-    await getListeIllustrations()
+export let urlImage = "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png"
+export let options = {
+    'resizing_type': 'fill',
+    'width': 80,
+    'height': 80,
+    'gravity': 'ce'
 }
+export let altImage = "Une illustration";
+export let classImage = "";
+export let dataImg
 
-async function effaceImage() {
-    flagSuppressionImage = true
-    var variables={
-        imageId: suppressionImageId
-    }
-    effaceCloudinary($auth, $user.estAdmin, variables).then(()=> {
-        variables = {
-            id: suppressionId
-        }
-        effaceIllustration($auth, $user.estAdmin, variables).then(()=> {
-            getListeIllustrations()
-            flagSuppressionImage = false
-            flagConfirmationEffacer = false
+let flagUploadDone = true
+const optionsULRThumbs =  {
+    'resizing_type': 'fill',
+    'width': 80,
+    'height': 80,
+    'gravity': 'ce'
+}
+let illustrationAEffacer = {'illustrationId': '', 'imageId': ''}
+
+var listeIllustrations = []
+$: {if (flagUploadDone && dataImg && dataImg!=="")
+        var dataForList = JSON.parse(dataImg)
+        listeImgByEspaceEtTag(dataForList.espaces, dataForList.tags).then((lesImages)=> {
+            listeIllustrations = lesImages
         })
-    })
+        flagUploadDone = false
+    }
+
+function effaceImage() {
+    flagSuppressionImage = true
+    effaceIllustration(illustrationAEffacer)
+        .then((retour)=>{
+            flagSuppressionImage = false;
+            flagUploadDone = true;
+            flagConfirmationEffacer = false
+            })
+    
 }
 
 </script>
-
-<img src={urlImage(nomImage, options)} alt={altImage} on:click={() => showDialog = true} class={"cursor-pointer " + classImage} />
+{#await imgProxyUrl(urlImage, options)}
+    ...
+{:then value}
+    <img
+        src={value.imgProxyUrl}
+        alt={altImage}
+        on:click={() => showDialog = true}
+        class={"cursor-pointer " + classImage}
+        />
+{/await}
 
 <Dialog bind:visible={showDialog} on:close={() => showDialog = false}>
     <h4 slot="title">Choix Illustration</h4>
     <div class="flex flex-column flex-wrap justify-around mb-2">
-        <div  on:click={() => {nomImage = "logoLBFSeul_a1t4af.png"}} class="p-1">
-            <img src={urlImage('logoLBFSeul_a1t4af.png',optionsULRThumbs)} alt="logoLBFSeul_a1t4af" class="rounded cursor-pointer">
+        <div on:click={() => {urlImage = "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png"}} class="p-1">
+            {#await imgProxyUrl('https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png', optionsULRThumbs)} 
+              ...
+              {:then value}
+            <img class="rounded cursor-pointer" 
+                src={value.imgProxyUrl} 
+                alt="logo LBF" />
+                {/await}
             <div class="flex flex-column">
                 <div class="relative my-1 text-vertLBF cursor-pointer">
-                    {#if nomImage === "logoLBFSeul_a1t4af.png"}
+                    {#if urlImage === "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png"}
                     <Fa icon={faDotCircle} />
                     {:else}
                     <Fa icon={faCircle} />
@@ -104,23 +96,32 @@ async function effaceImage() {
         </div>
         {#each listeIllustrations as illu (illu.id)}
             <div class="p-1">
-                    <img on:click={() => {nomImage = illu.idImage + '.' + illu.format}} src={urlImage(illu.idImage + '.' + illu.format,optionsULRThumbs)} alt={illu.idImage + '.' + illu.format} class="rounded cursor-pointer">
+                {#await imgProxyUrl('https://cms.labonnefabrique.fr'+illu.illustration[0].url, optionsULRThumbs)} 
+                    ...
+                {:then value}
+                    <img 
+                        class="rounded cursor-pointer"
+                        on:click={() => {urlImage = 'https://cms.labonnefabrique.fr' + illu.illustration[0].url}} 
+                        src={value.imgProxyUrl} 
+                        alt={illu.name}
+                        />
+                    {/await}
                     <div class="flex flex-column">
-                        <div on:click={() => {nomImage = illu.idImage + '.' + illu.format}} class="relative my-1 text-vertLBF cursor-pointer">
-                            {#if nomImage === illu.idImage + '.' + illu.format}
+                        <div on:click={() => {urlImage = 'https://cms.labonnefabrique.fr' + illu.illustration[0].url}} class="relative my-1 text-vertLBF cursor-pointer">
+                            {#if urlImage === 'https://cms.labonnefabrique.fr' + illu.illustration[0].url}
                             <Fa icon={faDotCircle} />
                             {:else}
                             <Fa icon={faCircle} />
                             {/if}
                         </div>
-                        <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {suppressionId = illu.id; suppressionImageId = illu.idImage; flagConfirmationEffacer = true}}>
+                        <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.illustration[0].id}; flagConfirmationEffacer = true}}>
                             <Fa icon={faTrashAlt} />
                         </div>
                     </div>
             </div>
         {/each}
   </div>
-  <FilePond on:uploadDone={onUploadDone} />
+  <FilePond data={dataImg} on:uploadDone={() => {flagUploadDone = true;}}/>
   <div slot="actions">
     <Bouton on:actionBouton={() => showDialog = false} largeur="w-10" couleur="text-bleuLBF border-bleuLBF">
         <Fa icon={faArrowLeft} size="lg"  class="mx-auto" />

@@ -2,6 +2,19 @@
   import { register } from 'svelte-loadable'
 
   // Loaders must be registered outside of the render tree.
+const oubliMDP = register({
+    loader: () => import('./routes/login/oubliMDP.svelte'),
+    resolve: () => './oubliMDP'
+  })
+
+  const resetMDP = register({
+    loader: () => import('./routes/login/resetMDP.svelte'),
+    resolve: () => './resetMDP'
+  })
+  const login = register({
+    loader: () => import('./routes/login/index.svelte'),
+    resolve: () => './login'
+  })
   const agendaAteliers = register({
     loader: () => import('./routes/ateliers/agenda.svelte'),
     resolve: () => './agendaAteliers'
@@ -37,39 +50,75 @@ const listeMachines = register({
     loader: () => import('./routes/index.svelte'),
     resolve: () => './'
   })
+
+  const bob = register({
+    loader: () => import('./routes/index.svelte'),
+    resolve: () => './'
+  })
 </script>
 
 <script>
-    import { Router, Link, Route } from "svelte-routing";
+    import { Router, Link, Route, navigate } from "svelte-routing";
     import Loadable from 'svelte-loadable'
     import Chargement from './components/chargement.svelte'
 
-    import { listeEspacesBF } from './graphQL/espacesBF.js'
+    //import { listeEspacesBF } from './graphQL/espacesBF.js'
+    import {listeEspacesBF, listeTags} from './strapi/espacesEtTags.js'
     import { getBuildNeeded, setBuildNeeded } from './graphQL/build.js'
 
-    import { auth } from "./stores/auth.js"
+    //import { auth } from "./stores/auth.js"
     import { user } from "./stores/user.js"
     import { espacesBF } from "./stores/espacesBF.js"
+    import {tags} from "./stores/tags.js"
     import { buildNeeded } from "./stores/build.js"
 
     import Header from './layouts/header.svelte'
     import Navigation from "./layouts/navigation.svelte"
+    var loginNeeded = true
     var flagEspace = false
+    var flagTags = false
     var flagBuildNeeded = false
     var variableBN = {
         buildNeeded: false
     }
 
-    $: if ($auth && $user && $espacesBF && !flagEspace) {
-        listeEspacesBF($auth, $user.estAdmin).then(async (retour )=>{
+    $: {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+        if (userInfo) {
+            user.set(userInfo)
+            loginNeeded = false
+        } else {
+            const pathName = window.location.pathname
+            if (pathName!=="/login" && pathName!=="/login/oubliMDP" && pathName!=="/login/resetMDP") {
+                window.location.replace(window.location.origin + '/login')
+            }
+        }
+    }
+
+$: if ($user && $espacesBF && !flagEspace) {
+        listeEspacesBF().then((retour )=>{
         var listeEspaces = []
         retour.forEach((valeur) => {
-            listeEspaces.push({label: valeur.espace.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/(L)(e)/g, '$1\'$2').replace(/(L)(ate)/g, '$1\'$2').replace('Partage', 'partagé'), value: valeur.espace})
+            listeEspaces.push({id: valeur.id, label: valeur.espace, value: valeur.espace})
         })
         espacesBF.set(listeEspaces)
         flagEspace = true
     })
     }
+
+$: {
+    if (!loginNeeded && $tags && !flagTags) {
+        console.log('bob ?')
+        listeTags().then((lesTags)=>{
+            tags.set(lesTags)
+            flagTags = true
+        })
+    }
+}
+
+
+/*
+    
 
     $: if ($auth && $user && !flagBuildNeeded) {
         getBuildNeeded($auth, $user.estAdmin).then((retour) => {
@@ -83,7 +132,8 @@ const listeMachines = register({
         setBuildNeeded($auth,false,variableBN)
         console.log('buildNeeded changed', variableBN)
     }
-
+*/
+/*
     var keycloak = new Keycloak({
         realm: 'LBF',
         url: 'https://cloud.labonnefabrique.fr/auth',
@@ -108,72 +158,99 @@ const listeMachines = register({
     }).catch(function() {
         console.log('failed to initialize');
     }); 
-
-    export let url = "";
+*/
 </script> 
  
-<Router url={url}>
-    <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
-        <Header />
-    </div>
-    <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
-        <Navigation />
-    </div>
-    <div class="ml-240px p-4 pt-20">
-        <Route path="/ateliers/agenda" >
-            <Loadable loader="{agendaAteliers}">
-            <div slot="loading">
-                <Chargement>La page se charge, merci de patienter...</Chargement>
-            </div>
-            </Loadable>
+<Router>
+    {#if loginNeeded}
+        <Route path="login/*">
+            <Router>
+                <Route path="/">
+                    <Loadable loader={login} >
+                        <div slot="loading">
+                            <Chargement />
+                        </div>
+                    </Loadable>
+                </Route>
+                <Route path="resetMDP">
+                    <Loadable loader={resetMDP}>
+                        <div slot="loading">
+                            <Chargement />
+                        </div>
+                    </Loadable>
+                </Route>
+                <Route path="oubliMDP">
+                    <Loadable loader={oubliMDP}>
+                        <div slot="loading">
+                            <Chargement />
+                        </div>
+                    </Loadable>
+                </Route>
+            </Router>
         </Route>
-        <Route path="/ateliers/archives" >
-            <Loadable loader="{archivesAteliers}">
+    {:else}
+        <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
+            <Header />
+        </div>
+        <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
+            <Navigation />
+        </div>
+        <div class="ml-240px p-4 pt-20">
+            <Route path="/">
+                <Loadable loader="{HomeLoader}">
+                    
+                </Loadable>
+            </Route>
+            <Route path="ateliers/*">
+                <Router>
+                    <Route path="agenda" >
+                        <Loadable loader={agendaAteliers}>
+                            
+                        </Loadable>
+                    </Route>
+                    <Route path="archives" >
+                        <Loadable loader={archivesAteliers}>
+                            
+                        </Loadable>
+                    </Route>
+                </Router>
+            </Route>
+            <Route path="machines/*">
+                <Router>
+                    <Route path="abonnements" >
+                        <Loadable loader={abonnementsMachines}>
+                            
+                        </Loadable>
+                    </Route>
+                    <Route path="plagesReservations" >
+                        <Loadable loader={plagesReservations}>
+                            
+                        </Loadable>
+                    </Route>
+                    <Route path="agendaReservations" >
+                        <Loadable loader={agendaReservations}>
+                            
+                        </Loadable>
+                    </Route>
+                    <Route path="nouvelleMachine" >
+                        <Loadable loader={nouvelleMachine}>
+                            
+                        </Loadable>
+                    </Route>
+                    <Route path="listeMachines" >
+                        <Loadable loader={listeMachines}>
+                            
+                        </Loadable>
+                    </Route>
+                </Router>
+            </Route>
+        </div>
+    {/if}
+    <!-- <Route>
+        <Loadable loader={bob}>
             <div slot="loading">
-                <Chargement>La page se charge, merci de patienter...</Chargement>
+                <Chargement />
             </div>
-            </Loadable>
-        </Route>
-        <Route path="/machines/abonnements" >
-            <Loadable loader="{abonnementsMachines}">
-            <div slot="loading">
-                <Chargement>La page se charge, merci de patienter...</Chargement>
-            </div>
-            </Loadable>
-        </Route>
-        <Route path="/machines/plagesReservations" >
-            <Loadable loader="{plagesReservations}">
-            <div slot="loading">
-                <Chargement>La page se charge, merci de patienter...</Chargement>
-            </div>
-            </Loadable>
-        </Route>
-        <Route path="/machines/agendaReservations" >
-            <Loadable loader="{agendaReservations}">
-            <div slot="loading">
-                <Chargement>La page se charge, merci de patienter...</Chargement>
-            </div>
-            </Loadable>
-        </Route>
-        <Route path="/machines/nouvelleMachine" >
-            <Loadable loader={nouvelleMachine}>
-            <div slot="loading">
-                <Chargement>La page se charge, merci de patienter...</Chargement>
-            </div>
-            </Loadable>
-        </Route>
-        <Route path="/machines/listeMachines" >
-            <Loadable loader={listeMachines}>
-            <div slot="loading">
-                <Chargement>La page se charge, merci de patienter...</Chargement>
-            </div>
-            </Loadable>
-        </Route>
-        <Route path="/">
-            <Loadable loader="{HomeLoader}" />
-            <div slot="loading">
-                <Chargement>La page se charge, merci de patienter...</Chargement>
-            </div>
-        </Route>
-    </div>
+        </Loadable>
+    </Route> -->
 </Router>

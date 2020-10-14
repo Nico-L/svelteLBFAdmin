@@ -18,6 +18,6 @@
         </svg>
     </div>
     <h3 class="text-center">
-        <slot />
+        <slot>La page se charge, merci de patienter...</slot>
     </h3>
 </div>

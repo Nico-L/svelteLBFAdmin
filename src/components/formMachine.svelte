@@ -55,12 +55,14 @@ let flagSauvegardeSucces = false;
 let flagGetMachine = false;
 
 $: {
-    if($auth && $user && lesTarifs.length===0) {
+    if($auth && $user) {
         listeAbonnements($auth, $user.estAdmin, {typeTarif: 'abonnement'}).then((retour)=> {
             lesTarifs = retour
         })
     }
 }
+
+$: console.log('change !', $user)
 
 $: {
     if($auth && $user && idMachine!=="" && !flagEdition) {

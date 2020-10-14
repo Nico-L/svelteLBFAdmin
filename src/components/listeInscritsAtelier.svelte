@@ -1,7 +1,7 @@
 <script>
 import { onMount, createEventDispatcher} from 'svelte';
 const dispatch = createEventDispatcher();
-import { auth } from "./../stores/auth.js"
+//import { auth } from "./../stores/auth.js"
 import { user } from "./../stores/user.js"
 import Editeur from './editeur.svelte';
 import Bouton from './Button/Button.svelte';
@@ -9,14 +9,18 @@ import Dialog from './Dialog.svelte'
 import Fa from 'svelte-fa'
 import { faTrashAlt, faCheck, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { faSave, faEnvelope } from '@fortawesome/free-regular-svg-icons'
-import { listeInscrits, saveNouvelInscrit, effaceInscrit } from './../graphQL/ateliers.js'
+import { effaceInscrit } from './../graphQL/ateliers.js'
+import {listeInscrits, saveNouvelInscrit, majInscrit, effacerInscription} from './../strapi/ateliers.js'
 import { envoieEmail } from './../graphQL/emails.js'
+
+import { v4 as uuidv4 } from 'uuid';
 
 export let idAtelier = "";
 export let dateAtelier = "";
 export let archive = "false";
 
 let lesInscrits = []
+let lesInscritsFromStrapi = []
 let classesPaires = "border border-gray-600 bg-lbfvertt-900 px-2 py-0"
 let classesImpaires = "border border-gray-600 px-2 py-0"
 let nouvelInscrit = {
@@ -28,7 +32,7 @@ let message= {
     sujet: "",
     corps: ""
 }
-let idInscritAEffacer = ""
+let dataInscritAEffacer = ""
 let flagEnvoiMail = false;
 let flagEnvoieMailOK = false;
 let flagSauveNouvelInscrit = false;
@@ -36,17 +40,103 @@ let flagEffaceInscrit = [];
 let flagConfirmationEffacerInscrit = false;
 
 function getlisteInscrits() {
-    if (idAtelier!=="" && $auth && $user) {
-        const variables = {idAtelier: idAtelier}
-        listeInscrits($auth,$user.estAdmin, variables).then((retour) => {
-            lesInscrits = retour
-            lesInscrits.forEach((inscrit)=> {
-                flagEffaceInscrit[inscrit.id] = false
+    listeInscrits(idAtelier).then((retour) => {
+        lesInscritsFromStrapi = retour
+        lesInscrits = []
+        retour.forEach((emailInscription) => {
+            emailInscription.lesInscrits.forEach((inscrit)=> {
+                lesInscrits.push(
+                    {
+                        prenom: inscrit.prenom,
+                        nom: inscrit.nom,
+                        email: emailInscription.email
+                    }
+                )
             })
         })
-    }
+        lesInscrits.forEach((inscrit)=> {
+            flagEffaceInscrit[inscrit.id] = false
+        })
+    })
 }
 
+function sauveNouvelInscrit() {
+    flagSauveNouvelInscrit = true
+    let flagEmailExists = false
+    var variables = {}
+    lesInscritsFromStrapi.forEach((inscrit) => {
+        if (inscrit.email===nouvelInscrit.email) {
+            flagEmailExists = true
+            inscrit.lesInscrits.push({nom: nouvelInscrit.nom, prenom: nouvelInscrit.prenom})
+            variables = inscrit
+        }
+    })
+    if (!flagEmailExists) {
+        variables = {
+            atelier: idAtelier,
+            email: nouvelInscrit.email,
+            lesInscrits: [{nom: nouvelInscrit.nom, prenom: nouvelInscrit.prenom}],
+            uuid: uuidv4()
+        }
+        saveNouvelInscrit(variables).then((retour) => {
+            flagSauveNouvelInscrit = false;
+            nouvelInscrit = {
+                prenom: "",
+                nom: "",
+                email: ""
+            }
+            getlisteInscrits()
+        })
+    } else {
+        majInscrit(variables).then((retour) => {
+            flagSauveNouvelInscrit = false;
+            nouvelInscrit = {
+                prenom: "",
+                nom: "",
+                email: ""
+            }
+            getlisteInscrits()
+        })
+    }
+
+}
+
+function prepEffacerInscrit(email, prenom) {
+    dataInscritAEffacer = {email: email, prenom: prenom}
+    flagConfirmationEffacerInscrit = true
+}
+
+function effacerInscrit() {
+    //flagEffaceInscrit[idInscritAEffacer] = true;
+    lesInscritsFromStrapi.forEach((inscrit) => {
+        if (inscrit.email === dataInscritAEffacer.email) {
+            if (inscrit.lesInscrits.length<2) {
+                let idInscrit = inscrit.id
+                effacerInscription(idInscrit).then((retour) => {
+                    flagConfirmationEffacerInscrit = false
+                    getlisteInscrits()
+                })
+            } else {
+                inscrit.lesInscrits.forEach((membre, index) => {
+                    if (membre.prenom===dataInscritAEffacer.prenom) {
+                        inscrit.lesInscrits.splice(index, 1)
+                        const variables = {
+                            id: inscrit.id,
+                            email: inscrit.email,
+                            lesInscrits: inscrit.lesInscrits
+                        }
+                        majInscrit(variables).then((retour) => {
+                            flagConfirmationEffacerInscrit = false
+                            getlisteInscrits()
+                        })
+                    }
+                })
+            }
+        }
+    })
+}
+
+/*
 function sauveNouvelInscrit() {
     flagSauveNouvelInscrit = true
     const variables = {
@@ -113,7 +203,7 @@ function envoyerEmail() {
     
     
 }
-
+*/
 onMount(()=> {
     getlisteInscrits()
 })
@@ -132,14 +222,14 @@ onMount(()=> {
     </tr>
   </thead>
   <tbody>
-    {#each lesInscrits as inscrit, index (inscrit.id)}
+    {#each lesInscrits as inscrit, index (inscrit.id +'-' + index)}
         <tr>
             <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.prenom}</td>
             <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.nom}</td>
             <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.email}</td>
             <td class={index%2===0?classesPaires:classesImpaires}>
             {#if !archive}
-                <Bouton noBorder={true} largeur="w-8" couleur="text-orangeLBF border-orangeLBF" on:actionBouton={()=>{prepEffacerInscrit(inscrit.id)}} occupe={flagEffaceInscrit[inscrit.id]}>
+                <Bouton noBorder={true} largeur="w-8" couleur="text-orangeLBF border-orangeLBF" on:actionBouton={()=>{prepEffacerInscrit(inscrit.email, inscrit.prenom)}} occupe={flagEffaceInscrit[inscrit.id]}>
                     <Fa icon={faTrashAlt} size="lg" class="mx-auto" />
                 </Bouton>
             {/if}
@@ -183,28 +273,9 @@ onMount(()=> {
     {/if}
   </tbody>
 </table>
-<div class="mt-4">
-<h4>Envoyer un message aux inscrits</h4>
-    <label for="sujetEmail" class="mt-2">
-    <div class="text-base text-bleuLBF">Sujet</div>
-            <input 
-            bind:value= {message.sujet}
-            class="bg-gray-900 text-gray-200 focus:outline-none border border-bleuLBF rounded py-2 px-4 block w-full appearance-none leading-normal"
-            type="text"
-            id="sujetEMail"
-            />
-    </label>
-    <div class="mt-2 ">
-        <div class="text-base text-bleuLBF">Message</div>
-        <Editeur bind:contenu={message.corps} couleur="bleu"/>
-    </div>
-</div>
     <div class="flex flex-row justify-end items-center mt-4">
         <Bouton largeur="w-10" couleur="text-bleuLBF border-bleuLBF" on:actionBouton={()=>{dispatch('close')}}>
             <Fa icon={faArrowLeft} size="lg"  class="mx-auto" />
-        </Bouton>
-        <Bouton disabled={message.sujet==="" || message.corps==="" || message.corps ==="<p><br></p>"} largeur="w-12" couleur="text-vertLBF border-vertLBF" on:actionBouton={() => {if (!flagEnvoieMailOK) {envoyerEmail()}}} occupe={flagEnvoiMail} succes={flagEnvoieMailOK}>
-            <Fa icon={faEnvelope} size="lg" class="mx-auto" />
         </Bouton>
     </div>
 </main>

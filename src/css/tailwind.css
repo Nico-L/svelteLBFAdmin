@@ -121,8 +121,16 @@ text-indent: -0.5rem;
 }
 
 /* fullCalendar */
+.fc-col-header {
+    @apply bg-gray-900;
+}
+
 .fc-day-today {
   @apply bg-vertLBFT;
+}
+
+.fc-day {
+    @apply border-solid border-rougeLBF;
 }
 
 .fc-timegrid-event .fc-event-main {

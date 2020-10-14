@@ -23,8 +23,8 @@ export let noBorder = false;
 export let disabled = false;
 
 $: border = occupe || disabled || succes ?"cursor-default":noBorder?"cursor-pointer":"border-2 cursor-pointer"
-$: classBouton = "h-10 mx-1 px-1 my-auto rounded text-base font-medium focus:outline-none " + couleur + " " + border + " " + largeur
-const classSVG = "fill-current stroke-current h-8 w-8 mx-auto mt-2" + couleurSVG
+$: classBouton = "h-10 px-1 mx-1 my-auto rounded text-base font-medium focus:outline-none " + couleur + " " + border + " " + largeur
+const classSVG = "fill-current stroke-current h-8 w-8 mx-auto " + couleurSVG
 
 </script>
 
@@ -47,6 +47,6 @@ const classSVG = "fill-current stroke-current h-8 w-8 mx-auto mt-2" + couleurSVG
             <Fa icon={faCheck} size="2x" class="mx-auto"/>
         </div>
     {:else}
-        <slot class="mx-auto">un bouton</slot>
+        <slot class="mx-auto ">un bouton</slot>
     {/if}
 </button>

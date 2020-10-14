@@ -9,11 +9,13 @@ import { Calendar } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { listeAteliers, majHoraireAtelier } from "./../../graphQL/ateliers.js"
+import { listeAteliers, editerAtelier, listeInscrits } from "../../strapi/ateliers.js"
 import {setBuildNeeded} from './../../graphQL/build.js'
-import { auth } from "./../../stores/auth.js"
 import { user } from "./../../stores/user.js"
 import { buildNeeded } from "./../../stores/build.js"
+import { setDate } from "./../../utils/dateFr.js"
+
+
 
 
 let flagDialogAtelier = false;
@@ -29,41 +31,53 @@ let flagEdition = false;
 let dataAtelier = {
     id: "",
     titre:"",
-    espace: "Latelier",
-    urlImage: "logoLBFSeul_a1t4af.png",
+    espaceId: 4,
+    urlImage: "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png",
     nbParticipants: 8,
     surInscription: true,
     dateDebut: new Date(),
     dateFin: new Date(),
     description: "Une description",
-    inscrits:[],
-    tarifs: [ [ "Adhérent", "10", true ], [ "Non adhérent", "15", false ] ]
+    inscriptions_ateliers:[],
+    lesTarifs: [ { description: "Adhérent", tarif: "10", qf: true }, { description: "Non adhérent", tarif: "15", qf: false} ]
 }
 
 function majListeAteliers() {
 
     flagDialogAtelier = false
     flagMAJAtelier = true
-    listeAteliers($auth, $user.estAdmin).then((ateliers) => {
-        lesAteliers = ateliers
+    listeAteliers().then((ateliers) => {
+        lesAteliers = []
         flagMAJAtelier = false
+        ateliers.forEach((atelier)=> {
+            flagMAJAtelier = true
+            listeInscrits(atelier.id).then((listeInscrits)=> {
+                atelier.inscriptions_ateliers = listeInscrits
+                lesAteliers = [... lesAteliers, atelier]
+                flagMAJAtelier = false
+            })
+        })
     })
 }
 
 function updateHoraireAtelier(id, debut, fin) {
     flagMAJAtelier = true
+    var minDebut = "30"
+    if ((new Date(debut)).getMinutes()===0) minDebut = "00"
+    const horaireDebut = (new Date(debut)).getHours() + ":" + minDebut + ":00"
+    var minFin = "30"
+    if ((new Date(fin)).getMinutes()===0) minFin = "00"
+    const horaireFin = (new Date(fin)).getHours() + ":" + minFin + ":00"
     const variables = {
-        id: id,
-        dateDebut: debut,
-        dateFin: fin
+        date: new Date(debut),
+        debut: horaireDebut,
+        fin: horaireFin
     }
-    if ($auth && $user) {
-        majHoraireAtelier($auth, $user.estAdmin, variables).then((retour) => {
+    editerAtelier(id, variables).then((retour) => {
             buildNeeded.set(true)
             flagMAJAtelier = false
             majListeAteliers()
         })
-    }
 }
 
 $: {
@@ -73,9 +87,9 @@ $: {
             const atelierEvent = {
                 id: atelier.id,
                 title: atelier.titre,
-                start:atelier.dateDebut,
-                end:atelier.dateFin,
-                editable: atelier.inscritsAteliers.length===0,
+                start: setDate(atelier.date, atelier.debut),
+                end: setDate(atelier.date, atelier.fin),
+                editable: atelier.inscriptions_ateliers.length===0,
                 extendedProps: atelier,
                 color: "#ee732e"
             }
@@ -84,8 +98,11 @@ $: {
     }
 }
 
+
 onMount(async ()=> {
+    majListeAteliers()
     calendar = new Calendar(calendarEl, {
+        height: "auto",
         selectable: true,
         editable: true,
         plugins: [timeGridPlugin, dayGridPlugin, interactionPlugin],
@@ -116,8 +133,21 @@ onMount(async ()=> {
         navLinks: true,
         navLinkDayClick: "timeGridWeek",
         select: function(info) {
-            dataAtelier.dateDebut = info.start
-            dataAtelier.dateFin = info.end
+            dataAtelier = {
+                id: "",
+                titre:"",
+                espaceId: 4,
+                urlImage: "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png",
+                nbParticipants: 8,
+                surInscription: true,
+                dateDebut: info.start,
+                dateFin: info.end,
+                description: "Une description",
+                inscriptions_ateliers:[],
+                lesTarifs: [ { description: "Adhérent", tarif: "10", qf: true }, { description: "Non adhérent", tarif: "15", qf: false} ]
+            }
+            //dataAtelier.dateDebut = info.start
+            //dataAtelier.dateFin = info.end
             flagEdition = false
             flagDialogAtelier = true
         },
@@ -131,6 +161,7 @@ onMount(async ()=> {
             flagEdition = true
             dataAtelier = {}
             dataAtelier = info.event.extendedProps
+            console.log('dataAtelier', dataAtelier)
             flagDialogAtelier = true
         },
         eventContent: function (args) {
@@ -138,16 +169,15 @@ onMount(async ()=> {
                 let leTitre = document.createElement('div')
                 leTitre.classList.add('event-titre-atelier')
                 leTitre.textContent = args.event.title
-                let illustration = document.createElement('img')
-                illustration.src='https://res.cloudinary.com/la-bonne-fabrique/image/upload/c_fill,w_auto,q_40/' + args.event.extendedProps.urlImage
-                illustration.classList.add('event-img-atelier')
-                let arrayOfDomNodes = [ leTitre, illustration ]
+                //let illustration = document.createElement('img')
+                //illustration.src='https://cms.labonnefabrique.fr' + args.event.extendedProps.illustration[0].formats.thumbnail.url
+                //illustration.classList.add('event-img-atelier')
+                let arrayOfDomNodes = [ leTitre ]
                 return { domNodes: arrayOfDomNodes }
             }
         } 
     });
     calendar.render();
-    majListeAteliers()
 })
 
 onDestroy(()=> {

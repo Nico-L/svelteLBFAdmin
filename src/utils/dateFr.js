@@ -25,9 +25,8 @@ jours: [
 }
 
 export function getHoraire(value){
-    var d = new Date(value)
-    var minute = d.getMinutes() == 0 ? '00': d.getMinutes();
-    return d.getHours() + "h" + minute;
+    var d = value.split(':');
+    return d[0] + "h" + d[1];
 }
 
 export function getJour(value){
@@ -49,4 +48,21 @@ export function dateInscription(debut, fin) {
     var minuteDebut = leDebut.getMinutes() == 0 ? '00': leDebut.getMinutes();
     var minuteFin = laFin.getMinutes() == 0 ? '00': laFin.getMinutes();
     return 'le ' + leJourSemaine + ' ' + leJour + ' ' + leMois + ' de ' + leDebut.getHours() + 'h' + minuteDebut + ' à ' + laFin.getHours() + 'h' + minuteFin;
+}
+
+export function dateLisible(date, debut, fin) {
+    var leJour = (new Date(date)).getDate();
+    var leJourSemaine = dateFr.jours[(new Date(date)).getDay()][0];
+    var leMois = dateFr.mois[(new Date(date)).getMonth()][0]
+    const horaireDebut = debut.split(':')
+    const horaireFin = fin.split(':')
+    return 'le ' + leJourSemaine + ' ' + leJour + ' ' + leMois + ' de ' + horaireDebut[0] + 'h' + horaireDebut[1] + ' à ' + horaireFin[0] + 'h' + horaireFin[1];
+}
+
+export function setDate(date, horaire) {
+    const horaireSplit = horaire.split(':')
+    var laDate = new Date(date)
+    laDate.setHours(horaireSplit[0])
+    laDate.setMinutes(horaireSplit[1])
+    return laDate
 }

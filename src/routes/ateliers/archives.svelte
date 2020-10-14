@@ -1,5 +1,5 @@
 <script>
-import { auth } from "./../../stores/auth.js"
+//import { auth } from "./../../stores/auth.js"
 import { user } from "./../../stores/user.js"
 import { listeArchivesAteliers, effacerAtelier } from "./../../graphQL/ateliers.js"
 import * as dateFr from "./../../utils/dateFr.js"
@@ -10,6 +10,8 @@ import FormAtelier from './../../components/FormAtelier.svelte'
 import Chargement from './../../components/chargement.svelte'
 import Dialog from './../../components/Dialog.svelte';
 import Bouton from './../../components/Button/Button.svelte';
+//import {verifJWT} from '../../strapi/verifJWT.js'
+import {listeAteliersArchives, supprimerAtelier} from '../../strapi/ateliers.js'
 
 var lesAteliers;
 let dataAtelier;
@@ -18,10 +20,25 @@ var flagConfirmationEffacerAtelier = false;
 var busyEffacerAtelier = false;
 let flagDialogAtelier = false;
 
-async function getListesAteliers() {
-    lesAteliers = await listeArchivesAteliers($auth, $user.estAdmin)
+$: if ($user) {
+    listeAteliersArchives().then((retour)=> {
+        lesAteliers = retour
+    })
 }
-$:     if ($auth && $user) {getListesAteliers()}
+
+function supprimeAtelier() {
+    busyEffacerAtelier = true
+    supprimerAtelier(dataAtelierEfface.id)
+        .then((retour)=>{
+            listeAteliersArchives().then((retour)=> {
+                lesAteliers = retour
+                flagConfirmationEffacerAtelier = false
+                busyEffacerAtelier = false
+            })
+        })
+}
+
+/*
 
 function supprimerAtelier() {
     busyEffacerAtelier = true
@@ -38,7 +55,7 @@ function supprimerAtelier() {
 function editAtelier(idAtelier) {
     dataAtelier = lesAteliers.filter((atelier) => atelier.id === idAtelier)[0]
     flagDialogAtelier = true
-}
+} */
 </script>
 
 <main class="flex flex-row items-stretch flex-wrap justify-around">
@@ -48,16 +65,19 @@ function editAtelier(idAtelier) {
     <div class="h-14 ml-16 flex flex-row content-center">
         <h5 class="mx-auto my-auto pl-2">{atelier.titre}</h5>
     </div>
-    <div class="relative h-180px" style="background-image: url(https://res.cloudinary.com/la-bonne-fabrique/image/upload/ar_16:9,c_fill/w_340,c_scale/{atelier.urlImage})">
-    </div>
+    {#if atelier.illustration[0].formats.small}
+    <div class="relative h-180px bg-auto" style="background-image: url(https://cms.labonnefabrique.fr{atelier.illustration[0].formats.small.url}); background-size: cover; background-repeat: no-repeat;"></div>
+    {:else}
+        <div class="relative h-180px bg-auto" style="background-image: url(https://cms.labonnefabrique.fr{atelier.illustration[0].formats.thumbnail.url}); background-size: cover; background-repeat: no-repeat;"></div>
+    {/if}
     <div class="absolute top-0 left-0 bg-orangeLBF min-h-16 h-16 w-16 rounded-br mb-4">
-        <div class="text-gray-900 text-3xl font-bold my-0 p-0 text-center mx-auto">{dateFr.getJour(atelier.dateDebut)}</div>
-        <div class="text-gray-900 text-base font-bold my-0 p-0 text-center -mt-2 mx-auto">{dateFr.getMoisShort(atelier.dateDebut)}</div>
+        <div class="text-gray-900 text-3xl font-bold my-0 p-0 text-center mx-auto">{dateFr.getJour(atelier.date)}</div>
+        <div class="text-gray-900 text-base font-bold my-0 p-0 text-center -mt-2 mx-auto">{dateFr.getMoisShort(atelier.date)}</div>
     </div>
         {#if $user.estAdmin}
         <div class="absolute top-16 left-0 w-10 py-1 bg-orangeLBF text-gray-900 rounded-br flex flex-col">
             <div class="mx-auto my-1 cursor-pointer" on:click={() => {editAtelier(atelier.id)}}><Fa icon={faEdit} size="lg"/></div>
-            {#if atelier.inscritsAteliers.length===0}
+            {#if atelier.inscriptions_ateliers.length===0}
                 <div class="mx-auto my-1 cursor-pointer" on:click={() => {dataAtelierEfface.id = atelier.id; flagConfirmationEffacerAtelier = true}}><Fa icon={faTrashAlt} size="lg"/></div>
             {/if}
         </div>
@@ -77,15 +97,15 @@ function editAtelier(idAtelier) {
                 <div class="my-1">
                     <Fa icon={faClock} size="lg" class="mx-auto"/>
                 </div>
-                <div class="mx-auto text-sm">{dateFr.getHoraire(atelier.dateDebut)} - {dateFr.getHoraire(atelier.dateFin)}</div>
+                <div class="mx-auto text-sm">{dateFr.getHoraire(atelier.debut)} - {dateFr.getHoraire(atelier.fin)}</div>
             </div>
             <div class="mx-1">
                 <div class="my-1 mx-auto">
                     <Fa icon={faEuroSign} size="lg" class="mx-auto"/>
                 </div>
                 <div class="mx-auto text-sm text-center">
-                {#each atelier.tarifs as tarif, i}
-                    {#if i === atelier.tarifs.length-1 } {tarif[1]} € - {tarif[0]} {:else } {tarif[1]} € - {tarif[0]} <br /> {/if}
+                {#each atelier.lesTarifs as tarif, i}
+                    {#if tarif.tarif}{tarif.tarif} € - {/if} {#if i === atelier.lesTarifs.length-1 }  {tarif.description} {:else } {tarif.description} <br /> {/if}
                 {/each}
                 </div>
             </div>
@@ -103,9 +123,9 @@ function editAtelier(idAtelier) {
 <Dialog bind:visible={flagConfirmationEffacerAtelier} >
     <h4 slot="title">Confirmation</h4>
     <p>Confirmer la suppression de l'atelier</p>
-    <div slot="actions" class="flex flex-row justify-end items-center">
-        <Bouton on:actionBouton={() => flagConfirmationEffacerAtelier = false}>Annuler</Bouton>
-        <Bouton occupe={busyEffacerAtelier} on:actionBouton = {supprimerAtelier} couleur="text-orangeLBF border-orangeLBF">Confirmer</Bouton>
+    <div slot="actions" class="flex flex-row justify-around items-center">
+        <Bouton largeur="w-24 ml-2" on:actionBouton={() => flagConfirmationEffacerAtelier = false}>Annuler</Bouton>
+        <Bouton largeur="w-24 ml-2" occupe={busyEffacerAtelier} on:actionBouton = {supprimeAtelier} couleur="text-orangeLBF border-orangeLBF">Confirmer</Bouton>
     </div>
 </Dialog>
 

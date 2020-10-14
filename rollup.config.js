@@ -29,7 +29,11 @@ export default {
                 { src: './_redirects', dest: './public' },
             ]
         }),
-        replace({ CLOUDINARY_API_KEY: process.env.CLOUDINARY_KEY, HOOK_ATELIER: process.env.HOOK_ATELIER}),
+        replace({
+            CLOUDINARY_API_KEY: process.env.CLOUDINARY_KEY,
+            HOOK_ATELIER: process.env.HOOK_ATELIER,
+            ADRESSE_CMS: process.env.ADRESSE_CMS
+        }),
         css({ output: 'public/css/imported.css' }),
 		svelte({
 			// enable run-time checks when not in production
@@ -46,7 +50,8 @@ export default {
 		// consult the documentation for details:
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
-			browser: true,
+            browser: true,
+            preferBuiltins: false,
 			dedupe: ['svelte']
 		}),
         commonjs(),

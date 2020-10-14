@@ -2,7 +2,7 @@
 import {onMount} from 'svelte'
 import { saveSelection, restoreSelection } from '../utils/selection.js'
 import Fa from 'svelte-fa'
-import { faBold, faItalic, faUnderline, faLink, faUnlink, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { faBold, faItalic, faUnderline, faLink, faUnlink, faCheck, faListUl } from '@fortawesome/free-solid-svg-icons'
 let editeur;
 let url="";
 let flagAjoutLien = false;
@@ -18,6 +18,7 @@ const classeCadre = "mt-1 border rounded p-1 border-" + couleur + "LBF"
 var classBold=classeDefaut
 var classItalic=classeDefaut
 var classUnderline=classeDefaut
+var classUnOrdered = classeDefaut
 var classUnlink=classeDefaut
 function etatBouton(command) {return document.queryCommandState(command)}
 
@@ -44,6 +45,24 @@ function prepLien() {
     flagAjoutLien = true
 }
 
+function strip(html)
+{
+   var tmp = document.implementation.createHTMLDocument("New").body;
+   tmp.innerHTML = html;
+   return tmp.textContent || tmp.innerText || "";
+}
+
+function handlePaste(event) {
+    let paste = (event.clipboardData || window.clipboardData).getData('text/plain');
+    paste = strip(paste)
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return false;
+    selection.deleteFromDocument();
+    selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+    contenu = editeur.innerHTML
+}
+
+
 function verifEtatBouton() {
     if(contenu==="") {
         document.execCommand('formatBlock', false, '<p>');
@@ -62,15 +81,15 @@ function verifEtatBouton() {
         } else {
              return
         }
-    /*if (etatBouton('bold')) {
-        classBold = "boutonJaune"
-    } else {classBold="boutonEditeur boutonJauneHover"} */
     if (etatBouton('italic')) {
         classItalic = classeActivee
     } else {classItalic=classeDefaut}
     if (etatBouton('underline')) {
         classUnderline = classeActivee
     } else {classUnderline=classeDefaut}
+    if (etatBouton('InsertUnorderedList')) {
+        classUnOrdered = classeActivee
+    } else {classUnOrdered = classeDefaut}
     if(parent1.nodeName === "A" || parent2.nodeName === "A" || parent3.nodeName === "A" || parent4.nodeName === "A") {
         flagEstUnLien = true
         classUnlink= classeActivee
@@ -98,6 +117,10 @@ function verifEtatBouton() {
         <button on:click={() => {MEP('underline')}} class={classUnderline}>
             <Fa icon={faUnderline} size="sm" class="mx-auto my-auto"/>
         </button>
+        <button on:click={() => {MEP('InsertUnorderedList')}} class={classUnOrdered}>
+            <Fa icon={faListUl} size="sm" class="mx-auto my-auto"/>
+        </button>
+        
         {#if flagEstUnLien}
             <button on:click={() =>{ MEP('unlink')}} class={classUnlink}>
                 <Fa icon={faUnlink} size="sm" class="mx-auto my-auto"/>
@@ -116,5 +139,10 @@ function verifEtatBouton() {
             {/if}
         {/if}
     </div>
-    <div bind:this={editeur} contenteditable="true" class="editeur bg-gray-800 rounded-sm p-1 focus:outline-none" bind:innerHTML={contenu}></div>
+    <div bind:this={editeur} 
+        contenteditable="true" 
+        class="editeur bg-gray-800 rounded-sm p-1 focus:outline-none list-disc" 
+        bind:innerHTML={contenu} 
+        on:paste|preventDefault={handlePaste}>
+    </div>
 </div>
