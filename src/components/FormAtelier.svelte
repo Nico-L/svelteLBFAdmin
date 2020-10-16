@@ -522,7 +522,7 @@ function suppressionAtelier() {
 
 <!-- Liste des inscrits-->
 <Dialog bind:visible={flagListeInscrits} on:close={() => {flagListeInscrits=false}}>
-    <ListeInscrits dateAtelier={datesFormatees} idAtelier={editAtelier.id} archive={archive} on:close={() => {flagListeInscrits=false}}/>
+    <ListeInscrits nbParticipants={editAtelier.nbParticipants} idAtelier={editAtelier.id} archive={archive} on:close={() => {flagListeInscrits=false}}/>
 </Dialog>
 <!-- envoiyer email-->
 <Dialog bind:visible={flagEnvoiEmail} on:close={() => {flagEnvoiEmail=false}}>

@@ -36,7 +36,6 @@ function envoyerEmail() {
         var tableEmails = []
         listeInscrits(idAtelier).then((inscrits)=> {
             const infoAtelier = inscrits[0].atelier
-            console.log('infoAtelier', infoAtelier)
             tableEmails = inscrits.map( inscrit => inscrit.email)
             imgproxyURL(infoAtelier.urlImage, optionsImg).then((urlImage) => {
                 var infoMail = {
@@ -48,7 +47,6 @@ function envoyerEmail() {
                     altMachine: "Illustration Atelier",
                     urlImage: urlImage.imgproxyURL
                 };
-                console.log('infoMail', infoMail, tableEmails)
                 const variables = {
                     from: "atelier@labonnefabrique.fr",
                     to: tableEmails,

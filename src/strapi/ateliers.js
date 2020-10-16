@@ -1,5 +1,19 @@
 import {verifJWT} from "./verifJWT.js"
 
+export function nombreInscrits(atelierId) {
+    const url = "ADRESSE_CMS" + "inscriptions-ateliers/count/?atelier_eq=" + atelierId
+    var entetes = {"content-type": "application/json"}
+    var options = { 
+        method: 'GET',
+        headers: entetes,
+        mode: 'cors',
+        cache: 'default'
+    }
+    return fetch(url, options)
+            .then((leJSON) => {return leJSON.json()})
+            .then((retour) => {return retour})
+}
+
 export function listeAteliers() {
     const url = "ADRESSE_CMS" + "ateliers"
     return verifJWT().then((token)=> 

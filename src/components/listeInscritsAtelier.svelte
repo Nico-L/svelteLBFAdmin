@@ -10,17 +10,17 @@ import Fa from 'svelte-fa'
 import { faTrashAlt, faCheck, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { faSave, faEnvelope } from '@fortawesome/free-regular-svg-icons'
 import { effaceInscrit } from './../graphQL/ateliers.js'
-import {listeInscrits, saveNouvelInscrit, majInscrit, effacerInscription} from './../strapi/ateliers.js'
+import { listeInscrits, saveNouvelInscrit, effacerInscription, nombreInscrits } from './../strapi/ateliers.js'
+import { findUser } from "./../strapi/users"
 import { envoieEmail } from './../graphQL/emails.js'
 
 import { v4 as uuidv4 } from 'uuid';
 
 export let idAtelier = "";
-export let dateAtelier = "";
+export let nbParticipants = ""
 export let archive = "false";
 
 let lesInscrits = []
-let lesInscritsFromStrapi = []
 let classesPaires = "border border-gray-600 bg-lbfvertt-900 px-2 py-0"
 let classesImpaires = "border border-gray-600 px-2 py-0"
 let nouvelInscrit = {
@@ -32,178 +32,87 @@ let message= {
     sujet: "",
     corps: ""
 }
-let dataInscritAEffacer = ""
+let warningComplet = "Attention, l'atelier est officiellement complet."
+var flagComplet = false
+var nbInscrits = 0
+let idInscritAEffacer = ""
 let flagEnvoiMail = false;
 let flagEnvoieMailOK = false;
 let flagSauveNouvelInscrit = false;
 let flagEffaceInscrit = [];
 let flagConfirmationEffacerInscrit = false;
 
+$: {
+    nbInscrits = lesInscrits.length
+    flagComplet = nbInscrits >= nbParticipants
+}
+
 function getlisteInscrits() {
     listeInscrits(idAtelier).then((retour) => {
-        lesInscritsFromStrapi = retour
         lesInscrits = []
-        retour.forEach((emailInscription) => {
-            emailInscription.lesInscrits.forEach((inscrit)=> {
-                lesInscrits.push(
-                    {
-                        prenom: inscrit.prenom,
-                        nom: inscrit.nom,
-                        email: emailInscription.email
-                    }
-                )
-            })
-        })
-        lesInscrits.forEach((inscrit)=> {
+        retour.forEach((inscrit)=> {
             flagEffaceInscrit[inscrit.id] = false
+            lesInscrits.push(
+                {
+                    id: inscrit.id,
+                    prenom: inscrit.prenom,
+                    nom: inscrit.nom,
+                    email: inscrit.email,
+                    uuid: inscrit.uuid
+                }
+            )
         })
+        lesInscrits = lesInscrits
     })
 }
 
 function sauveNouvelInscrit() {
     flagSauveNouvelInscrit = true
     let flagEmailExists = false
-    var variables = {}
-    lesInscritsFromStrapi.forEach((inscrit) => {
-        if (inscrit.email===nouvelInscrit.email) {
-            flagEmailExists = true
-            inscrit.lesInscrits.push({nom: nouvelInscrit.nom, prenom: nouvelInscrit.prenom})
-            variables = inscrit
-        }
-    })
-    if (!flagEmailExists) {
-        variables = {
-            atelier: idAtelier,
-            email: nouvelInscrit.email,
-            lesInscrits: [{nom: nouvelInscrit.nom, prenom: nouvelInscrit.prenom}],
-            uuid: uuidv4()
-        }
-        saveNouvelInscrit(variables).then((retour) => {
-            flagSauveNouvelInscrit = false;
-            nouvelInscrit = {
-                prenom: "",
-                nom: "",
-                email: ""
-            }
-            getlisteInscrits()
-        })
-    } else {
-        majInscrit(variables).then((retour) => {
-            flagSauveNouvelInscrit = false;
-            nouvelInscrit = {
-                prenom: "",
-                nom: "",
-                email: ""
-            }
-            getlisteInscrits()
-        })
-    }
-
-}
-
-function prepEffacerInscrit(email, prenom) {
-    dataInscritAEffacer = {email: email, prenom: prenom}
-    flagConfirmationEffacerInscrit = true
-}
-
-function effacerInscrit() {
-    //flagEffaceInscrit[idInscritAEffacer] = true;
-    lesInscritsFromStrapi.forEach((inscrit) => {
-        if (inscrit.email === dataInscritAEffacer.email) {
-            if (inscrit.lesInscrits.length<2) {
-                let idInscrit = inscrit.id
-                effacerInscription(idInscrit).then((retour) => {
-                    flagConfirmationEffacerInscrit = false
-                    getlisteInscrits()
-                })
-            } else {
-                inscrit.lesInscrits.forEach((membre, index) => {
-                    if (membre.prenom===dataInscritAEffacer.prenom) {
-                        inscrit.lesInscrits.splice(index, 1)
-                        const variables = {
-                            id: inscrit.id,
-                            email: inscrit.email,
-                            lesInscrits: inscrit.lesInscrits
-                        }
-                        majInscrit(variables).then((retour) => {
-                            flagConfirmationEffacerInscrit = false
-                            getlisteInscrits()
-                        })
-                    }
-                })
-            }
-        }
-    })
-}
-
-/*
-function sauveNouvelInscrit() {
-    flagSauveNouvelInscrit = true
-    const variables = {
+    var variables = {
         atelier: idAtelier,
-        ...nouvelInscrit
+        email: nouvelInscrit.email,
+        nom: nouvelInscrit.nom,
+        prenom: nouvelInscrit.prenom,
+        uuid: uuidv4()
     }
-    if ($auth && $user) {
-        saveNouvelInscrit($auth, $user.estAdmin, variables).then((retour) => {
-            flagSauveNouvelInscrit = false;
-            nouvelInscrit = {
-                prenom: "",
-                nom: "",
-                email: ""
+    lesInscrits.forEach((inscrit) => {
+        if (nouvelInscrit.email===inscrit.email) {
+            variables.uuid = inscrit.uuid
+        }
+    })
+    findUser(nouvelInscrit.email)
+        .then((retour) => {
+            console.log('retour user', retour)
+            if (retour.length > 0 && retour.id) {
+                variables.id = retour.id
             }
-            getlisteInscrits()
+            saveNouvelInscrit(variables).then((retour) => {
+                flagSauveNouvelInscrit = false;
+                nouvelInscrit = {
+                    prenom: "",
+                    nom: "",
+                    email: ""
+                }
+                getlisteInscrits()
+            })
         })
-    }
 }
 
-function prepEffacerInscrit(idInscrit) {
-    idInscritAEffacer = idInscrit
+function prepEffacerInscrit(id) {
+    idInscritAEffacer = id
     flagConfirmationEffacerInscrit = true
 }
 
 function effacerInscrit() {
-    flagConfirmationEffacerInscrit = false
     flagEffaceInscrit[idInscritAEffacer] = true;
-    const variables = {
-        id: idInscritAEffacer
-    }
-    if ($auth && $user) {
-        effaceInscrit($auth, $user.estAdmin, variables).then((retour)=> {
+    effacerInscription(idInscritAEffacer).then((retour) => {
+        flagEffaceInscrit[idInscritAEffacer] = true;
+            flagConfirmationEffacerInscrit = false
             getlisteInscrits()
-            flagEffaceInscrit[idInscritAEffacer] = false
         })
-    }
 }
 
-function envoyerEmail() {
-    if (message.sujet!=="" && message.corps!=="" && message.corps!=="<p><br></p>") {
-        flagEnvoiMail = true
-        var infoMail = {
-            sujet: message.sujet,
-            message: message.corps,
-            titreAtelier: lesInscrits[0].atelierInscrit.titre,
-            date: dateAtelier,
-            urlDesinscription: "https://atelier.labonnefabrique.fr/",
-            altMachine: "Illustration Atelier",
-            urlImage: "https://res.cloudinary.com/la-bonne-fabrique/image/upload/ar_1.5,w_auto,c_fill/" + lesInscrits[0].atelierInscrit.urlImage
-        };
-        var tableEmails = lesInscrits.map( inscrit => inscrit.email)
-        const variables = {
-            email: tableEmails,
-            templateId: "d-a3a4bd4f471742f7a092f2872b9917b1",
-            template: JSON.stringify(infoMail)
-        }
-        if ($auth && $user) {
-            envoieEmail($auth, $user.estAdmin, variables).then((retour)=>{
-                flagEnvoiMail = false;
-                flagEnvoieMailOK = true;
-            }).catch((error) => {console.log('error', error)})
-        }
-    }
-    
-    
-}
-*/
 onMount(()=> {
     getlisteInscrits()
 })
@@ -229,7 +138,7 @@ onMount(()=> {
             <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.email}</td>
             <td class={index%2===0?classesPaires:classesImpaires}>
             {#if !archive}
-                <Bouton noBorder={true} largeur="w-8" couleur="text-orangeLBF border-orangeLBF" on:actionBouton={()=>{prepEffacerInscrit(inscrit.email, inscrit.prenom)}} occupe={flagEffaceInscrit[inscrit.id]}>
+                <Bouton noBorder={true} largeur="w-8" couleur="text-orangeLBF border-orangeLBF" on:actionBouton={()=>{prepEffacerInscrit(inscrit.id)}} occupe={flagEffaceInscrit[inscrit.id]}>
                     <Fa icon={faTrashAlt} size="lg" class="mx-auto" />
                 </Bouton>
             {/if}
@@ -273,6 +182,9 @@ onMount(()=> {
     {/if}
   </tbody>
 </table>
+    {#if flagComplet}
+    <div class="text-rougeLBF">{warningComplet}</div>
+    {/if}
     <div class="flex flex-row justify-end items-center mt-4">
         <Bouton largeur="w-10" couleur="text-bleuLBF border-bleuLBF" on:actionBouton={()=>{dispatch('close')}}>
             <Fa icon={faArrowLeft} size="lg"  class="mx-auto" />

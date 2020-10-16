@@ -108,7 +108,6 @@ $: if ($user && $espacesBF && !flagEspace) {
 
 $: {
     if (!loginNeeded && $tags && !flagTags) {
-        console.log('bob ?')
         listeTags().then((lesTags)=>{
             tags.set(lesTags)
             flagTags = true

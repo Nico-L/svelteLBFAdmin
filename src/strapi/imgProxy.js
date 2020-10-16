@@ -1,7 +1,6 @@
 import {verifJWT} from "./verifJWT.js"
 
 export function imgProxyUrl(url, options) {
-    console.log('url initiale', url)
     const variables = {
         url: url,
         resizing_type: options.resizing_type,
