@@ -30,10 +30,8 @@ import { tableCouleursLBF } from './../../utils/couleursLBF.js'
 let calendarEl;
 let calendar;
 let jourDebutCalendrier = (new Date()).getDay()
-let firstSetup = false
 let plagesHoraires = [[], [], [], [], [], [], []]
 let businessHours = []
-let nbPlagesJour = 4;
 let lesMachines = []
 let filtreReservations = [];
 let listeReservationFiltrees=[]
@@ -90,19 +88,6 @@ function getlistePlages() {
                 })
             })
         })
-        /*for(let i=0; i<7; i++) {
-            for(let j=0; j<nbPlagesJour; j++) {
-                if (retourPlage[i][j][0]!== null) {
-                    plagesHoraires[i].push(retourPlage[i][j])
-                        businessHours.push({
-                            daysOfWeek: [i],
-                            startTime: retourPlage[i][j].debut,
-                            endTime: retourPlage[i][j].fin                                
-                        })
-                }
-            }
-        }
-        plagesHoraires = plagesHoraires */
         businessHours = businessHours
     })
 }
@@ -110,7 +95,6 @@ function getlistePlages() {
 function getListeReservations() {
     flagGetReservation = true
     listeReservations().then((liste)=> {
-        console.log('liste resa', liste)
         flagGetReservation = false
         lesReservations = liste;
     })
@@ -118,7 +102,6 @@ function getListeReservations() {
 
 function getListeMachines() {
      listeMachinesComplete().then((liste)=> {
-         console.log('listeMachine', liste)
          lesMachines = liste
          filtreReservations['tous'] = true
          liste.forEach((machine)=>{
@@ -135,7 +118,7 @@ $: {
 
 $: {
     if (calendar) {
-        //calendar.setOption('businessHours', businessHours)
+        calendar.setOption('businessHours', businessHours)
         //calendar.setOption('eventConstraint', 'businessHours')
         //calendar.setOption('selectConstraint', 'businessHours')
 
@@ -287,7 +270,6 @@ function sauverReservation() {
             nouvelleReservation.heurefin = nouvelleReservation.dateFin.getHours() + ":" + (nouvelleReservation.dateFin.getMinutes === 0 ? "00":"30") + ":00"
             nouvelleReservation.uuid = uuidv4()
             sauveReservation(nouvelleReservation).then((retour) => {
-                console.log('retour save resa', retour)
                 mailConfirmation(retour.uuid, retour.machine)
                 busySauverReservation = false
                 flagNouvelleReservation = false
@@ -298,25 +280,6 @@ function sauverReservation() {
             flagUserNotFound = true
         }
     })
-    /*sauveReservation(nouvelleReservation).then((retour) => {
-        console.log('retour save resa', retour)
-        busySauverReservation = false
-        flagNouvelleReservation = false
-    })*/
-    /*if ($auth && $user) {
-        sauveReservation($auth, $user.estAdmin, nouvelleReservation).then((retour)=> {
-            let machineChoisie = lesMachines.filter((machine) => machine.id === nouvelleReservation.idMachine)
-            nouvelleReservation = {
-                ...nouvelleReservation,
-                ...machineChoisie[0]
-            }
-            console.log('def nouvel', nouvelleReservation)
-            mailConfirmation(retour.id)
-            getListeReservations()
-            busySauverReservation = false
-            flagNouvelleReservation = false
-        })
-    }*/
 }
 
 function updateReservation() {
@@ -328,15 +291,6 @@ function updateReservation() {
             finiResa()
             getListeReservations() 
         })
-        /*if($auth && $user) {
-            majReservation($auth, $user.estAdmin, variables).then((retour)=> {
-                mailConfirmation(nouvelleReservation.id)
-                flagMAJReservation = false
-                busySauverReservation = false
-                finiResa()
-                getListeReservations()
-            })
-        }*/
     }
 }
 
@@ -390,7 +344,6 @@ function mailConfirmation(uuidResa, detailsMachine) {
     let dureeString = Math.floor(tempDuree/60) + "h"
     dureeString += tempDuree % 60 === 0 ? "00" : tempDuree % 60
     let dateDebut = new Date(nouvelleReservation.dateDebut)
-    console.log('dateDebut fr', dateDebut, dateDebut.toLocaleDateString("fr-fr", options))
     let arrayMails = [];
     arrayMails.push(nouvelleReservation.email);
     imgProxyUrl(detailsMachine.urlImage, optionsImg).then((retour)=>{
@@ -413,7 +366,6 @@ function mailConfirmation(uuidResa, detailsMachine) {
             dynamicTemplateData: envoiMail,
             templateId: "d-08bb9e1b96ac4d56a9210660cac6cd07"
         }
-        console.log('var mail confirmation', variables)
         envoiEmail(variables)
     })
 }
