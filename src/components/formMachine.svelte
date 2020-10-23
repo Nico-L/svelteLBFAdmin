@@ -2,9 +2,11 @@
 import { createEventDispatcher} from 'svelte';
 const dispatch = createEventDispatcher();
 import { navigate } from "svelte-routing";
-import { auth } from "./../stores/auth.js"
+//import { auth } from "./../stores/auth.js"
 import { user } from "./../stores/user.js"
-import {listeAbonnements, getMachineById, creerMachine, majMachine} from './../graphQL/machines.js'
+import {espacesBF} from './../stores/espacesBF.js'
+import { tags } from "./../stores/tags.js"
+import {listeAbonnements, getMachineById, majMachine, creerMachine} from './../strapi/machines.js'
 import ImageUpload from './imageUpload.svelte';
 import Editeur from './editeur.svelte';
 import Bouton from './Button/Button.svelte';
@@ -19,6 +21,27 @@ import { tableCouleursLBFNum } from './../utils/couleursLBF.js'
 export let flagEdition = false;
 export let idMachine = "";
 
+// variables passée à l'upload pour tag = Atelier et espaceBF = L'atelier
+let tagId;
+let espaceId;
+$tags.forEach((tag) => {
+    if (tag.tag==="Machine") tagId=tag.id
+})
+$espacesBF.forEach((espace)=> {
+    if (espace.value==="L'atelier") espaceId = espace.id
+})
+const dataImg = {
+    user: $user.id,
+    espaces: espaceId,
+    tags: tagId
+}
+const optionsURL= {
+    'resizing_type': 'fill',
+    'width': 400,
+    'height': 180,
+    'gravity': 'ce'
+}
+
 let lesTarifs = []
 let typeTarif = "abonnement"
 let newTarifHoraire = {tarification: "", tarif: ""}
@@ -26,7 +49,7 @@ let specificationMateriaux = false
 let laMachine= {
                 titre: "",
                 tag: "",
-                urlImage: "",
+                urlImage: "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png",
                 description: "",
                 lesTarifs: "",
                 largeur: "",
@@ -39,7 +62,7 @@ let laMachine= {
 }
 let laDecoupe = ""
 let laGravure = ""
-const optionsURL= [
+/*const optionsURL= [
         {
           ar: '2:1',
           cropType: 'fill'
@@ -49,34 +72,34 @@ const optionsURL= [
           qualite: 'auto',
           cropType: 'scale'
         }
-      ]
+      ]*/
 let flagSauvegardeEnCours = false;
 let flagSauvegardeSucces = false;
 let flagGetMachine = false;
 
-$: {
-    if($auth && $user) {
-        listeAbonnements($auth, $user.estAdmin, {typeTarif: 'abonnement'}).then((retour)=> {
-            lesTarifs = retour
-        })
-    }
-}
-
-$: console.log('change !', $user)
+$: listeAbonnements().then((retour)=> {
+        lesTarifs = retour.Tarifs
+    })
 
 $: {
-    if($auth && $user && idMachine!=="" && !flagEdition) {
+    if(idMachine !== "" && !flagEdition) {
         flagGetMachine = true
-        getMachineById($auth, $user.estAdmin, {id: idMachine}).then((retour)=> {
+        getMachineById(idMachine).then((retour)=> {
             flagGetMachine = false
             flagEdition = true
-            specificationMateriaux = retour.decoupe.length>0 || retour.gravure.length>0
+            /*specificationMateriaux = retour.decoupe.length>0 || retour.gravure.length>0
             laDecoupe = retour.decoupe.join(', ')
-            laGravure = retour.gravure.join(', ')
+            laGravure = retour.gravure.join(', ') */
             laMachine = retour
+            if (!laMachine.Abonnement) {
+                typeTarif = "horaire"
+            }
+            console.log('laMachine', laMachine)
         })
     }
 }
+
+$: laMachine.Abonnement = typeTarif==="abonnement"
 
 function ajouterTarifHoraire() {
     tarifsHoraire.push(newTarifHoraire)
@@ -91,44 +114,15 @@ function retirerTarifHoraire(index) {
 
 function validationSauvegarde() {
     flagSauvegardeEnCours = true
-    laMachine.decoupe =
-        '{' +
-        laDecoupe
-            .split(',')
-            .map(s => s.trim())
-            .join(', ') +
-        '}'
-    laMachine.gravure =
-        '{' +
-        laGravure
-            .split(',')
-            .map(s => s.trim())
-            .join(', ') +
-        '}'
-    let stringTarif = '{"' + typeTarif + '": ['
-    lesTarifs.forEach((tarif, index) => {
-        if (index > 0) {
-            stringTarif = stringTarif + ', '
-        }
-        stringTarif =
-            stringTarif +
-            '{"tarif": "' +
-            tarif.tarif +
-            '", "tarification": "' +
-            tarif.tarification +
-            '"}'
-        })
-    stringTarif = stringTarif + ']}'
-    laMachine.lesTarifs = JSON.parse(stringTarif)
     flagGetMachine = true
     if (idMachine==="") {
-        creerMachine($auth, $user.estAdmin, laMachine).then((retour)=>{
+        creerMachine(laMachine).then((retour)=>{
             flagSauvegardeEnCours=false
             flagGetMachine = false
             navigate("/machines/listeMachines", { replace: true });
         })
     } else {
-        majMachine($auth, $user.estAdmin, laMachine).then((retour)=>{
+        majMachine(idMachine, laMachine).then((retour)=>{
             flagSauvegardeEnCours= false
             flagGetMachine = false
             dispatch('close')
@@ -147,7 +141,7 @@ function fini() {
             Nom de la machine
             <div class="border border-bleuLBFT rounded p-1">
                 <input 
-                bind:value= {laMachine.titre}
+                bind:value= {laMachine.nom}
                 class="bg-gray-800 text-base text-gray-200 focus:outline-none rounded py-1 px-1 block w-full appearance-none leading-normal"
                 type="text"
                 id="titre"
@@ -177,7 +171,12 @@ function fini() {
             </div>
         </div>
         <div class="w-5/6 mx-auto">
-            <ImageUpload bind:nomImage={laMachine.urlImage} options = {optionsURL} typeIllustration="Machine" altImage="Illustration de la machine" classImage="rounded border-2 border-bleuLBF" />
+            <!--<ImageUpload bind:nomImage={laMachine.urlImage} options = {optionsURL} typeIllustration="Machine" altImage="Illustration de la machine" classImage="rounded border-2 border-bleuLBF" />-->
+            <ImageUpload dataImg={JSON.stringify(dataImg)} bind:urlImage={laMachine.urlImage} options = {optionsURL} altImage="Illustration de l'atelier" classImage="rounded border-2 border-bleuLBF" />
+        </div>
+        <div class="mt-4 ">
+            <div class="h4 font-medium text-vertLBF">Résumé</div>
+            <Editeur bind:contenu={laMachine.resume} couleur="vert"/>
         </div>
         <div class="mt-4 ">
             <div class="h4 font-medium text-vertLBF">Description</div>
@@ -187,20 +186,20 @@ function fini() {
             <div class="h4 font-medium text-orangeLBF">Tarifs</div>
             <div class="flex flex-row items-center mt-1">
                 <RadioBouton mettreApres={true} cbClasses="text-gray-400" name="typeTarif" value="abonnement" bind:selected={typeTarif} label="abonnement"/>
-                <RadioBouton mettreApres={true} cbClasses="text-gray-400" name="typeTarif" value="horaire" bind:selected={typeTarif} label="horaire"/>
+                <RadioBouton mettreApres={true} cbClasses="text-gray-400" name="typeTarif" value="horaire" bind:selected={typeTarif} label="tarif horaire"/>
             </div>
-            {#if typeTarif==="abonnement"}
+            {#if laMachine.Abonnement}
                 <table class="mx-auto table-auto border-collapse border-2 border-gray-300 mt-3">
                     <thead>
                         <tr>
-                        <th class="border border-gray-600 px-2 py-1 text-orangeLBF">Période</th>
+                        <th class="border border-gray-600 px-2 py-1 text-orangeLBF">Durée</th>
                         <th class="border border-gray-600 px-2 py-1 text-orangeLBF">Tarif (€)</th>
                         </tr>
                     </thead>
                     {#each lesTarifs as abonnement, index}
                         <tr>
                             <td class="border border-gray-600 px-2 py-1">
-                                {abonnement.tarification}
+                                {abonnement.duree}
                             </td>
                             <td class="border border-gray-600 px-2 py-1">
                             {abonnement.tarif} 
@@ -209,12 +208,22 @@ function fini() {
                     {/each}
                 </table>
             {:else}
-                <table class="mx-auto table-auto border-collapse border-2 border-gray-300 mt-3">
+                <div class=" flex flex-row items-center mt-3">
+                    <div class="font-medium mx-2">Tarif : </div>
+                    <input 
+                    bind:value={laMachine.tarifHoraire}
+                    class="w-12 p-1 bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal text-right"
+                    type="text"
+                    id="nouveauTarif"
+                    />
+                    <Fa icon={faEuroSign} size="lg" class="mx-auto ml-2" />
+                </div>  
+                <!--<table class="mx-auto table-auto border-collapse border-2 border-gray-300 mt-3">
                     <thead>
                         <tr>
-                        <th class="border border-gray-600 px-2 py-1 text-orangeLBF">Période</th>
-                        <th class="border border-gray-600 px-2 py-1 text-orangeLBF">Tarif</th>
-                        <th class="border border-gray-600 px-2 py-1 text-orangeLBF">~</th>
+                        <td class="border border-gray-600 px-2 py-1 text-orangeLBF">Tarif Horaire</td>
+                        <td class="border border-gray-600 px-2 py-1 text-orangeLBF">{laMachine.tarifHoraire}</td>
+                        <td class="border border-gray-600 px-2 py-1 text-orangeLBF">~</td>
                         </tr>
                     </thead>
                     {#each lesTarifs as tarifHoraire, index}
@@ -269,10 +278,10 @@ function fini() {
                                 </Bouton>
                             </td>
                         </tr>
-                </table>
+                </table>-->
             {/if}
         </div>
-        <div class="mt-4">
+        <!--<div class="mt-4">
             <div class="h4 font-medium text-rougeLBF">Caractéristiques</div>
             <div class="flex flex-row justify-around">
                 <div class="flex flex-row justify-start items-end">
@@ -345,7 +354,7 @@ function fini() {
                         </label>
                 </div>
             {/if}
-        </div>
+        </div> -->
         <div class="mt-4 flex flex-row items-center justify-end">
             {#if idMachine!==""}
             <Bouton on:actionBouton={fini} largeur="w-10" couleur="text-bleuLBF border-bleuLBF">

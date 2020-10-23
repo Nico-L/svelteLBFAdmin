@@ -133,6 +133,14 @@ onMount(async ()=> {
         navLinks: true,
         navLinkDayClick: "timeGridWeek",
         select: function(info) {
+            const horaireDebut = {
+                heures: info.start.getHours(),
+                minutes: info.start.getMinutes()
+            }
+            const horaireFin = {
+                heures: info.end.getHours(),
+                minutes: info.end.getMinutes()
+            }
             dataAtelier = {
                 id: "",
                 titre:"",
@@ -140,14 +148,13 @@ onMount(async ()=> {
                 urlImage: "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png",
                 nbParticipants: 8,
                 surInscription: true,
-                dateDebut: info.start,
-                dateFin: info.end,
+                date: info.start,
+                debut: horaireDebut.heures + ":" + horaireDebut.minutes,
+                fin: horaireFin.heures + ":" + horaireFin.minutes,
                 description: "Une description",
                 inscriptions_ateliers:[],
                 lesTarifs: [ { description: "Adhérent", tarif: "10", qf: true }, { description: "Non adhérent", tarif: "15", qf: false} ]
             }
-            //dataAtelier.dateDebut = info.start
-            //dataAtelier.dateFin = info.end
             flagEdition = false
             flagDialogAtelier = true
         },
@@ -161,7 +168,6 @@ onMount(async ()=> {
             flagEdition = true
             dataAtelier = {}
             dataAtelier = info.event.extendedProps
-            console.log('dataAtelier', dataAtelier)
             flagDialogAtelier = true
         },
         eventContent: function (args) {

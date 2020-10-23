@@ -25,7 +25,6 @@ export let flagEdition=false;
 export let dataAtelier = {
     id: "",
     titre:"",
-    espaceId: 4,
     urlImage: "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png",
     nbParticipants: 8,
     surInscription: true,
@@ -41,6 +40,7 @@ export let archive = false;
 let editAtelier = {
     ... dataAtelier
 }
+let espaceId = editAtelier.espace.id
 if (!editAtelier.dateDebut) {
   let dateDebut = new Date(editAtelier.date)
   let debutTemp = editAtelier.debut.split(':')
@@ -63,38 +63,41 @@ let flagConfirmationEffacerAtelier = false;
 let flagDupliquer = false;
 let flagListeInscrits = false;
 let flagEnvoiEmail= false
+let flagDupliquerMemeDate = false
 
-var jourDebut = new Date(editAtelier.dateDebut)
-var jourFin = new Date(editAtelier.dateFin)
+var jourDebut = new Date(editAtelier.date)
+var jourFin = new Date(editAtelier.date)
 let deuxJourAvantDebut = new Date(editAtelier.dateDebut)
-let deuxAnsApresFin = new Date(editAtelier.dateFin)
-var heureDebut = jourDebut.getHours() + "h"
+let deuxAnsApresFin = new Date(editAtelier.date)
+var heureDebut = editAtelier.debut.split(':')[0] + "h" + (editAtelier.debut.split(':')[1] === "0" ? "00":"30")
+var heureFin = editAtelier.fin.split(':')[0] + "h" + (editAtelier.fin.split(':')[1] === "0" ? "00":"30")
+/*var heureDebut = jourDebut.getHours() + "h"
 jourDebut.getMinutes()===0? heureDebut = heureDebut + "00":heureDebut = heureDebut + jourDebut.getMinutes()
 var heureFin = jourFin.getHours() + "h"
-jourFin.getMinutes()===0? heureFin = heureFin + "00":heureFin = heureFin + jourFin.getMinutes()
+jourFin.getMinutes()===0? heureFin = heureFin + "00":heureFin = heureFin + jourFin.getMinutes() */
 let maintenant= new Date();
 let  dateFormat = "#{l} #{j} #{F} #{Y}"
 let datesFormatees = ""
 
 // variables passée à l'upload pour tag = Atelier et espaceBF = L'atelier
 let tagId;
-let espaceId;
+
 $tags.forEach((tag) => {
     if (tag.tag==="Atelier") tagId=tag.id
 })
-$espacesBF.forEach((espace)=> {
+/*$espacesBF.forEach((espace)=> {
     if (espace.value==="L'atelier") espaceId = espace.id
-})
-const dataImg = {
+}) */
+var dataImg = {
     user: $user.id,
-    espaces: espaceId,
-    tags: tagId
+    espace: espaceId|| 1,
+    tag: tagId
 }
 
 $: {
-    deuxJourAvantDebut = new Date(editAtelier.dateDebut)
+    deuxJourAvantDebut = new Date(editAtelier.date)
     deuxJourAvantDebut.setDate(deuxJourAvantDebut.getDate()-2)
-    deuxAnsApresFin = new Date(editAtelier.dateFin)
+    deuxAnsApresFin = new Date(editAtelier.date)
     deuxAnsApresFin.setMonth(deuxAnsApresFin.getMonth()+24)
     let heureDebutTemp = heureDebut.split('h')
     jourDebut.setHours(heureDebutTemp[0])
@@ -102,7 +105,6 @@ $: {
     let heureFinTemp = heureFin.split('h')
     jourFin.setHours(heureFinTemp[0])
     jourFin.setMinutes(heureFinTemp[1])
-    //datesFormatees =  dateInscription(jourDebut, jourFin)
 }
 
 const optionsURL= {
@@ -111,7 +113,15 @@ const optionsURL= {
     'height': 180,
     'gravity': 'ce'
 }
-      
+ 
+$: {
+     dataImg = {
+        user: $user.id,
+        espace: espaceId,
+        tag: tagId
+    }
+ }
+
 function fini() {
     dispatch('close')
 }
@@ -128,7 +138,7 @@ function sauveAtelier() {
         debut: heureDebut.split('h').join(':') + ":00",
         fin: heureFin.split('h').join(':') + ":00",
         description: editAtelier.description || "Un nouvel atelier sympa !",
-        espace: editAtelier.espaceId,
+        espace: espaceId,
         nbParticipants: editAtelier.nbParticipants,
         surInscription: editAtelier.surInscription,
         lesTarifs: editAtelier.lesTarifs,
@@ -168,7 +178,7 @@ function updateAtelier() {
         debut: heureDebut.split('h').join(':') + ":00",
         fin: heureFin.split('h').join(':') + ":00",
         description: editAtelier.description || "Un nouvel atelier sympa !",
-        espace: editAtelier.espaceId,
+        espace: espaceId,
         nbParticipants: editAtelier.nbParticipants,
         surInscription: editAtelier.surInscription,
         lesTarifs: editAtelier.lesTarifs,
@@ -184,131 +194,20 @@ function updateAtelier() {
     })
 }
 
-/*
-function sauveAtelier() {
-    let variables = {}
-    let heureDebutTemp = heureDebut.split('h')
-    jourDebut.setHours(heureDebutTemp[0])
-    jourDebut.setMinutes(heureDebutTemp[1])
-    let heureFinTemp = heureFin.split('h')
-    jourFin.setHours(heureFinTemp[0])
-    jourFin.setMinutes(heureFinTemp[1])
-    var tarifs='{'
-    editAtelier.tarifs.forEach((tarif, index) => {
-        if(index===0) {
-          tarifs = tarifs + '{'+ tarif[0] + ', ' +  tarif[1] + ', ' + tarif[2] +'}'
-        } else {
-          tarifs = tarifs + ', {'+ tarif[0] + ', ' +  tarif[1] + ', ' + tarif[2] +'}'
-        }
-      })
-    tarifs = tarifs + '}'
-    variables = {
-        dateDebut: jourDebut,
-        dateFin: jourFin,
-        description: editAtelier.description || "Un nouvel atelier sympa !",
-        espace: editAtelier.espace,
-        nbParticipants: editAtelier.nbParticipants,
-        surInscription: editAtelier.surInscription,
-        tarifs: tarifs,
-        titre: editAtelier.titre || "Un nouvel atelier A",
-        urlImage: editAtelier.urlImage
+function verifDuplication() {
+    const comparaisonDate = {
+        jour: new Date(editAtelier.date).getDate() === new Date(jourDebut).getDate(),
+        mois: new Date(editAtelier.date).getMonth() === new Date(jourDebut).getMonth(),
+        debut: editAtelier.debut.split(':')[0] + 'h' + editAtelier.debut.split(':')[1] === heureDebut,
+        fin: editAtelier.fin.split(':')[0] + 'h' + editAtelier.fin.split(':')[1] === heureFin
     }
-    if ($auth && $user) {
-        flagSauvegardeEnCours = !flagDupliquer;
-        flagDuplicationEnCours = flagDupliquer
-        ajouterAtelier($auth, $user.estAdmin, variables).then((result)=> {
-            flagSauvegardeSucces = !flagDupliquer
-            flagDuplicationSucces = flagDupliquer
-            flagSauvegardeEnCours = false
-            flagDuplicationEnCours = false
-            buildNeeded.set(true)
-            fini()
-        })
+    if (comparaisonDate.jour && comparaisonDate.mois && comparaisonDate.debut && comparaisonDate.fin) {
+        flagDupliquerMemeDate = true
+    } else {
+        sauveAtelier()
     }
 }
 
-function updateAtelier() {
-    let variables = {}
-    let heureDebutTemp = heureDebut.split('h')
-    jourDebut.setHours(heureDebutTemp[0])
-    jourDebut.setMinutes(heureDebutTemp[1])
-    let heureFinTemp = heureFin.split('h')
-    jourFin.setHours(heureFinTemp[0])
-    jourFin.setMinutes(heureFinTemp[1])
-    var tarifs='{'
-    editAtelier.tarifs.forEach((tarif, index) => {
-        if(index===0) {
-          tarifs = tarifs + '{'+ tarif[0] + ', ' +  tarif[1] + ', ' + tarif[2] +'}'
-        } else {
-          tarifs = tarifs + ', {'+ tarif[0] + ', ' +  tarif[1] + ', ' + tarif[2] +'}'
-        }
-      })
-    tarifs = tarifs + '}'
-    variables = {
-        id: editAtelier.id,
-        dateDebut: jourDebut,
-        dateFin: jourFin,
-        description: editAtelier.description || "Un nouvel atelier sympa !",
-        espace: editAtelier.espace,
-        nbParticipants: editAtelier.nbParticipants,
-        surInscription: editAtelier.surInscription,
-        tarifs: tarifs,
-        titre: editAtelier.titre || "Un nouvel atelier update",
-        urlImage: editAtelier.urlImage
-    }
-    if ($auth && $user) {
-        flagSauvegardeEnCours = true;
-        majAtelier($auth, $user.estAdmin, variables).then((result)=> {
-            buildNeeded.set(true)
-            flagSauvegardeSucces = true
-            flagSauvegardeEnCours = false
-            fini()
-        })
-    }
-}
-
-function dupliqueAtelier() {
-    let variables = {}
-    let heureDebutTemp = heureDebut.split('h')
-    jourDebut.setHours(heureDebutTemp[0])
-    jourDebut.setMinutes(heureDebutTemp[1])
-    let heureFinTemp = heureFin.split('h')
-    jourFin.setHours(heureFinTemp[0])
-    jourFin.setMinutes(heureFinTemp[1])
-    var tarifs='{'
-    editAtelier.tarifs.forEach((tarif, index) => {
-        if(index===0) {
-          tarifs = tarifs + '{'+ tarif[0] + ', ' +  tarif[1] + ', ' + tarif[2] +'}'
-        } else {
-          tarifs = tarifs + ', {'+ tarif[0] + ', ' +  tarif[1] + ', ' + tarif[2] +'}'
-        }
-      })
-    tarifs = tarifs + '}'
-    variables = {
-        dateDebut: jourDebut,
-        dateFin: jourFin,
-        description: editAtelier.description || "Un nouvel atelier sympa !",
-        espace: editAtelier.espace,
-        nbParticipants: editAtelier.nbParticipants,
-        surInscription: editAtelier.surInscription,
-        tarifs: tarifs,
-        titre: editAtelier.titre || "Un nouvel atelier Dupliqué",
-        urlImage: editAtelier.urlImage
-    }
-    if ($auth && $user) {
-        flagSauvegardeEnCours = !flagDupliquer;
-        flagDuplicationEnCours = flagDupliquer
-        ajouterAtelier($auth, $user.estAdmin, variables).then((result)=> {
-            flagSauvegardeSucces = !flagDupliquer
-            flagDuplicationSucces = flagDupliquer
-            flagSauvegardeEnCours = false
-            flagDuplicationEnCours = false
-            buildNeeded.set(true)
-            fini()
-        })
-    }
-}
-*/
 function validationSauvegarde() {
     if (flagEdition) {
         updateAtelier()
@@ -379,7 +278,7 @@ function suppressionAtelier() {
     </label>
     <label for="selectEspaces" class="mt-3 flex flex-row">
     <div class="mr-2 text-base font-medium  text-bleuLBF">Espace concerné</div>
-        <select value={editAtelier.espaceId} id="selectEspaces" class="bg-gray-900 border border-bleuLBF rounded">
+        <select bind:value={espaceId} id="selectEspaces" class="bg-gray-900 border border-bleuLBF rounded" >
 		{#each $espacesBF as espace}
 			<option value={espace.id}>
 				{espace.label}
@@ -388,7 +287,7 @@ function suppressionAtelier() {
 	    </select>
     </label>
     <div class="w-5/6 mx-auto mt-3">
-        <ImageUpload dataImg={JSON.stringify(dataImg)} bind:urlImage={editAtelier.urlImage} options = {optionsURL} altImage="Illustration de l'atelier" classImage="rounded border-2 border-bleuLBF" />
+        <ImageUpload dataImg={dataImg} bind:urlImage={editAtelier.urlImage} options = {optionsURL} altImage="Illustration de l'atelier" classImage="rounded border-2 border-bleuLBF" />
     </div>
     <div class="flex flex-row items-center justify-between mt-4">
         <label for="nbParticipants" class="w-1/2 flex flex-row items-center text-vertLBF">
@@ -406,7 +305,7 @@ function suppressionAtelier() {
         <div class="flex flex-row justify-center my-2">
             <Datepicker
                 start={deuxJourAvantDebut}
-                end={jourFin}
+                end={deuxAnsApresFin}
                 bind:selected={jourDebut}
                 daysOfWeek={dateFr.jours}
                 monthsOfYear={dateFr.mois}
@@ -498,7 +397,7 @@ function suppressionAtelier() {
             <Bouton on:actionBouton={() => flagListeInscrits = true} largeur="w-10" couleur="text-jauneLBF border-jauneLBF">
                 <Fa icon={faUsers} size="lg"  class="mx-auto" />
             </Bouton>
-            <Bouton occupe={flagDuplicationEnCours} succes={flagDuplicationSucces} on:actionBouton={() => {dupliqueAtelier()}} largeur="w-12" couleur="text-orangeLBF border-orangeLBF">
+            <Bouton occupe={flagDuplicationEnCours} succes={flagDuplicationSucces} on:actionBouton={() => {verifDuplication()}} largeur="w-12" couleur="text-orangeLBF border-orangeLBF">
                 <Fa icon={faCopy} size="lg"  class="mx-auto" />
             </Bouton>
         {/if}
@@ -524,8 +423,16 @@ function suppressionAtelier() {
 <Dialog bind:visible={flagListeInscrits} on:close={() => {flagListeInscrits=false}}>
     <ListeInscrits nbParticipants={editAtelier.nbParticipants} idAtelier={editAtelier.id} archive={archive} on:close={() => {flagListeInscrits=false}}/>
 </Dialog>
-<!-- envoiyer email-->
+<!-- envoyer email-->
 <Dialog bind:visible={flagEnvoiEmail} on:close={() => {flagEnvoiEmail=false}}>
     <EnvoiEmail idAtelier={editAtelier.id} on:close={() => {flagEnvoiEmail=false}} />
+</Dialog>
+<!-- dupliquer mais meme jour-->
+<Dialog bind:visible={flagDupliquerMemeDate} on:close={() => {flagDupliquerMemeDate=false}}>
+    <h4 slot="title">Duplication</h4>
+    <p>Le nouvel atelier a la même date que l'original. Merci de corriger</p>
+    <div slot="actions" class="flex flex-row justify-end items-center">
+        <Bouton on:actionBouton={() => flagDupliquerMemeDate = false}>OK</Bouton>
+    </div>
 </Dialog>
 

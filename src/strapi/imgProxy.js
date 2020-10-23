@@ -20,10 +20,9 @@ export function imgProxyUrl(url, options) {
                 cache: 'default',
                 body: JSON.stringify(variables)
             }
-            console.log('variables', variables)
             return fetch(urlQuery, options)
                 .then((leJSON)=> {return leJSON.json()})
-                .then((retour)=> { return retour; })
+                .then((retour)=> { console.log('retour imgProxy', retour); return retour; })
         }
     )
 }

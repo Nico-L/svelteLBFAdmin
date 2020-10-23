@@ -1,7 +1,7 @@
 <script>
 import {onMount, tick } from 'svelte'
 //import { auth } from "./../stores/auth.js"
-import { user } from "./../stores/user.js"
+//import { user } from "./../stores/user.js"
 //import { urlImage } from './../utils/urlImages.js'
 import Dialog from './Dialog.svelte';
 import Bouton from './Button/Button.svelte';
@@ -29,10 +29,11 @@ export let options = {
     'gravity': 'ce'
 }
 export let altImage = "Une illustration";
-export let classImage = "";
+export let classImage = {};
 export let dataImg
 
 let flagUploadDone = true
+let flagRecupIllu = false
 const optionsULRThumbs =  {
     'resizing_type': 'fill',
     'width': 80,
@@ -42,10 +43,12 @@ const optionsULRThumbs =  {
 let illustrationAEffacer = {'illustrationId': '', 'imageId': ''}
 
 var listeIllustrations = []
-$: {if (flagUploadDone && dataImg && dataImg!=="")
-        var dataForList = JSON.parse(dataImg)
-        listeImgByEspaceEtTag(dataForList.espaces, dataForList.tags).then((lesImages)=> {
+$: {if (flagUploadDone && dataImg!== {})
+        var dataForList = dataImg
+        flagRecupIllu = true
+        listeImgByEspaceEtTag(dataImg.espace, dataImg.tag).then((lesImages)=> {
             listeIllustrations = lesImages
+            flagRecupIllu = false
         })
         flagUploadDone = false
     }
@@ -75,7 +78,7 @@ function effaceImage() {
 
 <Dialog bind:visible={showDialog} on:close={() => showDialog = false}>
     <h4 slot="title">Choix Illustration</h4>
-    <div class="flex flex-column flex-wrap justify-around mb-2">
+    <div class="flex flex-column flex-wrap justify-start mb-2">
         <div on:click={() => {urlImage = "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png"}} class="p-1">
             {#await imgProxyUrl('https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png', optionsULRThumbs)} 
               ...
@@ -94,32 +97,32 @@ function effaceImage() {
                 </div>
             </div>
         </div>
-        {#each listeIllustrations as illu (illu.id)}
-            <div class="p-1">
-                {#await imgProxyUrl('https://cms.labonnefabrique.fr'+illu.illustration[0].url, optionsULRThumbs)} 
-                    ...
-                {:then value}
-                    <img 
-                        class="rounded cursor-pointer"
-                        on:click={() => {urlImage = 'https://cms.labonnefabrique.fr' + illu.illustration[0].url}} 
-                        src={value.imgProxyUrl} 
-                        alt={illu.name}
-                        />
-                    {/await}
-                    <div class="flex flex-column">
-                        <div on:click={() => {urlImage = 'https://cms.labonnefabrique.fr' + illu.illustration[0].url}} class="relative my-1 text-vertLBF cursor-pointer">
-                            {#if urlImage === 'https://cms.labonnefabrique.fr' + illu.illustration[0].url}
-                            <Fa icon={faDotCircle} />
-                            {:else}
-                            <Fa icon={faCircle} />
-                            {/if}
+            {#each listeIllustrations as illu (illu.id)}
+                <div class="p-1">
+                    {#await imgProxyUrl('https://cms.labonnefabrique.fr'+illu.illustration[0].url, optionsULRThumbs)} 
+                        ...
+                    {:then value}
+                        <img 
+                            class="rounded cursor-pointer"
+                            on:click={() => {urlImage = 'https://cms.labonnefabrique.fr' + illu.illustration[0].url}} 
+                            src={value.imgProxyUrl} 
+                            alt={illu.name}
+                            />
+                        {/await}
+                        <div class="flex flex-column">
+                            <div on:click={() => {urlImage = 'https://cms.labonnefabrique.fr' + illu.illustration[0].url}} class="relative my-1 text-vertLBF cursor-pointer">
+                                {#if urlImage === 'https://cms.labonnefabrique.fr' + illu.illustration[0].url}
+                                <Fa icon={faDotCircle} />
+                                {:else}
+                                <Fa icon={faCircle} />
+                                {/if}
+                            </div>
+                            <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.illustration[0].id}; flagConfirmationEffacer = true}}>
+                                <Fa icon={faTrashAlt} />
+                            </div>
                         </div>
-                        <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.illustration[0].id}; flagConfirmationEffacer = true}}>
-                            <Fa icon={faTrashAlt} />
-                        </div>
-                    </div>
-            </div>
-        {/each}
+                </div>
+            {/each}
   </div>
   <FilePond data={dataImg} on:uploadDone={() => {flagUploadDone = true;}}/>
   <div slot="actions">

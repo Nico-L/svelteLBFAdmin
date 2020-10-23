@@ -10,7 +10,7 @@ import { faTrashAlt, faCheck, faArrowLeft } from '@fortawesome/free-solid-svg-ic
 import { faSave, faEnvelope } from '@fortawesome/free-regular-svg-icons'
 import {listeInscrits} from './../strapi/ateliers.js'
 import {envoiEmail} from "./../strapi/email.js"
-import {imgproxyURL} from "../apollo/imgproxyUrl.js"
+import {imgProxyUrl} from "../strapi/imgProxy.js"
 import { dateLisible } from "./../utils/dateFr.js"
 const optionsImg = {
     'resizing_type': 'fill',
@@ -37,7 +37,7 @@ function envoyerEmail() {
         listeInscrits(idAtelier).then((inscrits)=> {
             const infoAtelier = inscrits[0].atelier
             tableEmails = inscrits.map( inscrit => inscrit.email)
-            imgproxyURL(infoAtelier.urlImage, optionsImg).then((urlImage) => {
+            imgProxyUrl(infoAtelier.urlImage, optionsImg).then((urlImage) => {
                 var infoMail = {
                     sujet: message.sujet,
                     message: message.corps,
@@ -45,7 +45,7 @@ function envoyerEmail() {
                     date: dateLisible(infoAtelier.date, infoAtelier.debut, infoAtelier.fin),
                     urlDesinscription: "https://atelier.labonnefabrique.fr/",
                     altMachine: "Illustration Atelier",
-                    urlImage: urlImage.imgproxyURL
+                    urlImage: urlImage.imgProxyUrl
                 };
                 const variables = {
                     from: "atelier@labonnefabrique.fr",

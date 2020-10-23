@@ -15,7 +15,7 @@ export function envoiEmail(variables) {
             }
             return fetch(url, options)
                 .then((leJSON)=> {return leJSON.json()})
-                .then((retour)=> {return retour})
+                .then((retour)=> {console.log('retour email', retour); return retour})
         }
     )
 }

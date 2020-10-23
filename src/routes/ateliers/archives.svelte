@@ -12,6 +12,7 @@ import Dialog from './../../components/Dialog.svelte';
 import Bouton from './../../components/Button/Button.svelte';
 //import {verifJWT} from '../../strapi/verifJWT.js'
 import {listeAteliersArchives, supprimerAtelier} from '../../strapi/ateliers.js'
+import {imgProxyUrl} from '../../strapi/imgProxy.js'
 
 var lesAteliers;
 let dataAtelier;
@@ -19,6 +20,13 @@ var dataAtelierEfface = {id: ""};
 var flagConfirmationEffacerAtelier = false;
 var busyEffacerAtelier = false;
 let flagDialogAtelier = false;
+
+let optionsImg = {
+    'resizing_type': 'fill',
+    'width': 340,
+    'height': 180,
+    'gravity': 'ce'
+}
 
 $: if ($user) {
     listeAteliersArchives().then((retour)=> {
@@ -38,24 +46,17 @@ function supprimeAtelier() {
         })
 }
 
-/*
-
-function supprimerAtelier() {
-    busyEffacerAtelier = true
-    const variables = {
-        id: dataAtelierEfface.id
-    }
-    effacerAtelier($auth, $user.estAdmin, variables).then(async ()=>{
-        await getListesAteliers()
-        flagConfirmationEffacerAtelier = false
-        busyEffacerAtelier = false
-    })
-}
-
 function editAtelier(idAtelier) {
     dataAtelier = lesAteliers.filter((atelier) => atelier.id === idAtelier)[0]
     flagDialogAtelier = true
-} */
+}
+
+function finEdition() {
+    listeAteliersArchives().then((retour)=> {
+        lesAteliers = retour
+        flagDialogAtelier = false
+    })
+}
 </script>
 
 <main class="flex flex-row items-stretch flex-wrap justify-around">
@@ -65,11 +66,17 @@ function editAtelier(idAtelier) {
     <div class="h-14 ml-16 flex flex-row content-center">
         <h5 class="mx-auto my-auto pl-2">{atelier.titre}</h5>
     </div>
-    {#if atelier.illustration[0].formats.small}
-    <div class="relative h-180px bg-auto" style="background-image: url(https://cms.labonnefabrique.fr{atelier.illustration[0].formats.small.url}); background-size: cover; background-repeat: no-repeat;"></div>
-    {:else}
-        <div class="relative h-180px bg-auto" style="background-image: url(https://cms.labonnefabrique.fr{atelier.illustration[0].formats.thumbnail.url}); background-size: cover; background-repeat: no-repeat;"></div>
-    {/if}
+    {#await imgProxyUrl(atelier.urlImage, optionsImg)}
+    <div
+            class="relative h-180px bg-auto"
+            style="">
+            </div>
+    {:then value}
+        <div
+            class="relative h-180px bg-auto"
+            style="background-image: url({value.imgProxyUrl}); background-size: cover; background-repeat: no-repeat;">
+            </div>
+    {/await}
     <div class="absolute top-0 left-0 bg-orangeLBF min-h-16 h-16 w-16 rounded-br mb-4">
         <div class="text-gray-900 text-3xl font-bold my-0 p-0 text-center mx-auto">{dateFr.getJour(atelier.date)}</div>
         <div class="text-gray-900 text-base font-bold my-0 p-0 text-center -mt-2 mx-auto">{dateFr.getMoisShort(atelier.date)}</div>
@@ -130,6 +137,6 @@ function editAtelier(idAtelier) {
 </Dialog>
 
 <!-- dialog info Atelier -->
-<Dialog bind:visible={flagDialogAtelier} on:close={()=>{flagDialogAtelier=false}}>
-    <FormAtelier dataAtelier={dataAtelier} flagEdition={true} archive={true} on:close={()=>{flagDialogAtelier=false}}/>
+<Dialog bind:visible={flagDialogAtelier} on:close={()=>{finEdition()}}>
+    <FormAtelier dataAtelier={dataAtelier} flagEdition={true} archive={true} on:close={()=>{finEdition()}}/>
 </Dialog>

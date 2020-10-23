@@ -13,15 +13,16 @@
 </script>
 
 <div on:click={()=> {selected=value}} class="cursor-pointer mx-2">
-    <label class={"flex flex-row items-center " + cbClasses}>
+    <label class={"flex flex-row items-center " + cbClasses} for={value}>
         {#if mettreApres}
-                <input
-                    aria-label={label}
-                    class="hidden"
-                    type="radio"
-                    role="radio"
-                    {name}
-                    selected={selected === value} />
+            <input
+                aria-label={label}
+                class="hidden"
+                type="radio"
+                role="radio"
+                id={value}
+                {name}
+                selected={selected === value} />
             <div >
                 {#if selected === value}
                     <Fa icon={faDotCircle} size="lg" />

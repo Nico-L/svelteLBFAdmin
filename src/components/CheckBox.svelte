@@ -17,9 +17,9 @@ function check() {
 </script>
 
 <div on:click={check}>
-    <label class={"flex flex-row items-center " + cbClasses}>
+    <label class={"flex flex-row items-center " + cbClasses} for={label}>
         {#if mettreApres}
-            <input bind:checked class="hidden" type="checkbox" />
+            <input bind:checked class="hidden" type="checkbox" id={label}/>
             <div >
                 {#if checked}
                     <Fa icon={faCheckSquare} size="lg" />

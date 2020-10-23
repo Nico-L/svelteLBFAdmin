@@ -5,7 +5,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Busy from '../../components/busy.svelte'
 import {majPlagesHoraires, listePlagesHoraires} from './../../graphQL/machines.js'
-import { auth } from "./../../stores/auth.js"
+import {getListeHoraires, majListeHoraires} from "./../../strapi/machines.js"
+//import { auth } from "./../../stores/auth.js"
 import { user } from "./../../stores/user.js"
 
 let calendarEl;
@@ -18,21 +19,19 @@ let flagMAJ = false
 
 function getlistePlages() {
             lesPlages = [[], [], [], [], [], [], []]
-            listePlagesHoraires($auth, $user.estAdmin).then((retour)=>{
-                const retourPlage = retour[0].plages
-                for(let i=0; i<7; i++) {
-                    for(let j=0; j<nbPlagesJour; j++) {
-                        if (retourPlage[i][j][0]!== null) {
-                            lesPlages[i].push(retourPlage[i][j])
-                        }
-                    }
-                }
-                lesPlages = lesPlages
+            getListeHoraires().then((retour)=>{
+                lesPlages[0] = retour.dimanche
+                lesPlages[1] = retour.lundi
+                lesPlages[2] = retour.mardi
+                lesPlages[3] = retour.mercredi
+                lesPlages[4] = retour.jeudi
+                lesPlages[5] = retour.vendredi
+                lesPlages[6] = retour.samedi
             })
         }
 
 $: {
-    if ($auth && $user) {
+    if ($user) {
         getlistePlages()
     }
 }
@@ -40,7 +39,16 @@ $: {
 $: {
     if (calendar && hasChanged) {
         hasChanged = false
-        let lesPlagesFormated = '{'
+        var horairesPourSauvegarde = {
+            dimanche: lesPlages[0],
+            lundi: lesPlages[1],
+            mardi: lesPlages[2],
+            mercredi: lesPlages[3],
+            jeudi: lesPlages[4],
+            vendredi: lesPlages[5],
+            samedi: lesPlages[6]
+        }
+        /*let lesPlagesFormated = '{'
         lesPlages.forEach((jour, index)=> {
             if (index===0) {lesPlagesFormated += '{'} else {lesPlagesFormated += ',{'}
             for (let i = 0; i<nbPlagesJour; i++) {
@@ -54,7 +62,7 @@ $: {
             lesPlagesFormated += '}'
         })
         lesPlagesFormated += '}'
-        if ($auth && $user) {
+        if ($user) {
             flagMAJ = true
             const variables = {
                 plages: lesPlagesFormated
@@ -62,7 +70,11 @@ $: {
             majPlagesHoraires($auth, $user.estAdmin, variables).then((retour)=>{
                 flagMAJ = false
             })
-        }
+        } */
+        flagMAJ = true
+        majListeHoraires(horairesPourSauvegarde).then((retour) => {
+            flagMAJ = false
+        })
     }
     if (calendar) {
         calendar.removeAllEvents()
@@ -72,8 +84,8 @@ $: {
                     const plageEvent = {
                         id: index + '-' + index2,
                         daysOfWeek: index.toString(),
-                        startTime: plage[0],
-                        endTime: plage[1],
+                        startTime: plage.debut,
+                        endTime: plage.fin,
                         color: "#4bbcc4"
                     }
                     calendar.addEvent(plageEvent)
@@ -111,12 +123,11 @@ onMount(()=> {
             let minutesFin = info.end.getMinutes()===0?"00":info.end.getMinutes()
             let horaireDebut = info.start.getHours() + ":" + minutesDebut + ":00"
             let horaireFin = info.end.getHours() + ":" + minutesFin + ":00"
-            lesPlages[jour].push([horaireDebut, horaireFin])
+            lesPlages[jour].push({debut: horaireDebut, fin: horaireFin})
             hasChanged = true
             lesPlages = lesPlages
         },
         eventResize: function(info) {
-            console.log('info resize', info)
             let jour = info.event.start.getDay()
             let minutesDebut = info.event.start.getMinutes()===0?"00":info.event.start.getMinutes()
             let minutesFin = info.event.end.getMinutes()===0?"00":info.event.end.getMinutes()
@@ -124,7 +135,7 @@ onMount(()=> {
             let horaireFin = info.event.end.getHours() + ":" + minutesFin + ":00"
             let indices = info.event.id.split('-')
             hasChanged = true
-            lesPlages[Number(indices[0])][Number(indices[1])] = [horaireDebut, horaireFin]
+            lesPlages[Number(indices[0])][Number(indices[1])] = {debut: horaireDebut, fin: horaireFin}
         },
         eventDrop: function(info) {
         },
@@ -142,10 +153,6 @@ onMount(()=> {
 </script>
 
 <main class="mt-4 mb-3">
-<!-- <div class="flex flex-row items-center">
-    <RadioBouton cbClasses="text-vertLBF" name="typeSelection" value="plages" bind:selected={selectionReservation} label="Plages autorisées"/>
-    <RadioBouton cbClasses="text-orangeLBF" name="typeSelection" value="reservations" bind:selected={selectionReservation} label="Réservations machines"/>
-</div> -->
 <div bind:this={calendarEl} ></div>
 </main>
 <!-- opération en cours -->
