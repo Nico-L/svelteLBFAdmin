@@ -34,14 +34,16 @@ export default {
             HOOK_ATELIER: process.env.HOOK_ATELIER,
             ADRESSE_CMS: process.env.ADRESSE_CMS
         }),
-        css({ output: 'public/css/imported.css' }),
+        // extract fullcalendar css
+        css({ output: 'public/css/fullCalendar.css' }),
 		svelte({
 			// enable run-time checks when not in production
 			dev: !production,
 			// we'll extract any component CSS out into
 			// a separate file - better for performance
 			css: css => {
-				css.write('public/css/bundle.css');
+                // extract datePicker component css
+				css.write('public/css/datePicker.css');
 			}
 		}),
 		// If you have external dependencies installed from

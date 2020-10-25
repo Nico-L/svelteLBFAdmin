@@ -27,9 +27,11 @@ function check() {
                     <Fa icon={faSquare} size="lg" />
                 {/if}
             </div>
-            <div class="ml-3 text-base font-medium">
-                {label}
-            </div>
+            {#if label !== ""}
+                <div class="ml-3 text-base font-medium">
+                    {label}
+                </div>
+            {/if}
         {:else}
             <div class="mr-1">
                 {#if checked}

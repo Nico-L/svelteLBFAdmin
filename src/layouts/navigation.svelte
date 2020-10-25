@@ -18,5 +18,10 @@
     <Link to="/machines/nouvelleMachine"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Nouvelle fiche machine</li></Link>
     <Link to="/machines/abonnements"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Abonnements</li></Link>   
 </ul>
+<hr class="ml-2 my-3 w-5/6 border-orangeLBFT"/>
+<h5 class="ml-2 w-5/6">Les utilisateurs</h5>
+<ul class="ml-2 mb-2 navi">
+    <Link to="/utilisateurs/fiche"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Fiche utilisateur</li></Link>
+</ul>
 
 

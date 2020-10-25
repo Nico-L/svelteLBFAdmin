@@ -1,11 +1,16 @@
 <script context="module">
   import { register } from 'svelte-loadable'
 
-  // Loaders must be registered outside of the render tree.
-const oubliMDP = register({
-    loader: () => import('./routes/login/oubliMDP.svelte'),
-    resolve: () => './oubliMDP'
+  // user
+  const ficheUtilisateur = register ({
+    loader: () => import('./routes/utilisateurs/ficheUtilisateur.svelte'),
+    resolve: () => './ficheUtilisateur'
   })
+  // Loaders must be registered outside of the render tree.
+    const oubliMDP = register({
+        loader: () => import('./routes/login/oubliMDP.svelte'),
+        resolve: () => './oubliMDP'
+    })
 
   const resetMDP = register({
     loader: () => import('./routes/login/resetMDP.svelte'),
@@ -199,6 +204,15 @@ $: {
                 <Loadable loader="{HomeLoader}">
                     
                 </Loadable>
+            </Route>
+            <Route path="utilisateurs/*">
+                <Router>
+                    <Route path="fiche">
+                        <Loadable loader={ficheUtilisateur}>
+                        
+                        </Loadable>
+                    </Route>
+                </Router>
             </Route>
             <Route path="ateliers/*">
                 <Router>

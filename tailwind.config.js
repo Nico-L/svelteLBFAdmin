@@ -1,5 +1,11 @@
 module.exports = {
-
+    purge: {
+    enabled: true,
+    layers: ['base', 'components', 'utilities'],
+    content: [
+    './src/**/*.svelte',
+    './src/css/tailwind.css'
+  ]},
   theme: {
     minWidth: {
         '0': '0',

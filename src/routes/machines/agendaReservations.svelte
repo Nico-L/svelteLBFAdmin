@@ -382,7 +382,7 @@ function resetFiltre(status) {
 <main>
 <div class="border border-4 border-gray-600 bg-gray-800 rounded p-4 mt-2 mb-6">
     <h4>Filtrage des réservations</h4>
-    <div class="flex flex-row items-center mt-2">
+    <div class="flex flex-row flex-wrap items-center mt-2">
         <div class="mr-4">
             <CheckBox label="Tous" cbClasses="text-gray-400" bind:checked={filtreReservations['tous']} on:change={(val) => {resetFiltre(val.detail)}} />
         </div>
