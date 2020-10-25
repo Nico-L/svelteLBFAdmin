@@ -1,33 +1,4 @@
 <script>
-import { auth } from "./../stores/auth.js"
-import { user } from "./../stores/user.js"
-import * as ateliersGQL from "./../graphQL/ateliers.js"
-import * as connexionManagement from './../utils/connexionManagement.js'
-
-import Fa from 'svelte-fa'
-import { faCircle, faDotCircle } from '@fortawesome/free-regular-svg-icons'
-// composant imageUpload test
-import { urlImage } from './../utils/urlImages.js'
-const optionsULRThumbs = [
-        {
-          ar: '16:9',
-          cropType: 'fill'
-        },
-        {
-          width: 'auto',
-          qualite: 'auto',
-          cropType: 'scale'
-        }
-      ]
-
-var lesAteliers;
-var illustration = "u6iuwlfyik8lyedep2l3.png"
-
-async function getListesAteliers() {
-    lesAteliers = await ateliersGQL.listeAteliers($auth, $user.estAdmin)
-}
-
-$: if ($auth) {console.log("auth index", $auth.hasResourceRole('admin'))}
 
 </script>
 

@@ -1,7 +1,7 @@
 
 <script>
     import { buildNeeded } from "./../stores/build.js"
-    import {buildSiteAtelier} from './../utils/updateNetlify.js'
+    import {buildSiteAtelier} from './../strapi/updateNetlify.js'
 
     function lanceConstruction() {
         console.log('bob ?')

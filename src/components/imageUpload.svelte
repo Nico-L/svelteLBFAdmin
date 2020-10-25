@@ -1,17 +1,11 @@
 <script>
 import {onMount, tick } from 'svelte'
-//import { auth } from "./../stores/auth.js"
-//import { user } from "./../stores/user.js"
-//import { urlImage } from './../utils/urlImages.js'
 import Dialog from './Dialog.svelte';
 import Bouton from './Button/Button.svelte';
 import Fa from 'svelte-fa'
 import { faCircle, faDotCircle, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-
-import {listeIllustrationsByEspace, ajoutIllustration, effaceCloudinary} from "./../graphQL/illustrations.js"
 import {listeImgByEspaceEtTag, effaceIllustration} from "./../strapi/illustrations.js"
-//import {imgproxyURL} from "../apollo/imgproxyUrl.js"
 import {imgProxyUrl} from "../strapi/imgProxy.js"
 import FilePond from "./../components/Filepond.svelte"
 

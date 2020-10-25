@@ -1,7 +1,6 @@
 <script>
 import { onMount, createEventDispatcher} from 'svelte';
 const dispatch = createEventDispatcher();
-//import { auth } from "./../stores/auth.js"
 import { user } from "./../stores/user.js"
 import Editeur from './editeur.svelte';
 import Bouton from './Button/Button.svelte';
@@ -9,10 +8,8 @@ import Dialog from './Dialog.svelte'
 import Fa from 'svelte-fa'
 import { faTrashAlt, faCheck, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { faSave, faEnvelope } from '@fortawesome/free-regular-svg-icons'
-import { effaceInscrit } from './../graphQL/ateliers.js'
 import { listeInscrits, saveNouvelInscrit, effacerInscription, nombreInscrits } from './../strapi/ateliers.js'
 import { findUser } from "./../strapi/users"
-import { envoieEmail } from './../graphQL/emails.js'
 
 import { v4 as uuidv4 } from 'uuid';
 

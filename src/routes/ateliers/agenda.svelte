@@ -1,6 +1,6 @@
 <script>
 import {onDestroy} from 'svelte'
-import {buildSiteAtelier} from './../../utils/updateNetlify.js'
+import {buildSiteAtelier} from './../../strapi/updateNetlify.js'
 import FormAtelier from './../../components/FormAtelier.svelte'
 import Dialog from '../../components/Dialog.svelte';
 import Busy from '../../components/busy.svelte'
@@ -10,13 +10,9 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { listeAteliers, editerAtelier, listeInscrits } from "../../strapi/ateliers.js"
-import {setBuildNeeded} from './../../graphQL/build.js'
 import { user } from "./../../stores/user.js"
-import { buildNeeded } from "./../../stores/build.js"
 import { setDate } from "./../../utils/dateFr.js"
-
-
-
+import {buildNeeded} from "./../../stores/build.js"
 
 let flagDialogAtelier = false;
 let dateDebutAtelier = new Date();

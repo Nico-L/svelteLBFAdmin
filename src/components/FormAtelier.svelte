@@ -26,6 +26,7 @@ export let dataAtelier = {
     id: "",
     titre:"",
     urlImage: "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png",
+    espace: {id: 1},
     nbParticipants: 8,
     surInscription: true,
     date: new Date(),
@@ -40,7 +41,8 @@ export let archive = false;
 let editAtelier = {
     ... dataAtelier
 }
-let espaceId = editAtelier.espace.id
+//let espaceId = editAtelier.espace.id
+
 if (!editAtelier.dateDebut) {
   let dateDebut = new Date(editAtelier.date)
   let debutTemp = editAtelier.debut.split(':')
@@ -90,7 +92,7 @@ $tags.forEach((tag) => {
 }) */
 var dataImg = {
     user: $user.id,
-    espace: espaceId|| 1,
+    espace: editAtelier.espace.id|| 1,
     tag: tagId
 }
 
@@ -117,7 +119,7 @@ const optionsURL= {
 $: {
      dataImg = {
         user: $user.id,
-        espace: espaceId,
+        espace: editAtelier.espace.id,
         tag: tagId
     }
  }
@@ -138,7 +140,7 @@ function sauveAtelier() {
         debut: heureDebut.split('h').join(':') + ":00",
         fin: heureFin.split('h').join(':') + ":00",
         description: editAtelier.description || "Un nouvel atelier sympa !",
-        espace: espaceId,
+        espace: editAtelier.espace.id,
         nbParticipants: editAtelier.nbParticipants,
         surInscription: editAtelier.surInscription,
         lesTarifs: editAtelier.lesTarifs,
@@ -178,7 +180,7 @@ function updateAtelier() {
         debut: heureDebut.split('h').join(':') + ":00",
         fin: heureFin.split('h').join(':') + ":00",
         description: editAtelier.description || "Un nouvel atelier sympa !",
-        espace: espaceId,
+        espace: editAtelier.espace.id,
         nbParticipants: editAtelier.nbParticipants,
         surInscription: editAtelier.surInscription,
         lesTarifs: editAtelier.lesTarifs,
@@ -278,7 +280,7 @@ function suppressionAtelier() {
     </label>
     <label for="selectEspaces" class="mt-3 flex flex-row">
     <div class="mr-2 text-base font-medium  text-bleuLBF">Espace concerné</div>
-        <select bind:value={espaceId} id="selectEspaces" class="bg-gray-900 border border-bleuLBF rounded" >
+        <select bind:value={editAtelier.espace.id} id="selectEspaces" class="bg-gray-900 border border-bleuLBF rounded" >
 		{#each $espacesBF as espace}
 			<option value={espace.id}>
 				{espace.label}

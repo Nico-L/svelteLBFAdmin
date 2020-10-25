@@ -56,10 +56,6 @@ const listeMachines = register({
     resolve: () => './'
   })
 
-  const bob = register({
-    loader: () => import('./routes/index.svelte'),
-    resolve: () => './'
-  })
 </script>
 
 <script>
@@ -69,7 +65,7 @@ const listeMachines = register({
 
     //import { listeEspacesBF } from './graphQL/espacesBF.js'
     import {listeEspacesBF, listeTags} from './strapi/espacesEtTags.js'
-    import { getBuildNeeded, setBuildNeeded } from './graphQL/build.js'
+    //import { getBuildNeeded, setBuildNeeded } from './graphQL/build.js'
 
     //import { auth } from "./stores/auth.js"
     import { user } from "./stores/user.js"
@@ -83,9 +79,9 @@ const listeMachines = register({
     var flagEspace = false
     var flagTags = false
     var flagBuildNeeded = false
-    var variableBN = {
+    /*var variableBN = {
         buildNeeded: false
-    }
+    } */
 
     $: {
         const userInfo = JSON.parse(localStorage.getItem('userInfo'))
@@ -259,11 +255,4 @@ $: {
             </Route>
         </div>
     {/if}
-    <!-- <Route>
-        <Loadable loader={bob}>
-            <div slot="loading">
-                <Chargement />
-            </div>
-        </Loadable>
-    </Route> -->
 </Router>

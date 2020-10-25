@@ -4,7 +4,6 @@ import { Calendar } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Busy from '../../components/busy.svelte'
-import {majPlagesHoraires, listePlagesHoraires} from './../../graphQL/machines.js'
 import {getListeHoraires, majListeHoraires} from "./../../strapi/machines.js"
 //import { auth } from "./../../stores/auth.js"
 import { user } from "./../../stores/user.js"
@@ -48,29 +47,6 @@ $: {
             vendredi: lesPlages[5],
             samedi: lesPlages[6]
         }
-        /*let lesPlagesFormated = '{'
-        lesPlages.forEach((jour, index)=> {
-            if (index===0) {lesPlagesFormated += '{'} else {lesPlagesFormated += ',{'}
-            for (let i = 0; i<nbPlagesJour; i++) {
-                if (i===0) {lesPlagesFormated += '{'} else {lesPlagesFormated += ',{'}
-                if (i<jour.length) {
-                    lesPlagesFormated += '\"' + jour[i][0] + '\",\"' + jour[i][1] + '\"}'
-                } else {
-                    lesPlagesFormated += 'null, null}'
-                }
-            }
-            lesPlagesFormated += '}'
-        })
-        lesPlagesFormated += '}'
-        if ($user) {
-            flagMAJ = true
-            const variables = {
-                plages: lesPlagesFormated
-            }
-            majPlagesHoraires($auth, $user.estAdmin, variables).then((retour)=>{
-                flagMAJ = false
-            })
-        } */
         flagMAJ = true
         majListeHoraires(horairesPourSauvegarde).then((retour) => {
             flagMAJ = false
