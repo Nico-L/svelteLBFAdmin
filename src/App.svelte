@@ -6,6 +6,11 @@
     loader: () => import('./routes/utilisateurs/ficheUtilisateur.svelte'),
     resolve: () => './ficheUtilisateur'
   })
+
+  const ajoutUtilisateur = register ({
+      loader: () => import('./routes/utilisateurs/ajoutUtilisateur.svelte'),
+      resolve: () => './ajoutUtilisateur'
+  })
   // Loaders must be registered outside of the render tree.
     const oubliMDP = register({
         loader: () => import('./routes/login/oubliMDP.svelte'),
@@ -205,6 +210,13 @@ $: {
                 <Router>
                     <Route path="fiche">
                         <Loadable loader={ficheUtilisateur}>
+                        
+                        </Loadable>
+                    </Route>
+                </Router>
+                <Router>
+                    <Route path="ajout">
+                        <Loadable loader={ajoutUtilisateur}>
                         
                         </Loadable>
                     </Route>

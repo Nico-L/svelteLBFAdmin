@@ -34,7 +34,7 @@ export function majUser(userId, variables) {
             }
             return fetch(url, options)
                 .then((leJSON)=> {return leJSON.json()})
-                .then((retour)=> {console.log('retour maj', retour); return retour})
+                .then((retour)=> {return retour})
         }
     )
 }

@@ -1,6 +1,7 @@
 <script>
 import Bouton from './../../components/Button/Button.svelte';
 import CheckBoxAlone from './../../components/CheckBoxAlone.svelte';
+import RadioBouton from './../../components/radioButton.svelte'
 import {findUser, majUser} from '../../strapi/users.js'
 import Datepicker from './../../components/SvelteCalendar/Datepicker.svelte'
 import { dateFr } from './../../utils/dateFr.js'
@@ -45,6 +46,8 @@ function chercherUtilisateur () {
                 message = "Aucun résultat, cette adresse email n'est pas dans notre base."
             } else {
                 utilisateur = retour[0]
+                utilisateur.role = utilisateur.role.id
+                //console.log('utilisateur', utilisateur)
                 utilisateur.abonnementMachine = new Date(utilisateur.abonnementMachine)
                 flagUserFound = true
                 flagRechercheEnCours = false
@@ -148,6 +151,12 @@ function majUtilisateur () {
                         </td>
                     </tr>
                 </table>
+                <div class="h4 mt-2">Role</div>
+                <div class="flex flex-row flex-wrap">
+                    <RadioBouton cbClasses="text-bleuLBF" label="aucun" name="role" value={1} bind:selected={utilisateur.role} />
+                    <RadioBouton cbClasses="text-vertLBF" label="atelier" name="role" value={6} bind:selected={utilisateur.role} />
+                    <RadioBouton cbClasses="text-jauneLBF" label="admin" name="role" value={5} bind:selected={utilisateur.role} />
+                </div>
             </div>
             <div class="ml-4 mt-4">
                 <Bouton on:actionBouton={majUtilisateur} occupe={flagMAJEnCours} largeur="w-12" couleur="text-bleuLBF border-bleuLBF">

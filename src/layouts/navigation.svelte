@@ -22,6 +22,7 @@
 <h5 class="ml-2 w-5/6">Les utilisateurs</h5>
 <ul class="ml-2 mb-2 navi">
     <Link to="/utilisateurs/fiche"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Fiche utilisateur</li></Link>
+    <Link to="/utilisateurs/ajout"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Creation utilisateur</li></Link>
 </ul>
 
 
