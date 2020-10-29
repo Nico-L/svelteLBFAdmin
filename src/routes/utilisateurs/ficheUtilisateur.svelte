@@ -47,8 +47,13 @@ function chercherUtilisateur () {
             } else {
                 utilisateur = retour[0]
                 utilisateur.role = utilisateur.role.id
-                //console.log('utilisateur', utilisateur)
-                utilisateur.abonnementMachine = new Date(utilisateur.abonnementMachine)
+                console.log('utilisateur', utilisateur)
+                if (utilisateur.abonnementMachine) {
+                    utilisateur.abonnementMachine = new Date(utilisateur.abonnementMachine)
+                } else {
+                    utilisateur.abonnementMachine = new Date()
+                }
+
                 flagUserFound = true
                 flagRechercheEnCours = false
             }

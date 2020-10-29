@@ -81,7 +81,7 @@ function finEdition() {
         <div class="text-gray-900 text-3xl font-bold my-0 p-0 text-center mx-auto">{dateFr.getJour(atelier.date)}</div>
         <div class="text-gray-900 text-base font-bold my-0 p-0 text-center -mt-2 mx-auto">{dateFr.getMoisShort(atelier.date)}</div>
     </div>
-        {#if $user.estAdmin}
+        {#if $user.role.admin || $user.role.atelier}
         <div class="absolute top-16 left-0 w-10 py-1 bg-orangeLBF text-gray-900 rounded-br flex flex-col">
             <div class="mx-auto my-1 cursor-pointer" on:click={() => {editAtelier(atelier.id)}}><Fa icon={faEdit} size="lg"/></div>
             {#if atelier.inscriptions_ateliers.length===0}

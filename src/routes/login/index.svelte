@@ -40,7 +40,11 @@
                         userTemp.id = retour2.user.id
                         userTemp.username = retour2.user.username
                         userTemp.email = retour2.user.email
-                        userTemp.estAdmin = retour2.user.role.type==="admin"
+                        userTemp.role = {
+                            admin: retour2.user.role.type==="admin",
+                            atelier: retour2.user.role.type==="atelier",
+                            aucun: retour2.user.role.type==="authenticated"
+                        }
                         userTemp.jwt = retour2.jwt
                         localStorage.setItem('userInfo', JSON.stringify(userTemp))
                         window.location.replace(window.location.origin)

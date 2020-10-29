@@ -1,6 +1,11 @@
 <script context="module">
   import { register } from 'svelte-loadable'
+    // not found
 
+    const notFound = register ({
+        loader: () => import('./routes/notFound.svelte'),
+        resolve: () => './ficheUtilisateur'
+    })
   // user
   const ficheUtilisateur = register ({
     loader: () => import('./routes/utilisateurs/ficheUtilisateur.svelte'),
@@ -84,9 +89,7 @@ const listeMachines = register({
     var flagEspace = false
     var flagTags = false
     var flagBuildNeeded = false
-    /*var variableBN = {
-        buildNeeded: false
-    } */
+
 
     $: {
         const userInfo = JSON.parse(localStorage.getItem('userInfo'))
@@ -120,50 +123,6 @@ $: {
         })
     }
 }
-
-
-/*
-    
-
-    $: if ($auth && $user && !flagBuildNeeded) {
-        getBuildNeeded($auth, $user.estAdmin).then((retour) => {
-            buildNeeded.set(retour[0].buildNeeded)
-            flagBuildNeeded = true
-            })
-    }
-
-    $: if (flagBuildNeeded) {
-        variableBN.buildNeeded = $buildNeeded
-        setBuildNeeded($auth,false,variableBN)
-        console.log('buildNeeded changed', variableBN)
-    }
-*/
-/*
-    var keycloak = new Keycloak({
-        realm: 'LBF',
-        url: 'https://cloud.labonnefabrique.fr/auth',
-        clientId: 'lbf-frontend'
-    })
-
-    keycloak.init({
-        onLoad: 'login-required'
-    }).then(function(authenticated) {
-    if (!authenticated) {keycloak.login()} else {keycloak.loadUserProfile()
-    .then(function(profile) {
-        var userTemp = {}
-        userTemp.nom = profile.lastName
-        userTemp.prenom  = profile.firstName
-        userTemp.email = profile.email
-        userTemp.estAdmin = $auth.hasResourceRole('admin')
-        user.set(userTemp)
-    }).catch(function() {
-        console.log('Failed to load user profile');
-    });}
-        auth.set(keycloak);
-    }).catch(function() {
-        console.log('failed to initialize');
-    }); 
-*/
 </script> 
  
 <Router>
@@ -206,6 +165,7 @@ $: {
                     
                 </Loadable>
             </Route>
+            {#if $user.role.admin }
             <Route path="utilisateurs/*">
                 <Router>
                     <Route path="fiche">
@@ -222,6 +182,7 @@ $: {
                     </Route>
                 </Router>
             </Route>
+        {/if}
             <Route path="ateliers/*">
                 <Router>
                     <Route path="agenda" >
@@ -265,6 +226,12 @@ $: {
                     </Route>
                 </Router>
             </Route>
+            <Route>
+                <Loadable loader={notFound}>
+                    
+                </Loadable>
+            </Route>
         </div>
     {/if}
+
 </Router>

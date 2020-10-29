@@ -22,7 +22,7 @@ export function imgProxyUrl(url, options) {
             }
             return fetch(urlQuery, options)
                 .then((leJSON)=> {return leJSON.json()})
-                .then((retour)=> { console.log('retour imgProxy', retour); return retour; })
+                .then((retour)=> { return retour; })
         }
     )
 }
