@@ -41,6 +41,7 @@ export let archive = false;
 let editAtelier = {
     ... dataAtelier
 }
+
 //let espaceId = editAtelier.espace.id
 
 if (!editAtelier.dateDebut) {
@@ -92,7 +93,7 @@ $tags.forEach((tag) => {
 }) */
 var dataImg = {
     user: $user.id,
-    espace: editAtelier.espace.id|| 1,
+    espace: editAtelier.espace?editAtelier.espace.id:1,
     tag: tagId
 }
 
@@ -119,7 +120,7 @@ const optionsURL= {
 $: {
      dataImg = {
         user: $user.id,
-        espace: editAtelier.espace.id,
+        espace: editAtelier.espace?editAtelier.espace.id:1,
         tag: tagId
     }
  }

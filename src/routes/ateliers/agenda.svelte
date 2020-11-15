@@ -140,7 +140,7 @@ onMount(async ()=> {
             dataAtelier = {
                 id: "",
                 titre:"",
-                espaceId: 4,
+                espace: {id: 4},
                 urlImage: "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png",
                 nbParticipants: 8,
                 surInscription: true,

@@ -75,15 +75,17 @@ function sauveNouvelInscrit() {
     }
     lesInscrits.forEach((inscrit) => {
         if (nouvelInscrit.email===inscrit.email) {
+            console.log('bob ?')
             variables.uuid = inscrit.uuid
         }
     })
     findUser(nouvelInscrit.email)
         .then((retour) => {
             console.log('retour user', retour)
-            if (retour.length > 0 && retour.id) {
-                variables.id = retour.id
+            if (retour.length > 0 && retour[0].id) {
+                variables.user = retour[0].id
             }
+            console.log('variables nouvel inscrit', variables)
             saveNouvelInscrit(variables).then((retour) => {
                 flagSauveNouvelInscrit = false;
                 nouvelInscrit = {
@@ -142,7 +144,7 @@ onMount(()=> {
             </td>
         </tr>
     {/each}
-    {#if !archive}
+    <!-- {#if !archive} -->
     <tr>
         <td class="border border-gray-600 px-2 py-1">
             <input 
@@ -176,7 +178,7 @@ onMount(()=> {
             {/if}
         </td>
     </tr>
-    {/if}
+    <!-- {/if} -->
   </tbody>
 </table>
     {#if flagComplet}
