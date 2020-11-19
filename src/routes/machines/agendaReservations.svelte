@@ -218,10 +218,12 @@ onMount(()=> {
             let resa = info.event.extendedProps
             const heuredebut = info.event.start.getHours() + ":" + (info.event.start.getMinutes() ===0 ? "00": "30") + ":00"
             const heurefin = info.event.end.getHours() + ":" + (info.event.end.getMinutes() ===0 ? "00": "30") + ":00"
+            const dureeReservation = info.event.end.getHours() - info.event.start.getHours() + (info.event.end.getMinutes() - info.event.start.getMinutes())/60
             nouvelleReservation = {
                 id: resa.id,
                 heuredebut: heuredebut,
-                heurefin: heurefin
+                heurefin: heurefin,
+                dureeReservation: dureeReservation
             }
             updateReservation()
         },
@@ -266,8 +268,9 @@ function sauverReservation() {
         if (user.length > 0) {
             nouvelleReservation.user = user[0].id
             nouvelleReservation.date = new Date(nouvelleReservation.dateDebut)
-            nouvelleReservation.heuredebut = nouvelleReservation.date.getHours() + ":" + (nouvelleReservation.date.getMinutes === 0 ? "00":"30") + ":00"
-            nouvelleReservation.heurefin = nouvelleReservation.dateFin.getHours() + ":" + (nouvelleReservation.dateFin.getMinutes === 0 ? "00":"30") + ":00"
+            nouvelleReservation.heuredebut = nouvelleReservation.date.getHours() + ":" + (nouvelleReservation.date.getMinutes() === 0 ? "00":"30") + ":00"
+            nouvelleReservation.heurefin = nouvelleReservation.dateFin.getHours() + ":" + (nouvelleReservation.dateFin.getMinutes() === 0 ? "00":"30") + ":00"
+            nouvelleReservation.dureeReservation = nouvelleReservation.dateFin.getHours() - nouvelleReservation.date.getHours() + (nouvelleReservation.dateFin.getMinutes() - nouvelleReservation.date.getMinutes())/60
             nouvelleReservation.uuid = uuidv4()
             sauveReservation(nouvelleReservation).then((retour) => {
                 mailConfirmation(retour.uuid, retour.machine)
