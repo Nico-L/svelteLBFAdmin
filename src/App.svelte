@@ -4,7 +4,7 @@
 
     const notFound = register ({
         loader: () => import('./routes/notFound.svelte'),
-        resolve: () => './ficheUtilisateur'
+        resolve: () => './notFound'
     })
   // user
   const ficheUtilisateur = register ({
@@ -166,23 +166,23 @@ $: {
                 </Loadable>
             </Route>
             {#if $user.role.admin }
-            <Route path="utilisateurs/*">
-                <Router>
-                    <Route path="fiche">
-                        <Loadable loader={ficheUtilisateur}>
-                        
-                        </Loadable>
-                    </Route>
-                </Router>
-                <Router>
-                    <Route path="ajout">
-                        <Loadable loader={ajoutUtilisateur}>
-                        
-                        </Loadable>
-                    </Route>
-                </Router>
-            </Route>
-        {/if}
+                <Route path="utilisateurs/*">
+                    <Router>
+                        <Route path="fiche">
+                            <Loadable loader={ficheUtilisateur}>
+                            
+                            </Loadable>
+                        </Route>
+                    </Router>
+                    <Router>
+                        <Route path="ajout">
+                            <Loadable loader={ajoutUtilisateur}>
+                            
+                            </Loadable>
+                        </Route>
+                    </Router>
+                </Route>
+            {/if}
             <Route path="ateliers/*">
                 <Router>
                     <Route path="agenda" >
