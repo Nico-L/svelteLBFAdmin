@@ -16,32 +16,32 @@ var erreur = "text-gray-200"
 var message = "Merci de renseigner les informations suivantes."
 
 function demandeLien() {
-        if (email==="") {
-            return
-        }
-        occupe = true
-        succes = false
-        var entetes = new Headers({"content-type": "application/json"});
-        var options = { 
-            method: 'POST',
-            headers: entetes,
-            mode: 'cors',
-            cache: 'default',
-            body: JSON.stringify({
-                email: email
+    if (email==="") {
+        return
+    }
+    occupe = true
+    succes = false
+    var entetes = new Headers({"content-type": "application/json"});
+    var options = { 
+        method: 'POST',
+        headers: entetes,
+        mode: 'cors',
+        cache: 'default',
+        body: JSON.stringify({
+            email: email
+        })
+    };
+    fetch('https://cms.labonnefabrique.fr/auth/forgot-password', options)
+        .then((retour)=>
+            retour.json().then((retour2)=> {
+                occupe=false
+                if (retour2.ok) {
+                    succes = true
+                }
             })
-        };
-        fetch('https://cms.labonnefabrique.fr/auth/forgot-password', options)
-            .then((retour)=>
-                retour.json().then((retour2)=> {
-                    occupe=false
-                    if (retour2.ok) {
-                        succes = true
-                    }
-                })
-            ).catch((erreur)=>{
-                console.log('une erreur a eu lieu', erreur)
-            })
+        ).catch((erreur)=>{
+            console.log('une erreur a eu lieu', erreur)
+        })
     }
 
 function enregistrement() {
@@ -93,22 +93,7 @@ function enregistrement() {
                             erreur = "text-rougeLBF"
                         }
                     } else {
-                        options = { 
-                            method: 'POST',
-                            headers: entetes,
-                            mode: 'cors',
-                            cache: 'default',
-                            body: JSON.stringify({
-                                identifier: email,
-                                password: password
-                            })
-                        }
-                        fetch('https://cms.labonnefabrique.fr/auth/local', options)
-                            .then((leJSON) => leJSON.json())
-                            .then((user)=> {
-                                localStorage.setItem("userStrapi", JSON.stringify(user))
-                                window.location.replace(window.location.origin)
-                            })
+                        window.location.replace(window.location.origin + '/utilisateurs/fiche?email=' + email)
                     }
                 })
             ).catch((erreur)=>{
@@ -120,56 +105,43 @@ function enregistrement() {
 
 <main class="mt-4 mb-3 max-w-480px">
     <div class="h4">Ajout d'un nouvel utilisateur</div>
-    {#if succes}
-            <div class="mb-2 text-justify text-sm bg-gray-200 text-gray-900">Un mail a été envoyé à l'adresse email renseignée. Il peut mettre quelques minutes à vous parvenir.</div>
-    {:else}
-        <div>
-            <div class={"mb-2 text-justify text-sm " + erreur}>{message}</div>
-            <input 
-                class="mb-2 text-sm bg-gray-900 text-gray-200 focus:outline-none border border-vertLBFT rounded py-1 px-2 block w-full appearance-none leading-normal"
-                type="text"
-                id="userName"
-                placeholder="Nom d'utilisateur"
-                bind:value={userName}
-                />
-            <input 
-                class="mb-2 text-sm bg-gray-900 text-gray-200 focus:outline-none border border-vertLBFT rounded py-1 px-2 block w-full appearance-none leading-normal"
-                type="text"
-                id="identifiant"
-                placeholder="email"
-                bind:value={email}
-                />
-            <input 
-                class="mb-2 text-sm bg-gray-900 text-gray-200 focus:outline-none border border-vertLBFT rounded py-1 px-2 block w-full appearance-none leading-normal"
-                type="password"
-                id="password"
-                placeholder="Entrez un MDP"
-                bind:value={password}
-                />
-            <input 
-                class="mb-2 text-sm bg-gray-900 text-gray-200 focus:outline-none border border-vertLBFT rounded py-1 px-2 block w-full appearance-none leading-normal"
-                type="password"
-                id="passwordVerif"
-                placeholder="Vérification MDP"
-                bind:value={passwordVerif}
-                />
-        </div>
-        <div class="mt-2">
-                {#if connu}
-                    <Bouton occupe={occupe} succes={succes} border="border-1" largeur="w-full" couleur="text-vertLBF border-vertLBF" on:actionBouton={() => {demandeLien()}}>
-                        <div class="mx-auto flex flex-row justify-center">
-                            <div class="px-1 self-center">Envoyer un lien</div>
-                            <div class="px-1 self-center"><Fa icon={faSignInAlt} size="lg" class="mx-auto" /></div>
-                        </div>
-                    </Bouton>
-                {:else}
-                    <Bouton occupe={occupe} succes={succes} border="border-1" largeur="w-full" couleur="text-vertLBF border-vertLBF" on:actionBouton={() => {enregistrement()}}>
-                        <div class="mx-auto flex flex-row justify-center">
-                            <div class="px-1 self-center">Enregistrer</div>
-                            <div class="px-1 self-center"><Fa icon={faSave} size="lg" class="mx-auto" /></div>
-                        </div>
-                    </Bouton>
-                {/if}
-        </div>
-    {/if}   
+    <div>
+        <div class={"mb-2 text-justify text-sm " + erreur}>{message}</div>
+        <input 
+            class="mb-2 text-sm bg-gray-900 text-gray-200 focus:outline-none border border-vertLBFT rounded py-1 px-2 block w-full appearance-none leading-normal"
+            type="text"
+            id="userName"
+            placeholder="Nom d'utilisateur"
+            bind:value={userName}
+            />
+        <input 
+            class="mb-2 text-sm bg-gray-900 text-gray-200 focus:outline-none border border-vertLBFT rounded py-1 px-2 block w-full appearance-none leading-normal"
+            type="text"
+            id="identifiant"
+            placeholder="email"
+            bind:value={email}
+            />
+        <input 
+            class="mb-2 text-sm bg-gray-900 text-gray-200 focus:outline-none border border-vertLBFT rounded py-1 px-2 block w-full appearance-none leading-normal"
+            type="password"
+            id="password"
+            placeholder="Entrez un MDP"
+            bind:value={password}
+            />
+        <input 
+            class="mb-2 text-sm bg-gray-900 text-gray-200 focus:outline-none border border-vertLBFT rounded py-1 px-2 block w-full appearance-none leading-normal"
+            type="password"
+            id="passwordVerif"
+            placeholder="Vérification MDP"
+            bind:value={passwordVerif}
+            />
+    </div>
+    <div class="mt-2">
+        <Bouton occupe={occupe} succes={succes} border="border-1" largeur="w-full" couleur="text-vertLBF border-vertLBF" on:actionBouton={() => {enregistrement()}}>
+            <div class="mx-auto flex flex-row justify-center">
+                <div class="px-1 self-center">Enregistrer</div>
+                <div class="px-1 self-center"><Fa icon={faSave} size="lg" class="mx-auto" /></div>
+            </div>
+        </Bouton>
+    </div> 
 </main>

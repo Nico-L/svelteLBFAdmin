@@ -1,4 +1,5 @@
 <script>
+import { onMount } from "svelte";
 import Bouton from './../../components/Button/Button.svelte';
 import CheckBoxAlone from './../../components/CheckBoxAlone.svelte';
 import RadioBouton from './../../components/radioButton.svelte'
@@ -19,6 +20,16 @@ var deuxAnsApresAbonnement = new Date()
 let  dateFormat = "#{l} #{j} #{F} #{Y}"
 var flagMAJEnCours = false
 var flagDateChoisie = false
+
+var urlModifInscription = window.location.search;
+
+onMount(() => {
+    var extracted = /\?email=([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/i.exec(urlModifInscription)
+    if (extracted!==null) {
+        userEmail = extracted[1]
+        chercherUtilisateur ()
+    }
+})
 
 $: {
     if(/([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/i.exec(userEmail) === null && flagUserFound) {
@@ -47,7 +58,6 @@ function chercherUtilisateur () {
             } else {
                 utilisateur = retour[0]
                 utilisateur.role = utilisateur.role.id
-                console.log('utilisateur', utilisateur)
                 if (utilisateur.abonnementMachine) {
                     utilisateur.abonnementMachine = new Date(utilisateur.abonnementMachine)
                 } else {
