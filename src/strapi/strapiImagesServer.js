@@ -34,7 +34,7 @@ export const strapiUpload = (token, data) => ({
         //formData.append('upload_preset', unsignedUploadPreset);
         //formData.append('tags', 'browser_upload');
         formData.append('files.illustration', file);
-        formData.append('data', data)
+        formData.append('data', JSON.stringify(data))
         //formData.append('api_key', CLOUDINARY_API_KEY) // Replace API key with your own Cloudinary key
         //formData.append('timestamp', (Date.now() / 1000) | 0)
         xhr.send(formData);

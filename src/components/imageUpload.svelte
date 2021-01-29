@@ -38,9 +38,9 @@ let illustrationAEffacer = {'illustrationId': '', 'imageId': ''}
 
 var listeIllustrations = []
 $: {if (flagUploadDone && dataImg!== {})
-        var dataForList = dataImg
+        //var dataForList = dataImg
         flagRecupIllu = true
-        listeImgByEspaceEtTag(dataImg.espace, dataImg.tag).then((lesImages)=> {
+        listeImgByEspaceEtTag(dataImg.espaces, dataImg.tags).then((lesImages)=> {
             listeIllustrations = lesImages
             flagRecupIllu = false
         })

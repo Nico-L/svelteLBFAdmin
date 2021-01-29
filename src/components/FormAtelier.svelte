@@ -93,8 +93,8 @@ $tags.forEach((tag) => {
 }) */
 var dataImg = {
     user: $user.id,
-    espace: editAtelier.espace?editAtelier.espace.id:1,
-    tag: tagId
+    espaces: editAtelier.espace?editAtelier.espace.id:1,
+    tags: tagId
 }
 
 $: {
@@ -120,8 +120,8 @@ const optionsURL= {
 $: {
      dataImg = {
         user: $user.id,
-        espace: editAtelier.espace?editAtelier.espace.id:1,
-        tag: tagId
+        espaces: editAtelier.espace?editAtelier.espace.id:1,
+        tags: tagId
     }
  }
 

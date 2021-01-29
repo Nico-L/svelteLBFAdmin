@@ -172,7 +172,7 @@ function fini() {
         </div>
         <div class="w-5/6 mx-auto">
             <!--<ImageUpload bind:nomImage={laMachine.urlImage} options = {optionsURL} typeIllustration="Machine" altImage="Illustration de la machine" classImage="rounded border-2 border-bleuLBF" />-->
-            <ImageUpload dataImg={JSON.stringify(dataImg)} bind:urlImage={laMachine.urlImage} options = {optionsURL} altImage="Illustration de l'atelier" classImage="rounded border-2 border-bleuLBF" />
+            <ImageUpload dataImg={dataImg} bind:urlImage={laMachine.urlImage} options = {optionsURL} altImage="Illustration de l'atelier" classImage="rounded border-2 border-bleuLBF" />
         </div>
         <div class="mt-4 ">
             <div class="h4 font-medium text-vertLBF">Résumé</div>
