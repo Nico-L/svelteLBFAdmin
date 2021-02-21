@@ -23,11 +23,13 @@ var borderColore = ""
 
 switch (couleur) {
     case "bleu":
+        console.log("bleu !", couleur)
         var bgColoree = "bg-bleuLBFTT"
         var textColore = "text-bleuLBF"
         var borderColore = "border-bleuLBF"
         break;
     case "vert":
+        console.log('vert !', couleur)
         var bgColoree = "bg-vertLBFTT"
         var textColore = "text-vertLBF"
         var borderColore = "border-vertLBF"
