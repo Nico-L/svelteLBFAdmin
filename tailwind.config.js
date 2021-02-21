@@ -4,7 +4,7 @@ module.exports = {
         layers: ['base', 'components', 'utilities'],
         content: [
         './src/**/*.svelte',
-        './src/css/tailwind.css'
+        './src/css/*.css'
     ]},
   theme: {
       minHeight: {
