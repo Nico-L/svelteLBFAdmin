@@ -6,6 +6,31 @@
         loader: () => import('./routes/notFound.svelte'),
         resolve: () => './notFound'
     })
+
+    const tagsArticles = register ({
+        loader: () => import('./routes/redaction/tags.svelte'),
+        resolve: () => './tags'
+    })
+
+    const articles = register ({
+        loader: () => import('./routes/redaction/articles.svelte'),
+        resolve: () => './articles'
+    })
+
+    const brouillons = register ({
+        loader: () => import('./routes/redaction/brouillons.svelte'),
+        resolve: () => './brouillons'
+    })
+
+    const editeur = register ({
+        loader: () => import('./routes/redaction/editeur.svelte'),
+        resolve: () => './editeur'
+    })
+
+    const redaction = register ({
+        loader: () => import('./routes/redaction/dashboard.svelte'),
+        resolve: () => './redaction'
+    })
   // user
   const ficheUtilisateur = register ({
     loader: () => import('./routes/utilisateurs/ficheUtilisateur.svelte'),
@@ -73,21 +98,24 @@ const listeMachines = register({
     import Loadable from 'svelte-loadable'
     import Chargement from './components/chargement.svelte'
 
-    //import { listeEspacesBF } from './graphQL/espacesBF.js'
     import {listeEspacesBF, listeTags} from './strapi/espacesEtTags.js'
-    //import { getBuildNeeded, setBuildNeeded } from './graphQL/build.js'
+    import {getTagsArticles} from './strapi/tagsArticles.js'
+    import {verifJWT} from './strapi/verifJWT.js'
 
-    //import { auth } from "./stores/auth.js"
     import { user } from "./stores/user.js"
     import { espacesBF } from "./stores/espacesBF.js"
     import {tags} from "./stores/tags.js"
+    import {tagsArticlesStore} from "./stores/tagsArticles.js"
     import { buildNeeded } from "./stores/build.js"
 
     import Header from './layouts/header.svelte'
     import Navigation from "./layouts/navigation.svelte"
+    import NavigationRedaction from "./layouts/navigationRedaction.svelte"
+
     var loginNeeded = true
     var flagEspace = false
     var flagTags = false
+    var flagTagsArticles = false
     var flagBuildNeeded = false
 
 
@@ -123,6 +151,16 @@ $: {
         })
     }
 }
+
+$: {
+    if (!loginNeeded && $tagsArticlesStore && !flagTagsArticles) {
+        getTagsArticles().then((tagsArticles) => {
+            tagsArticlesStore.set(tagsArticles)
+            flagTagsArticles = true
+        })
+    }
+}
+
 </script> 
  
 <Router>
@@ -153,85 +191,138 @@ $: {
             </Router>
         </Route>
     {:else}
-        <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
-            <Header />
-        </div>
-        <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
-            <Navigation />
-        </div>
-        <div class="ml-240px p-4 pt-20">
+        {#await verifJWT() then value}
             <Route path="/">
-                <Loadable loader="{HomeLoader}">
-                    
-                </Loadable>
+                <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
+                    <Header />
+                </div>
+                <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
+                    <Navigation />
+                </div>
+                <div class="ml-240px p-4 pt-20">
+                    <Loadable loader="{HomeLoader}" />   
+                </div>
             </Route>
             {#if $user.role.admin }
                 <Route path="utilisateurs/*">
-                    <Router>
-                        <Route path="fiche">
-                            <Loadable loader={ficheUtilisateur}>
-                            
-                            </Loadable>
-                        </Route>
-                    </Router>
-                    <Router>
-                        <Route path="ajout">
-                            <Loadable loader={ajoutUtilisateur}>
-                            
-                            </Loadable>
-                        </Route>
-                    </Router>
+                    <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
+                        <Header />
+                    </div>
+                    <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
+                        <Navigation />
+                    </div>
+                    <div class="ml-240px p-4 pt-20">
+                        <Router>
+                            <Route path="fiche">
+                                <Loadable loader={ficheUtilisateur}>
+                                </Loadable>
+                            </Route>
+                        </Router>
+                        <Router>
+                            <Route path="ajout">
+                                <Loadable loader={ajoutUtilisateur}>
+                                </Loadable>
+                            </Route>
+                        </Router>
+                    </div>
                 </Route>
             {/if}
             <Route path="ateliers/*">
-                <Router>
-                    <Route path="agenda" >
-                        <Loadable loader={agendaAteliers}>
-                            
-                        </Loadable>
-                    </Route>
-                    <Route path="archives" >
-                        <Loadable loader={archivesAteliers}>
-                            
-                        </Loadable>
-                    </Route>
-                </Router>
+                <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
+                    <Header />
+                </div>
+                <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
+                    <Navigation />
+                </div>
+                <div class="ml-240px p-4 pt-20">
+                    <Router>
+                        <Route path="agenda" >
+                            <Loadable loader={agendaAteliers}>
+                                
+                            </Loadable>
+                        </Route>
+                        <Route path="archives" >
+                            <Loadable loader={archivesAteliers}>
+                                
+                            </Loadable>
+                        </Route>
+                    </Router>
+                </div>
             </Route>
             <Route path="machines/*">
-                <Router>
-                    <Route path="abonnements" >
-                        <Loadable loader={abonnementsMachines}>
-                            
-                        </Loadable>
-                    </Route>
-                    <Route path="plagesReservations" >
-                        <Loadable loader={plagesReservations}>
-                            
-                        </Loadable>
-                    </Route>
-                    <Route path="agendaReservations" >
-                        <Loadable loader={agendaReservations}>
-                            
-                        </Loadable>
-                    </Route>
-                    <Route path="nouvelleMachine" >
-                        <Loadable loader={nouvelleMachine}>
-                            
-                        </Loadable>
-                    </Route>
-                    <Route path="listeMachines" >
-                        <Loadable loader={listeMachines}>
-                            
-                        </Loadable>
-                    </Route>
-                </Router>
+                <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
+                    <Header />
+                </div>
+                <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
+                    <Navigation />
+                </div>
+                <div class="ml-240px p-4 pt-20">
+                    <Router>
+                        <Route path="abonnements" >
+                            <Loadable loader={abonnementsMachines}>
+                                
+                            </Loadable>
+                        </Route>
+                        <Route path="plagesReservations" >
+                            <Loadable loader={plagesReservations}>
+                                
+                            </Loadable>
+                        </Route>
+                        <Route path="agendaReservations" >
+                            <Loadable loader={agendaReservations}>
+                                
+                            </Loadable>
+                        </Route>
+                        <Route path="nouvelleMachine" >
+                            <Loadable loader={nouvelleMachine}>
+                                
+                            </Loadable>
+                        </Route>
+                        <Route path="listeMachines" >
+                            <Loadable loader={listeMachines}>
+                                
+                            </Loadable>
+                        </Route>
+                    </Router>
+                </div>
+            </Route>
+            <Route path="redaction/*">
+                <div class="fixed w-240px h-full bg-bleuLBFTT z-50">
+                    <NavigationRedaction />
+                </div>
+                <div class="ml-240px z-30">
+                    <Router>
+                        <Route path="" >
+                            <Loadable loader={redaction} />
+                        </Route>
+                        <Route path="editeur">
+                            <Loadable loader={editeur} />
+                        </Route>
+                        <Route path="brouillons">
+                            <Loadable loader={brouillons} />
+                        </Route>
+                        <Route path="articles">
+                            <Loadable loader={articles} />
+                        </Route>
+                        <Route path="tags">
+                            <Loadable loader={tagsArticles} />
+                        </Route>
+                    </Router>
+                </div>
             </Route>
             <Route>
-                <Loadable loader={notFound}>
-                    
-                </Loadable>
+                <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
+                    <Header />
+                </div>
+                <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
+                    <Navigation />
+                </div>
+                <div class="ml-240px p-4 pt-20">
+                    <Loadable loader={notFound}>
+                    </Loadable>
+                </div>
             </Route>
-        </div>
+        {/await}
     {/if}
 
 </Router>

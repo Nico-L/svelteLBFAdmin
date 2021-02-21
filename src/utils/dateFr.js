@@ -29,6 +29,11 @@ export function getHoraire(value){
     return d[0] + "h" + d[1];
 }
 
+export function getMinutes(value) {
+    var d = value.split(':')
+    return parseInt(d[0]) * 60 + parseInt(d[1])
+}
+
 export function getJour(value){
     var d = new Date(value)
     return d.getDate();
@@ -37,6 +42,14 @@ export function getJour(value){
 export function getMoisShort(value) {
     var d = (new Date(value)).getMonth();
     return dateFr.mois[d][1];
+}
+
+export function dateJourMoisHeure(value) {
+    const laDate = new Date(value)
+    const leJour = laDate.getDate();
+    const leMois = dateFr.mois[laDate.getMonth()][0]
+    const lesMinutes = laDate.getMinutes() == 0 ? '00': laDate.getMinutes();
+    return 'le ' + leJour + ' ' + leMois + ' à ' + laDate.getHours() + ' h ' + lesMinutes
 }
 
 export function dateInscription(debut, fin) {

@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export let idAtelier = "";
 export let nbParticipants = ""
-export let archive = "false";
+export let archive = false;
 
 let lesInscrits = []
 let classesPaires = "border border-gray-600 bg-lbfvertt-900 px-2 py-0"

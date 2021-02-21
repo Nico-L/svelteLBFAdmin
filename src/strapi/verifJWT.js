@@ -23,5 +23,8 @@ export function verifJWT () {
                 }
             })
             .catch((erreur) => console.log('erreur', erreur))
+    } else {
+        localStorage.removeItem('userInfo')
+        window.location.replace(window.location.origin + '/login')
     }
 }

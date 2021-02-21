@@ -1,11 +1,9 @@
 <script>
     import {onMount, onDestroy, createEventDispatcher} from 'svelte'
     const dispatch = createEventDispatcher();
-    //import {createCloudinary} from './../utils/cloudinary.js'
     import {strapiUpload} from './../strapi/strapiImagesServer.js'
     import {verifJWT} from './../strapi/verifJWT.js'
     import FilePond from 'filepond'
-    //console.log("fp", FilePond)
 
     let inputElement;
     var pond;

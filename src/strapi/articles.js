@@ -1,38 +1,17 @@
 import {verifJWT} from "./verifJWT.js"
-import qs from 'qs'
 
-export function listeImages(userId, espaceId, tagId) {
-    var url = "ADRESSE_CMS" + "illustrations?"
-    var flagPremierParametre = true
-    if (userId) {
-        url = url + 'user=' + userId
-        flagPremierParametre = false
-    }
-    if (espaceId) {
-        if (flagPremierParametre) {
-            url = url + 'espaces=' + espaceId
-        } else {
-            url = url + '&espaces=' + espaceId
-        }
-        flagPremierParametre = false
-    }
-    if (tagId) {
-        if (flagPremierParametre) {
-            url = url + 'tags=' + tagId
-        } else {
-            url = url + '&tags=' + tagId
-        }
-        flagPremierParametre = false 
-    }
+export function saveArticle(variables) {
+    const url = "ADRESSE_CMS" + "articles"
     return verifJWT().then((token)=> 
         {
             const auth = "Bearer " + token
             var entetes = new Headers({"content-type": "application/json", "Authorization": auth})
             var options = { 
-                method: 'GET',
+                method: 'POST',
                 headers: entetes,
                 mode: 'cors',
                 cache: 'default',
+                body: JSON.stringify(variables)
             }
             return fetch(url, options)
                 .then((leJSON)=> {return leJSON.json()})
@@ -41,36 +20,18 @@ export function listeImages(userId, espaceId, tagId) {
     )
 }
 
-export function getLogo() {
-   const url = "ADRESSE_CMS" + "illustrations/51"
+export function updateArticle(id, variables) {
+    const url = "ADRESSE_CMS" + "articles/" + id
     return verifJWT().then((token)=> 
         {
             const auth = "Bearer " + token
             var entetes = new Headers({"content-type": "application/json", "Authorization": auth})
             var options = { 
-                method: 'GET',
+                method: 'PUT',
                 headers: entetes,
                 mode: 'cors',
                 cache: 'default',
-            }
-            return fetch(url, options)
-                .then((leJSON)=> {return leJSON.json()})
-                .then((retour)=> {return retour})
-        }
-    ) 
-}
-
-export function listeImgByEspaceEtTag(espaceId, tagId) {
-    const url = "ADRESSE_CMS" + "illustrations?espaces=" + espaceId + "&tags=" + tagId
-    return verifJWT().then((token)=> 
-        {
-            const auth = "Bearer " + token
-            var entetes = new Headers({"content-type": "application/json", "Authorization": auth})
-            var options = { 
-                method: 'GET',
-                headers: entetes,
-                mode: 'cors',
-                cache: 'default',
+                body: JSON.stringify(variables)
             }
             return fetch(url, options)
                 .then((leJSON)=> {return leJSON.json()})
@@ -79,8 +40,10 @@ export function listeImgByEspaceEtTag(espaceId, tagId) {
     )
 }
 
-export function listeImgByEspaceEtTagEtUser(espaceId, tagId, userId) {
-    const url = "ADRESSE_CMS" + "illustrations?espaces=" + espaceId + "&tags=" + tagId + "&user=" + userId
+export function getArticlesByUser(userId, estPublie, limite) {
+    const queryLimit = limite && limite > 0 ? "&_limit=" + limite.toString() : ""
+    const typeArticle = estPublie ? "&_publicationState=live" : "&_publicationState=preview&published_at_null=true"
+    const url = "ADRESSE_CMS" + "articles?user=" + userId + typeArticle + queryLimit
     return verifJWT().then((token)=> 
         {
             const auth = "Bearer " + token
@@ -89,7 +52,7 @@ export function listeImgByEspaceEtTagEtUser(espaceId, tagId, userId) {
                 method: 'GET',
                 headers: entetes,
                 mode: 'cors',
-                cache: 'default',
+                cache: 'default'
             }
             return fetch(url, options)
                 .then((leJSON)=> {return leJSON.json()})
@@ -98,9 +61,8 @@ export function listeImgByEspaceEtTagEtUser(espaceId, tagId, userId) {
     )
 }
 
-export function listeIllustrationsOrphelines(tagId, userId) {
-    const query = qs.stringify({ _where: { tags: tagId, user: userId } })
-    const url = "ADRESSE_CMS" + "illustrations?" + query
+export function getArticleById(id) {
+    const url = "ADRESSE_CMS" + "articles/" + id + "?_publicationState=preview"
     return verifJWT().then((token)=> 
         {
             const auth = "Bearer " + token
@@ -109,7 +71,7 @@ export function listeIllustrationsOrphelines(tagId, userId) {
                 method: 'GET',
                 headers: entetes,
                 mode: 'cors',
-                cache: 'default',
+                cache: 'default'
             }
             return fetch(url, options)
                 .then((leJSON)=> {return leJSON.json()})
@@ -118,9 +80,8 @@ export function listeIllustrationsOrphelines(tagId, userId) {
     )
 }
 
-export function effaceIllustration(data) {
-    const urlIllustration = "ADRESSE_CMS" + "illustrations/" + data.illustrationId
-    const urlImage = "ADRESSE_CMS" + "upload/files/" + data.imageId
+export function deleteArticle(articleId) {
+    const url = "ADRESSE_CMS" + "articles/" + articleId
     return verifJWT().then((token)=> 
         {
             const auth = "Bearer " + token
@@ -131,11 +92,9 @@ export function effaceIllustration(data) {
                 mode: 'cors',
                 cache: 'default',
             }
-            return fetch(urlIllustration, options)
+            return fetch(url, options)
                 .then((leJSON)=> {return leJSON.json()})
-                .then((retour)=> {return fetch(urlImage, options)})
-                .then((leJSON)=> {return leJSON.json()})
-                .then((retour) => {return retour})
+                .then((retour)=> {return retour})
         }
     )
 }

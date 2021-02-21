@@ -1,16 +1,12 @@
 <script>
-
+import ListeAteliers from '../components/listeAteliersFuturs.svelte'
+import ListeReservationsMachines from '../components/listeReservationsMachines.svelte'
 </script>
 
 <main>
-	<h1 >Titre h1</h1>
-    <h2 >Titre h2</h2>
-    <h3 >Titre h3</h3>
-    <h4 >Titre h4</h4>
-    <h5 >Titre h5</h5>
-    <h6 >Titre h6</h6>
-	<p class="body-1 my-2">Body-1 : Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec leo ut dui tincidunt euismod ac id nisi. Quisque finibus dolor vel lacus imperdiet rhoncus. Integer vehicula quis tellus pharetra eleifend. Nulla egestas, dolor in mattis iaculis, dolor magna ultrices justo, vitae consectetur libero felis sed enim. Cras at sodales enim. Vivamus aliquam massa nibh, ac consequat mauris placerat ut. Proin egestas non massa eu molestie. Mauris vitae nibh ultrices est posuere elementum. Proin gravida magna metus, id auctor ex vestibulum in. Nunc id ipsum nec mi aliquam bibendum. Ut in leo mollis, dictum massa sed, aliquam lorem. Integer tincidunt velit ac neque aliquet, ut faucibus sapien rhoncus. Nulla hendrerit a sem ac tempus. Curabitur vitae elit vitae ex luctus malesuada vitae vel erat.</p>
-    <p class="body-2 my-2">Body-2 : Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec leo ut dui tincidunt euismod ac id nisi. Quisque finibus dolor vel lacus imperdiet rhoncus. Integer vehicula quis tellus pharetra eleifend. Nulla egestas, dolor in mattis iaculis, dolor magna ultrices justo, vitae consectetur libero felis sed enim. Cras at sodales enim. Vivamus aliquam massa nibh, ac consequat mauris placerat ut. Proin egestas non massa eu molestie. Mauris vitae nibh ultrices est posuere elementum. Proin gravida magna metus, id auctor ex vestibulum in. Nunc id ipsum nec mi aliquam bibendum. Ut in leo mollis, dictum massa sed, aliquam lorem. Integer tincidunt velit ac neque aliquet, ut faucibus sapien rhoncus. Nulla hendrerit a sem ac tempus. Curabitur vitae elit vitae ex luctus malesuada vitae vel erat.</p>
-
+	<h3>5 prochains ateliers</h3>
+    <ListeAteliers limiteNbAteliers="5"/>
+    <h3 class="mt-10">5 prochaines réservations</h3>
+    <ListeReservationsMachines limiteNbReservations="5"/>
 </main>
 

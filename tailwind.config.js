@@ -1,22 +1,49 @@
 module.exports = {
     purge: {
-    enabled: true,
-    layers: ['base', 'components', 'utilities'],
-    content: [
-    './src/**/*.svelte',
-    './src/css/tailwind.css'
-  ]},
+        enabled: true,
+        layers: ['base', 'components', 'utilities'],
+        content: [
+        './src/**/*.svelte',
+        './src/css/tailwind.css'
+    ]},
   theme: {
+      minHeight: {
+        "0": "0",
+        "1": "0.25rem",
+        "2": "0.5rem",
+        "3": "0.75rem",
+        "4": "1rem",
+        "5": "1.25rem",
+        "6": "1.5rem",
+        "7": "1.75rem",
+        "8": "2rem",
+        "10": "2.5rem",
+        "12": "3rem",
+        "14": "3.5rem",
+        "16": "4rem",
+        "20": "5rem",
+        "24": "6rem",
+        "32": "8rem",
+        "36": "9rem",
+        "40": "10rem",
+        "48": "12rem",
+        "56": "14rem",
+        "64": "16rem",
+        '60px': '60px'
+      },
     minWidth: {
         '0': '0',
         '1/4': '25%',
         '1/2': '50%',
         '3/4': '75%',
+        '1/3': '33%',
         'full': '100%',
         '200px': '200px',
         '240px': '240px',
         '340px': '340px',
-        '16': '4rem'
+        '620px': '620px',
+        '16': '4rem',
+        '60px': '60px'
     },
     maxWidth: {
         '1/4': '25%',
@@ -29,7 +56,7 @@ module.exports = {
         '4/6': '66%',
         '5/6': '83%',
         '480px': '480px',
-        '620px': "620px",
+        '620px': '620px',
         '28': '28rem'
     },
     maxHeight: {
@@ -47,11 +74,14 @@ module.exports = {
       orangeLBFT: "#ee732e55",
       bleuLBF: "#4bbcc4",
       bleuLBFT: "#4bbcc455",
+      bleuLBFTT: "#4bbcc420",
       vertLBF: "#93c021",
       vertLBFT: "#93c02155",
+      vertLBFTT: "#93c02120",
       rougeLBF: "#e02933",
       rougeLBFT: "#e0293355",
       jauneLBF: "#fcc62d",
+      jauneLBFT: "#fcc62d55",
       violetLBF: "#5e4b99",
       lbforange: {
         50: "#FFF4E3",
@@ -142,15 +172,22 @@ module.exports = {
       }
     },
     spacing: {
+        "1/2": "50%",
       px: "1px",
       "10px": "10px",
       "200px": "200px",
       "40px": "40px",
-      "240px": "240px",
-      "340px": "340px",
+      "60px": "60px",
+      "150px": "150px",
       "180px": "180px",
+      "240px": "240px",
+      "300px": "300px",
+      "340px": "340px",
+      "400px": "400px",
       "480px": "480px",
       "640px": "640px",
+      "720px": "720px",
+      "1024px": "1024px",
       "0": "0",
       "1": "0.25rem",
       "2": "0.5rem",
@@ -167,6 +204,7 @@ module.exports = {
       "20": "5rem",
       "24": "6rem",
       "32": "8rem",
+      "36": "9rem",
       "40": "10rem",
       "48": "12rem",
       "56": "14rem",
@@ -209,6 +247,10 @@ module.exports = {
     cursor: ["hover", "focus", "disabled"],
     backgroundColor: ["hover", "focus", "disabled"],
     display: ["responsive", "disabled"],
-    maxWidth: ["responsive"]
-  }
+    maxWidth: ["responsive"],
+    backgroundOpacity: ['hover']
+  },
+  plugins: [
+        require('tailwind-scrollbar')
+    ]
 };

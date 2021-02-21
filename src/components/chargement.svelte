@@ -17,7 +17,5 @@
             </g>
         </svg>
     </div>
-    <h3 class="text-center">
-        <slot>La page se charge, merci de patienter...</slot>
-    </h3>
+    <slot></slot>
 </div>

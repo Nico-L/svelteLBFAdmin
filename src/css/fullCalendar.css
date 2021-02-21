@@ -1,0 +1,61 @@
+/* fullCalendar */
+.fc-col-header {
+    @apply bg-gray-900;
+}
+
+.fc-day-today {
+  @apply bg-vertLBFT;
+}
+
+.fc-day {
+    @apply border-solid border-rougeLBF;
+}
+
+.fc-timegrid-event .fc-event-main {
+    @apply text-gray-900;
+}
+
+/* ajout personnel */
+
+.fc-event-main {
+    @apply flex flex-col justify-between;
+}
+
+.event-boutons {
+    @apply flex flex-row flex-wrap justify-evenly gap-1 text-sm  text-gray-900;
+    @apply  z-30 bg-gray-900 bg-opacity-70 rounded p-1;
+}
+
+.event-bouton {
+    @apply p-1 cursor-pointer hover:bg-gray-500 hover:bg-opacity-60 rounded;
+    @apply text-gray-900;
+}
+
+.event-titre-atelier {
+    @apply text-gray-900 text-base m-0 mx-auto p-0 font-semibold overflow-ellipsis;
+}
+
+.event-titre-decale {
+    @apply -mt-6 p-1 bg-orangeLBF rounded w-11/12 mx-auto shadow;
+}
+
+.event-inscrits {
+    @apply flex flex-row justify-between gap-1 items-end;
+}
+
+.fc-button-primary {
+    @apply bg-vertLBF text-gray-900;
+}
+
+.fc-daygrid-event-harness {
+    @apply cursor-pointer;
+}
+
+.event-imgDiv-atelier {
+    @apply relative w-12 h-12 rounded-full mx-auto -mt-6;
+    @apply border-2 border-orangeLBF;
+}
+
+.event-img-atelier {
+    @apply absolute w-12 h-12 rounded-full object-cover; 
+}

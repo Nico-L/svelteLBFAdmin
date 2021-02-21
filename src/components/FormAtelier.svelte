@@ -67,6 +67,7 @@ let flagDupliquer = false;
 let flagListeInscrits = false;
 let flagEnvoiEmail= false
 let flagDupliquerMemeDate = false
+var flagEMailNonValide = false
 
 var jourDebut = new Date(editAtelier.date)
 var jourFin = new Date(editAtelier.date)
@@ -130,6 +131,12 @@ function fini() {
 }
 
 function sauveAtelier() {
+    const regexMail = /([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/i.exec(editAtelier.encadrant)
+    const mailValide = regexMail!==null
+    if (!mailValide) {
+        flagEMailNonValide = true
+        return
+    }
     let variables = {}
     let heureDebutTemp = heureDebut.split('h')
     jourDebut.setHours(heureDebutTemp[0])
@@ -146,7 +153,8 @@ function sauveAtelier() {
         surInscription: editAtelier.surInscription,
         lesTarifs: editAtelier.lesTarifs,
         titre: editAtelier.titre || "Un nouvel atelier",
-        urlImage: editAtelier.urlImage
+        urlImage: editAtelier.urlImage,
+        encadrant: editAtelier.encadrant
     }
     flagSauvegardeEnCours = !flagDupliquer;
     flagDuplicationEnCours = flagDupliquer
@@ -161,6 +169,12 @@ function sauveAtelier() {
 }
 
 function updateAtelier() {
+    const regexMail = /([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/i.exec(editAtelier.encadrant)
+    const mailValide = regexMail!==null
+    if (!mailValide) {
+        flagEMailNonValide = true
+        return
+    }
     let variables = {}
     let heureDebutTemp = heureDebut.split('h')
     jourDebut.setHours(heureDebutTemp[0])
@@ -186,7 +200,8 @@ function updateAtelier() {
         surInscription: editAtelier.surInscription,
         lesTarifs: editAtelier.lesTarifs,
         titre: editAtelier.titre || "Un nouvel atelier",
-        urlImage: editAtelier.urlImage
+        urlImage: editAtelier.urlImage,
+        encadrant: editAtelier.encadrant
     }
     flagSauvegardeEnCours = true;
     editerAtelier(editAtelier.id, variables).then((result)=> {
@@ -279,6 +294,15 @@ function suppressionAtelier() {
             id="lieu"
             />
     </label>
+    <label for="lieu" class="my-2">
+        Email encadrant
+        <input 
+            bind:value= {editAtelier.encadrant}
+            class="bg-gray-900 text-gray-200 focus:outline-none border border-bleuLBF rounded py-2 px-4 block w-full appearance-none leading-normal"
+            type="text"
+            id="lieu"
+            />
+    </label>
     <label for="selectEspaces" class="mt-3 flex flex-row">
     <div class="mr-2 text-base font-medium  text-bleuLBF">Espace concerné</div>
         <select bind:value={editAtelier.espace.id} id="selectEspaces" class="bg-gray-900 border border-bleuLBF rounded" >
@@ -290,7 +314,14 @@ function suppressionAtelier() {
 	    </select>
     </label>
     <div class="w-5/6 mx-auto mt-3">
-        <ImageUpload dataImg={dataImg} bind:urlImage={editAtelier.urlImage} options = {optionsURL} altImage="Illustration de l'atelier" classImage="rounded border-2 border-bleuLBF" />
+        <ImageUpload
+            userId={$user.id}
+            espaceId={editAtelier.espace?editAtelier.espace.id:1}
+            tagId={tagId}
+            bind:urlImage={editAtelier.urlImage}
+            options = {optionsURL}
+            altImage="Illustration de l'atelier"
+            classImage="rounded border-2 border-bleuLBF w-400px h-180px" />
     </div>
     <div class="flex flex-row items-center justify-between mt-4">
         <label for="nbParticipants" class="w-1/2 flex flex-row items-center text-vertLBF">
@@ -438,4 +469,11 @@ function suppressionAtelier() {
         <Bouton on:actionBouton={() => flagDupliquerMemeDate = false}>OK</Bouton>
     </div>
 </Dialog>
-
+<!-- email non valide-->
+<Dialog bind:visible={flagEMailNonValide} on:close={() => {flagEMailNonValide=false}}>
+    <h4 slot="title text-orangeLBF">Erreur</h4>
+    <p class="mt-2">L'adresse email de l'encadrant est invalide.</p>
+    <div slot="actions" class="flex flex-row justify-end items-center">
+        <Bouton on:actionBouton={() => flagEMailNonValide = false}>OK</Bouton>
+    </div>
+</Dialog>

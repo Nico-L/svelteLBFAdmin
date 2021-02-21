@@ -493,7 +493,7 @@ function resetFiltre(status) {
 <Dialog bind:visible={flagUserNotFound} on:close={() => {busySauverReservation = false; flagUserNotFound = false}}>
     <div slot="title">Utilisateur inconnu</div>
     <div>
-        <div class="max-w-480px">L'adresse email n'a pas été trouvée dans la base de donnée. L'utilisateur n'est peut-être pas encore inscrit.</div>
+        <div class="max-w-480px">L'adresse email n'a pas été trouvée dans la base de donnée. L'utilisateur n'est peut-être pas enregistré.</div>
     </div>
     <div slot="actions">
         <Bouton largeur="w-10" on:actionBouton={() => {busySauverReservation = false; flagUserNotFound = false}} >

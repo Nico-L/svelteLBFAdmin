@@ -1,0 +1,251 @@
+/* purgecss start ignore */
+  @tailwind base;
+  @tailwind components;
+/* purgecss end ignore */
+  @tailwind utilities;
+
+  h1,
+.h1 {
+  @apply text-5xl font-semibold;
+  letter-spacing: -1.5px;
+}
+
+h2,
+.h2 {
+  @apply text-4xl font-medium;
+  letter-spacing: -0.5px;
+}
+
+h3,
+.h3 {
+  @apply text-3xl font-medium;
+  letter-spacing: 0px;
+}
+
+h4,
+.h4 {
+  @apply text-2xl font-medium;
+  letter-spacing: 0.25px;
+}
+
+h5,
+.h5 {
+  @apply text-xl font-medium;
+  letter-spacing: 0px;
+}
+
+h6,
+.h6 {
+  @apply text-base font-medium;
+  letter-spacing: 0.15px;
+}
+
+.subtitle-1 {
+  @apply text-base;
+  letter-spacing: 0.15px;
+}
+
+.subtitle-2 {
+  @apply text-base text-sm font-medium;
+  letter-spacing: 0.15px;
+}
+
+.body-1 {
+  @apply text-base;
+  letter-spacing: 0.5px;
+}
+
+.body-2 {
+  @apply text-sm;
+  letter-spacing: 0.25px;
+}
+
+.navi > li {
+@apply pl-3 cursor-pointer;
+text-indent: -0.5rem;
+}
+
+.boutonEditeur {
+    @apply p-1 mr-1 rounded-sm border border-gray-600 h-6 w-6;
+}
+
+.boutonEditeurHover:hover {
+    @apply p-1 mr-1 rounded-sm border border-gray-600 h-6 w-6;
+}
+
+.boutonEditeur:focus {
+    @apply outline-none;
+}
+
+.editeur a {
+    @apply text-jauneLBF font-medium;
+}
+
+.bouton-jaune {
+    @apply p-1 mr-1 rounded-sm border h-6 w-6 text-gray-900 bg-jauneLBF border-jauneLBF;
+}
+
+.bouton-jaune-hover:hover {
+    @apply text-gray-900 bg-jauneLBF border-jauneLBF;
+}
+
+.bouton-vert {
+    @apply p-1 mr-1 rounded-sm border h-6 w-6 text-gray-900 bg-vertLBF border-vertLBF;
+}
+
+.bouton-vert-hover:hover {
+    @apply text-gray-900 bg-vertLBF border-vertLBF;
+}
+
+.bouton-bleu {
+    @apply p-1 mr-1 rounded-sm border h-6 w-6 text-gray-900 bg-bleuLBF border-bleuLBF;
+}
+
+.bouton-bleu-hover:hover {
+    @apply text-gray-900 bg-bleuLBF border-bleuLBF;
+}
+
+.bouton-orange {
+    @apply p-1 mr-1 rounded-sm border h-6 w-6 text-gray-900 bg-orangeLBF border-orangeLBF;
+}
+
+.bouton-orange-hover:hover {
+    @apply text-gray-900 bg-orangeLBF border-orangeLBF;
+}
+.bouton-rouge {
+    @apply p-1 mr-1 rounded-sm border h-6 w-6 text-gray-900 bg-rougeLBF border-rougeLBF;
+}
+
+.bouton-rouge-hover:hover {
+    @apply text-gray-900 bg-rougeLBF border-rougeLBF;
+}
+
+/* fullCalendar */
+.fc-col-header {
+    @apply bg-gray-900;
+}
+
+.fc-day-today {
+  @apply bg-vertLBFT;
+}
+
+.fc-day {
+    @apply border-solid border-rougeLBF;
+}
+
+.fc-timegrid-event .fc-event-main {
+    @apply text-gray-900;
+}
+
+.event-titre-atelier {
+    @apply text-gray-900 text-base font-semibold truncate;
+}
+
+.event-img-atelier {
+    @apply rounded-sm mx-auto;
+}
+
+.fc-button-primary {
+    @apply bg-vertLBF text-gray-900;
+}
+
+/* animation bouton rebuild */
+.spinner {
+    @apply my-1 mx-auto;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  text-align: center;
+  
+  -webkit-animation: sk-rotate 2.0s infinite linear;
+  animation: sk-rotate 2.0s infinite linear;
+}
+
+.dot1, .dot2 {
+            @apply bg-rougeLBF;
+  width: 60%;
+  height: 60%;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  border-radius: 100%;
+  
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.cadreSpinner:hover .spinner .dot1, .cadreSpinner:hover .spinner .dot2 {
+    @apply bg-gray-900;
+}
+
+.dot2 {
+  top: auto;
+  bottom: 0;
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
+@keyframes sk-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+
+/* liste machines */
+.bleu {
+ @apply bg-bleuLBF border-2 border-bleuLBF;
+}
+
+.txt-bleu {
+   @apply text-bleuLBF; 
+}
+
+.orange {
+    @apply bg-orangeLBF border-2 border-orangeLBF;
+}
+
+.txt-orange {
+   @apply text-orangeLBF; 
+}
+
+.vert {
+    @apply bg-vertLBF border-2 border-vertLBF;
+}
+
+.txt-vert {
+   @apply text-vertLBF; 
+}
+
+.jaune {
+    @apply bg-jauneLBF border-2 border-jauneLBF;
+}
+
+.txt-jaune {
+   @apply text-jauneLBF; 
+}
+
+.rouge {
+    @apply bg-rougeLBF border-2 border-rougeLBF;
+}
+
+.txt-rouge {
+   @apply text-rougeLBF; 
+}
+
+/* css editorjs */
+
+.cadreEditeur {
+    @apply bg-rougeLBF border-1 border-gray-400 rounder;
+}
