@@ -1,4 +1,9 @@
 module.exports = {
+    purge: [
+        './src/**/*.svelte',
+        './src/**/*.js',
+        './src/css/*.css'  
+    ],
   theme: {
       minHeight: {
         "0": "0",
