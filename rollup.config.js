@@ -14,6 +14,7 @@ const rimraf = require('rimraf')
 // remove folders
 rimraf('./public/build', () => { console.log('public/build removed') })
 const production = !process.env.ROLLUP_WATCH;
+console.log('NODE_ENV', process.env.NODE_ENV)
 
 export default {
 	input: 'src/main.js',

@@ -1,40 +1,42 @@
 /* liste machines */
-.bleu {
- @apply bg-bleuLBF border-2 border-bleuLBF;
-}
+@layer components {
+    .bleu {
+    @apply bg-bleuLBF border-2 border-bleuLBF;
+    }
 
-.txt-bleu {
-   @apply text-bleuLBF; 
-}
+    .txt-bleu {
+    @apply text-bleuLBF; 
+    }
 
-.orange {
-    @apply bg-orangeLBF border-2 border-orangeLBF;
-}
+    .orange {
+        @apply bg-orangeLBF border-2 border-orangeLBF;
+    }
 
-.txt-orange {
-   @apply text-orangeLBF; 
-}
+    .txt-orange {
+    @apply text-orangeLBF; 
+    }
 
-.vert {
-    @apply bg-vertLBF border-2 border-vertLBF;
-}
+    .vert {
+        @apply bg-vertLBF border-2 border-vertLBF;
+    }
 
-.txt-vert {
-   @apply text-vertLBF; 
-}
+    .txt-vert {
+    @apply text-vertLBF; 
+    }
 
-.jaune {
-    @apply bg-jauneLBF border-2 border-jauneLBF;
-}
+    .jaune {
+        @apply bg-jauneLBF border-2 border-jauneLBF;
+    }
 
-.txt-jaune {
-   @apply text-jauneLBF; 
-}
+    .txt-jaune {
+    @apply text-jauneLBF; 
+    }
 
-.rouge {
-    @apply bg-rougeLBF border-2 border-rougeLBF;
-}
+    .rouge {
+        @apply bg-rougeLBF border-2 border-rougeLBF;
+    }
 
-.txt-rouge {
-   @apply text-rougeLBF; 
+    .txt-rouge {
+    @apply text-rougeLBF; 
+    }
 }
