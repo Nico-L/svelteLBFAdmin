@@ -35,13 +35,11 @@ var garderBanniere = false
 
 switch (couleur) {
     case "bleu":
-        console.log("bleu !", couleur)
         bgColoree = "bg-bleuLBFTT"
         textColore = "text-bleuLBF"
         borderColore = "border-bleuLBF"
         break;
     case "vert":
-        console.log('vert !', couleur)
         bgColoree = "bg-vertLBFTT"
         textColore = "text-vertLBF"
         borderColore = "border-vertLBF"

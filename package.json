@@ -2,7 +2,7 @@
   "name": "Admin_LBF",
   "version": "1.0.0",
   "scripts": {
-    "build": "NODE_ENV='production' npm-run-all --parallel build:js",
+    "build": "npm-run-all --parallel build:js",
     "build:css": "postcss src/css/tailwind.css -o public/css/styles.css",
     "build:js": "rollup -c",
     "watch:svelte": "rollup -c -w",
