@@ -21,21 +21,6 @@ var bgColoree = ""
 var textColore = ""
 var borderColore = ""
 
-switch (couleur) {
-    case "bleu":
-        console.log("bleu !", couleur)
-        var bgColoree = "bg-bleuLBFTT"
-        var textColore = "text-bleuLBF"
-        var borderColore = "border-bleuLBF"
-        break;
-    case "vert":
-        console.log('vert !', couleur)
-        var bgColoree = "bg-vertLBFTT"
-        var textColore = "text-vertLBF"
-        var borderColore = "border-vertLBF"
-        break;
-}
-
 var articles = []
 let optionsProxy = {
     'resizing_type': 'fill',
@@ -47,6 +32,21 @@ var flagConfirmationEffacer = false
 var flagSuppressionarticle = false
 var articleAEffacerId = ""
 var garderBanniere = false
+
+switch (couleur) {
+    case "bleu":
+        console.log("bleu !", couleur)
+        bgColoree = "bg-bleuLBFTT"
+        textColore = "text-bleuLBF"
+        borderColore = "border-bleuLBF"
+        break;
+    case "vert":
+        console.log('vert !', couleur)
+        bgColoree = "bg-vertLBFTT"
+        textColore = "text-vertLBF"
+        borderColore = "border-vertLBF"
+        break;
+}
 
 onMount(() => {
     getArticlesByUser($user.id, estPublie, limiteNbArticles).then((retour) => {
