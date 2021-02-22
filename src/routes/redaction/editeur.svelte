@@ -278,7 +278,7 @@ function tempsDepuisDerniereSauvegarde() {
 }
 
 function enregistreArticle(status=null) {
-    console.log('estPublie', estPublie)
+    console.log('estPublie', estPublie, status)
     if (status) {
         flagPublicationEnCours = true
         flagPublicationSucces = false
@@ -301,12 +301,13 @@ function enregistreArticle(status=null) {
     variables.banniere = dataArticle.banniere.id
     variables.user = $user.id
     variables.espace = dataArticle.espace.id
-    if (status && status === "publier" && !estPublie) {
-        variables.published_at = (new Date()).toISOString()
-        estPublie = true
-    } else {
-        variables.published_at = null
-        estPublie = false
+    if (status && status === "publier") {
+        if (estPublie) {
+            variables.published_at = null
+        } else {
+            variables.published_at = (new Date()).toISOString()
+        }
+        estPublie = !estPublie
     }
     updateArticle(dataArticle.id, variables).then((retour)=>{
         listeIllustrationsOrphelines(5, $user.id).then((listeIllustrations) => {
@@ -363,13 +364,13 @@ function effacerTag(index) {
     </div>
     <div class="fixed w-340px ml-720px h-full p-2 border border-gray-800 rounded-md m-2 my-4 z-50 overflow-y-auto scrollbar scrollbar-thumb-bleuLBF scrollbar-track-bleuLBFTT">
         <div class="grid grid-cols-2 gap-x-1 my-3">
-            <Bouton largeur="w-auto" occupe={flagSauvegardeEnCours} succes={flagSauvegardeSucces} on:actionBouton={enregistreArticle} couleur="text-vertLBF border-vertLBF">
+            <Bouton largeur="w-auto" occupe={flagSauvegardeEnCours} succes={flagSauvegardeSucces} on:actionBouton={() => enregistreArticle(null)} couleur="text-vertLBF border-vertLBF">
                 <div class="flex flex-row justify-center mx-auto">
                     <Fa icon={faSave} size="lg" />
                     <div class="ml-2">Sauvegarder</div>
                 </div>
             </Bouton>
-            <Bouton largeur="w-auto" occupe={flagPublicationEnCours} succes={flagPublicationSucces} on:actionBouton={() => {estPublie != estPublie; enregistreArticle("publier")}} couleur="text-orangeLBF border-orangeLBF">
+            <Bouton largeur="w-auto" occupe={flagPublicationEnCours} succes={flagPublicationSucces} on:actionBouton={() => {enregistreArticle("publier")}} couleur="text-orangeLBF border-orangeLBF">
                 <div class="flex flex-row justify-center">
                     <Fa icon={faNewspaper} size="lg" /> 
                     <div class="ml-2">
