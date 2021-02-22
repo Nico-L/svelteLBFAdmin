@@ -161,7 +161,7 @@ onMount(()=> {
                 ui: {
                     "blockTunes": {
                     "toggler": {
-                        "Click to tune": "Нажмите, чтобы настроить",
+                        "Click to tune": "Cliquer pour les options",
                         "or drag to move": "ou faire glisser"
                     },
                     },
