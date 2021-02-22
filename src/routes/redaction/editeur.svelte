@@ -58,8 +58,12 @@ let intervalSauvegarde
 
 var flagSauvegardeEnCours = false
 var flagSauvegardeSucces = false
+var flagPublicationEnCours = false
+var flagPublicationSucces = false
 var urlBanniere = ""
 let autoCompleteTags
+
+var estPublie = false
 
 $: {
     if (dataArticle !== undefined && newTag !== null) {
@@ -70,6 +74,11 @@ $: {
 
 onMount(()=> {
     getArticleById(idArticle).then(async (article) => {
+        if (article.published_at === null) {
+            estPublie = false
+        } else {
+            estPublie = true
+        }
         dataArticle = {
             ...article
         }
@@ -268,9 +277,15 @@ function tempsDepuisDerniereSauvegarde() {
     delta = Math.floor((temps - horaireDerniereSauvegarde)/1000/60)
 }
 
-function enregistreArticle() {
-    flagSauvegardeEnCours = true
-    flagSauvegardeSucces = false
+function enregistreArticle(status=null) {
+    console.log('estPublie', estPublie)
+    if (status) {
+        flagPublicationEnCours = true
+        flagPublicationSucces = false
+    } else {
+        flagSauvegardeEnCours = true
+        flagSauvegardeSucces = false
+    }
     var variables = {...dataArticle}
     variables.illustrations = []
     dataArticle.data.blocks.forEach((block) => {
@@ -286,12 +301,25 @@ function enregistreArticle() {
     variables.banniere = dataArticle.banniere.id
     variables.user = $user.id
     variables.espace = dataArticle.espace.id
+    if (status && status === "publier" && !estPublie) {
+        variables.published_at = (new Date()).toISOString()
+        estPublie = true
+    } else {
+        variables.published_at = null
+        estPublie = false
+    }
     updateArticle(dataArticle.id, variables).then((retour)=>{
         listeIllustrationsOrphelines(5, $user.id).then((listeIllustrations) => {
-            setTimeout(function(){ flagSauvegardeSucces = false; }, 5*1000);
+            if (status) {
+                setTimeout(function(){ flagPublicationSucces = false; }, 5*1000);
+                flagPublicationEnCours = false
+                flagPublicationSucces = true
+            } else {
+                setTimeout(function(){ flagSauvegardeSucces = false; }, 5*1000);
+                flagSauvegardeEnCours = false
+                flagSauvegardeSucces = true
+            }
             delta = 0
-            flagSauvegardeEnCours = false
-            flagSauvegardeSucces = true
             listeIllustrations.forEach((illu) => {
                 if (illu.article === null) {
                     effaceIllustration({illustrationId: illu.id, imageId: illu.illustration[0].id}).then((retourDelete) => {
@@ -307,17 +335,9 @@ function effacerTag(index) {
         dataArticle = dataArticle
     }
 
-  let combo = [];
-  $: if (combo.length > 0) {
-      console.log("combo", combo[combo.length-2], combo[combo.length-1])
-      if (combo[combo.length-2] === "Control" && combo[combo.length-1] === "s") enregistreArticle()
-      };
 </script>
 
 <svelte:body
-  on:keyup|preventDefault={() => {
-    combo = [];
-  }}
   on:keydown={(event) => {
       if (event.ctrlKey || event.metaKey) {
         switch (String.fromCharCode(event.which).toLowerCase()) {
@@ -343,17 +363,21 @@ function effacerTag(index) {
     </div>
     <div class="fixed w-340px ml-720px h-full p-2 border border-gray-800 rounded-md m-2 my-4 z-50 overflow-y-auto scrollbar scrollbar-thumb-bleuLBF scrollbar-track-bleuLBFTT">
         <div class="grid grid-cols-2 gap-x-1 my-3">
-            <Bouton largeur="w-auto" bind:occupe={flagSauvegardeEnCours} bind:succes={flagSauvegardeSucces} on:actionBouton={enregistreArticle}  couleur="text-vertLBF border-vertLBF">
+            <Bouton largeur="w-auto" occupe={flagSauvegardeEnCours} succes={flagSauvegardeSucces} on:actionBouton={enregistreArticle} couleur="text-vertLBF border-vertLBF">
                 <div class="flex flex-row justify-center mx-auto">
                     <Fa icon={faSave} size="lg" />
                     <div class="ml-2">Sauvegarder</div>
                 </div>
             </Bouton>
-            <Bouton largeur="w-auto" couleur="text-orangeLBF border-orangeLBF">
+            <Bouton largeur="w-auto" occupe={flagPublicationEnCours} succes={flagPublicationSucces} on:actionBouton={() => {estPublie != estPublie; enregistreArticle("publier")}} couleur="text-orangeLBF border-orangeLBF">
                 <div class="flex flex-row justify-center">
                     <Fa icon={faNewspaper} size="lg" /> 
                     <div class="ml-2">
-                        Publier
+                        {#if estPublie}
+                            Dépublier
+                        {:else}
+                            Publier
+                        {/if}
                     </div>
                 </div>
             </Bouton>
