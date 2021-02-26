@@ -6,7 +6,6 @@ export function buildSiteAtelier() {
             var entetes = new Headers({"content-type": "application/json", "Authorization": auth})*/
     var options = { 
         method: 'POST',
-        headers: entetes,
         mode: 'cors',
         cache: 'default',
     }
