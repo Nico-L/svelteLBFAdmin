@@ -10,6 +10,4 @@ export function buildSiteAtelier() {
         cache: 'default',
     }
     return fetch(url, options)
-        .then((leJSON)=> {return leJSON.json()})
-        .then((retour)=> {return retour})
 }
