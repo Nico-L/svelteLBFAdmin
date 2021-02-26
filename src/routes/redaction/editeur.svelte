@@ -278,7 +278,6 @@ function tempsDepuisDerniereSauvegarde() {
 }
 
 function enregistreArticle(status=null) {
-    console.log('estPublie', estPublie, status)
     if (status) {
         flagPublicationEnCours = true
         flagPublicationSucces = false

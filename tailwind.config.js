@@ -82,6 +82,18 @@ module.exports = {
       jauneLBF: "#fcc62d",
       jauneLBFT: "#fcc62d55",
       violetLBF: "#5e4b99",
+      lbfviolet: {
+        50:"#EBE8F2",
+        100:"#CDC7E0",
+        200:"#ADA3CC",
+        300:"#8D7EB7",
+        400:"#7564A8",
+        500:"#5F4B99",
+        600:"#574693",
+        700:"#4C3E89",
+        800:"#433880",
+        900:"#352D6C"
+      },
       lbforange: {
         50: "#FFF4E3",
         100: "#FFE1B9",
