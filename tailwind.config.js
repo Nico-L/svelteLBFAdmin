@@ -1,10 +1,13 @@
 module.exports = {
-    purge: [
-        'public/index.html',
-        'src/**/*.svelte',
-        'src/**/*.js',
-        'src/css/*.css'  
-    ],
+    purge: {
+        enabled: true,
+        content: [
+            'public/index.html',
+            'src/**/*.svelte',
+            'src/**/*.js',
+            'src/css/*.css'
+        ] 
+    },
   theme: {
       minHeight: {
         "0": "0",
@@ -56,6 +59,8 @@ module.exports = {
         '5/6': '83%',
         '480px': '480px',
         '620px': '620px',
+        "720px": "720px",
+        '820px': '820px',
         '28': '28rem'
     },
     maxHeight: {
@@ -198,6 +203,7 @@ module.exports = {
       "480px": "480px",
       "640px": "640px",
       "720px": "720px",
+      "820px": "820px",
       "1024px": "1024px",
       "0": "0",
       "1": "0.25rem",

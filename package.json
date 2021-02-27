@@ -7,7 +7,7 @@
     "build:js": "rollup -c",
     "watch:svelte": "rollup -c -w",
     "watch:css": "postcss src/css/tailwind.css -o public/css/styles.css --watch",
-    "dev": "NODE_ENV='development' npm-run-all --parallel watch:svelte",
+    "dev": "NODE_ENV='development' npm-run-all --parallel watch:svelte watch:css",
     "start": "sirv public --single"
   },
   "devDependencies": {

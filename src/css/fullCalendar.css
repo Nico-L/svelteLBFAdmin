@@ -16,6 +16,9 @@
         @apply text-gray-900;
     }
 
+    .fc-button {
+        @apply focus:outline-none;
+    }
     /* ajout personnel */
 
     .fc-event-main {
@@ -33,7 +36,7 @@
     }
 
     .event-titre-atelier {
-        @apply text-gray-900 text-base m-0 mx-auto p-0 font-semibold overflow-ellipsis;
+        @apply text-gray-900 text-xs m-0 mx-auto p-0;
     }
 
     .event-titre-decale {
@@ -41,11 +44,15 @@
     }
 
     .event-inscrits {
-        @apply flex flex-row justify-between gap-1 items-end;
+        @apply flex flex-row justify-between gap-1 items-center;
     }
 
+    .fc-dayGridMonth-button {
+        @apply focus:outline-none;
+    }
+    
     .fc-button-primary {
-        @apply bg-vertLBF text-gray-900;
+        @apply bg-vertLBF text-gray-900 focus:outline-none;
     }
 
     .fc-daygrid-event-harness {
