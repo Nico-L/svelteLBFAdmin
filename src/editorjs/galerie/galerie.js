@@ -183,9 +183,9 @@ export default class Gallerie {
 
     _addImageToList(src, idIllu, idImage, file){
         if (!this.data.urls || this.data.urls.length === 0) {
-            this.data.urls = [{url: src, idIllu: idIllu, idImage: idImage}]
+            this.data.urls = [{url: src, width: file.width, height: file.height, ratio: file.height/file.width, idIllu: idIllu, idImage: idImage}]
         } else {
-            this.data.urls.push({url: src, idIllu: idIllu, idImage: idImage})
+            this.data.urls.push({url: src, width: file.width, height: file.height, ratio: file.height/file.width, idIllu: idIllu, idImage: idImage})
         }
 
         this._createImages(this.idGalerie)
