@@ -34,7 +34,7 @@ export default class Gallerie {
         this.blockNumber = this.api.blocks.getCurrentBlockIndex()
         this.previousBlock = this.api.blocks.getBlockByIndex(this.blockNumber)
         this.idGalerie = "gallerie_" + this.blockNumber
-        this.maxFiles = 10
+        this.maxFiles = 6
         this.listOfFiles = []
         if (this.data && this.data.urls && this.data.urls.length !== 0)
         {
@@ -91,8 +91,8 @@ export default class Gallerie {
             },
             createImageThumbnails: false,
             acceptedFiles: "image/*",
-            resizeWidth: 1024,
-            resizeHeight: 1024,
+            resizeWidth: 2048,
+            resizeHeight: 2048,
             resizeMethod: 'contain',
             resizeQuality: 1.0,
             maxFiles: this.maxFiles,
