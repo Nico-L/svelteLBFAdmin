@@ -382,7 +382,7 @@ function resetFiltre(status) {
 }
 </script>
 
-<main>
+<main class="max-w-820px">
 <div class="border border-4 border-gray-600 bg-gray-800 rounded p-4 mt-2 mb-6">
     <h4>Filtrage des réservations</h4>
     <div class="flex flex-row flex-wrap items-center mt-2">

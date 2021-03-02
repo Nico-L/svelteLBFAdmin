@@ -128,8 +128,8 @@ onMount(()=> {
 })
 </script>
 
-<main class="mt-4 mb-3">
-<div bind:this={calendarEl} ></div>
+<main class="mt-4 mb-3 max-w-820px">
+    <div bind:this={calendarEl} ></div>
 </main>
 <!-- opération en cours -->
 <Busy visible={flagMAJ} >mise à jour des horaires de réservation en cours...</Busy>
