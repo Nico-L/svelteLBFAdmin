@@ -34,6 +34,7 @@ export default class Gallerie {
         this.blockNumber = this.api.blocks.getCurrentBlockIndex()
         this.previousBlock = this.api.blocks.getBlockByIndex(this.blockNumber)
         this.idGalerie = "gallerie_" + this.blockNumber
+        this.data.idGalerie = this.blockNumber
         this.maxFiles = 6
         this.listOfFiles = []
         if (this.data && this.data.urls && this.data.urls.length !== 0)
