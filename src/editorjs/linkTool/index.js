@@ -326,6 +326,7 @@ export default class LinkTool {
       this.nodes.linkDescription.textContent = description;
       this.nodes.linkContent.appendChild(this.nodes.linkDescription);
     }
+    
 
     this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
     this.nodes.linkContent.setAttribute('href', this.data.link);

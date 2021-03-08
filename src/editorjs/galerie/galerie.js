@@ -44,11 +44,13 @@ export default class Gallerie {
                 this.listOfFiles.push({file: mockFile, id: url.idIllu})
             })
         }
+        //this._pasteImage.bind(this)
     }
 
     render() {
         const wrapper = document.createElement('div');
         wrapper.classList.add('galerie');
+        this.api.listeners.on(wrapper, 'paste', (event) => this._pasteImage(event, this), false);
         const listeImg = document.createElement('div')
         listeImg.classList.add('listeImages')
         if (this.data.urls && this.data.urls.length !== 0) {
@@ -422,6 +424,28 @@ export default class Gallerie {
         }
     }
 
+    _pasteImage(event, that) {
+        console.log('this', that)
+        event.stopPropagation();
+        event.preventDefault();
+        const items = (event.clipboardData  || event.originalEvent.clipboardData).items;
+        console.log('event data', JSON.stringify(items))
+        var blob = null;
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf("image") === 0) {
+            blob = items[i].getAsFile();
+            }
+        }
+        // load image if there is a pasted image
+        if (blob !== null) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                that.dropzone.addFile(blob);
+            };
+            reader.readAsDataURL(blob);
+        }
+    }
+
   /*onPaste(event) {
     console.log('paste !', event)
     switch(event.type) {
@@ -444,7 +468,7 @@ export default class Gallerie {
         break;
 
       case 'file':
-        console.log('file ?', this.dropzone)
+        console.log('file ?', event.detail.file)
         //this.dropzone.emit("addedfile", event.detail.file)
         //this.dropzone.emit("success", event.detail.file);
         //this.dropzone.emit("complete", event.detail.file);
@@ -453,5 +477,5 @@ export default class Gallerie {
         this.dropzone.addFile(event.detail.file);
         break;
     }
-  }*/
+  } */
 }
