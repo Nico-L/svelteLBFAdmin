@@ -116,7 +116,7 @@ onMount(()=> {
                     shortcut: 'CMD+SHIFT+G',
                     config: {
                         user: $user.id,
-                        articles: parseInt(idArticle),
+                        article: parseInt(idArticle),
                         espaces: dataArticle.espace.id,
                         tags: 5,
                         token: $user.jwt
