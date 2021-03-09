@@ -154,17 +154,49 @@
     }
 
     .link-tool__title {
-        @apply text-lg font-semibold text-vertLBF;
+        @apply text-lg font-semibold text-vertLBF truncate;
+    }
+
+    .link-tool__description {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1rem;
+        max-height: 2rem;
+        overflow: hidden;
     }
 
     .link-tool__anchor {
         background-image: url('data:image/svg+xml, <svg width="15" height="16" xmlns="http://www.w3.org/2000/svg" fill="%2393c021"><path d="M8.567 13.629c.728.464 1.581.65 2.41.558l-.873.873A3.722 3.722 0 1 1 4.84 9.794L6.694 7.94a3.722 3.722 0 0 1 5.256-.008L10.484 9.4a5.209 5.209 0 0 1-.017.016 1.625 1.625 0 0 0-2.29.009l-1.854 1.854a1.626 1.626 0 0 0 2.244 2.35zm2.766-7.358a3.722 3.722 0 0 0-2.41-.558l.873-.873a3.722 3.722 0 1 1 5.264 5.266l-1.854 1.854a3.722 3.722 0 0 1-5.256.008L9.416 10.5a5.2 5.2 0 0 1 .017-.016 1.625 1.625 0 0 0 2.29-.009l1.854-1.854a1.626 1.626 0 0 0-2.244-2.35z" transform="translate(-3.667 -2.7)"/></svg>');
         background-repeat: no-repeat;
         background-position-y: 3px;
-        @apply text-sm pl-5 ml-2;
+        @apply text-sm pl-5 ml-2 truncate;
     }
 
     .link-tool__image {
-        @apply w-32 h-32 float-left mr-2 rounded overflow-hidden;
+        @apply w-32 h-20 float-left mr-2 rounded overflow-hidden;
     }
+
+    /*
+    code editor
+    */
+    .ce-code__textarea {
+        @apply bg-gray-900 border border-jauneLBF rounded text-jauneLBF text-base;  
+        min-height: 200px;
+        font-family: Menlo, Monaco, Consolas, Courier New, monospace;
+        line-height: 1.6em;
+        box-shadow: none;
+        white-space: pre;
+        word-wrap: normal;
+        overflow-x: auto;
+        resize: vertical;
+    }
+
+    .ce-code__languagecode {
+        @apply bg-gray-900 border border-jauneLBF text-jauneLBF p-1 rounded;
+        font-size: 14px;
+        margin: 5px 0px;
+    }
+
+    
 }

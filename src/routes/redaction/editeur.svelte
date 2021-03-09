@@ -14,6 +14,7 @@ import Underline from '@editorjs/underline'
 import InlineCode from '@editorjs/inline-code'
 import Galerie from '../../editorjs/galerie/galerie.js'
 import LinkTool from '../../editorjs/linkTool'
+import CodeTool from '../../editorjs/CodeTool'
 
 import {dateJourMoisHeure} from "../../utils/dateFr.js"
 
@@ -104,6 +105,10 @@ onMount(()=> {
              */
             holder: editorjs,
             tools: {
+                codeTool: {
+                    class: CodeTool,
+                    shortcut: 'CMD+SHIFT+K',
+                },
                 linkTool: {
                     class: LinkTool,
                     shortcut: 'CMD+SHIFT+L',
@@ -124,6 +129,7 @@ onMount(()=> {
                 },
                 header: {
                     class: Header,
+                    shortcut: 'CMD+SHIFT+E',
                     inlineToolbar : true,
                     config: {
                         placeholder: 'Un titre'
@@ -131,18 +137,22 @@ onMount(()=> {
                     },
                 list: {
                     class: List,
+                    shortcut: 'CMD+SHIFT+L',
                     inlineToolbar: true
                 },
                 marker: {
                     class: Marker,
+                    shortcut: 'CMD+SHIFT+M',
                     inlineToolbar: true
                 },
                 underline: {
                     class: Underline,
+                    shortcut: 'CMD+SHIFT+S',
                     inlineToolbar: true
                 },
                 inlineCode: {
                     class: InlineCode,
+                    shortcut: 'CMD+SHIFT+C',
                     inlineToolbar: true
                 }
 
@@ -160,20 +170,20 @@ onMount(()=> {
                  */
                 ui: {
                     "blockTunes": {
-                    "toggler": {
-                        "Click to tune": "Cliquer pour les options",
-                        "or drag to move": "ou faire glisser"
-                    },
+                        "toggler": {
+                            "Click to tune": "Cliquer pour les options",
+                            "or drag to move": "ou faire glisser"
+                        },
                     },
                     "inlineToolbar": {
-                    "converter": {
-                        "Convert to": "Conversion"
-                    }
+                        "converter": {
+                            "Convert to": "Conversion"
+                        }
                     },
                     "toolbar": {
-                    "toolbox": {
-                        "Add": "Ajouter"
-                    }
+                        "toolbox": {
+                            "Add": "Ajouter"
+                        }
                     }
                 },
             
@@ -218,11 +228,12 @@ onMount(()=> {
                     "link": {
                     "Add a link": "Ajouter un lien"
                     },
+
                     /**
                      * The "stub" is an internal block tool, used to fit blocks that does not have the corresponded plugin
                      */
                     "stub": {
-                    'The block can not be displayed correctly.': 'Le bloc n\'a pas pu s\'afficher correctement'
+                        'The block can not be displayed correctly.': 'Le bloc n\'a pas pu s\'afficher correctement'
                     }
                 },
             
@@ -278,6 +289,7 @@ function tempsDepuisDerniereSauvegarde() {
 }
 
 function enregistreArticle(status=null) {
+    console.log('sauvegarde !')
     if (status) {
         flagPublicationEnCours = true
         flagPublicationSucces = false
@@ -309,6 +321,7 @@ function enregistreArticle(status=null) {
         estPublie = !estPublie
     }
     updateArticle(dataArticle.id, variables).then((retour)=>{
+        horaireDerniereSauvegarde = (new Date()).getTime()
         listeIllustrationsOrphelines(5, $user.id).then((listeIllustrations) => {
             if (status) {
                 setTimeout(function(){ flagPublicationSucces = false; }, 5*1000);
