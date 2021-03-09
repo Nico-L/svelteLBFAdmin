@@ -50,7 +50,9 @@ export default class Gallerie {
     render() {
         const wrapper = document.createElement('div');
         wrapper.classList.add('galerie');
-        this.api.listeners.on(wrapper, 'paste', (event) => this._pasteImage(event, this), false);
+        this.api.listeners.on(wrapper, 'paste', (event) => 
+            this._pasteImage(event, this)
+            , false);
         const listeImg = document.createElement('div')
         listeImg.classList.add('listeImages')
         if (this.data.urls && this.data.urls.length !== 0) {
