@@ -25,15 +25,14 @@ export let idMachine = "";
 let tagId;
 let espaceId;
 $tags.forEach((tag) => {
-    if (tag.tag==="Machine") tagId=tag.id
+    if (tag.tag==="machine") tagId=tag.id
 })
 $espacesBF.forEach((espace)=> {
-    if (espace.value==="L'atelier") espaceId = espace.id
+    if (espace.value==="l'atelier") espaceId = espace.id
 })
 const dataImg = {
-    user: $user.id,
-    espaces: espaceId,
-    tags: tagId
+    espace: espaceId,
+    tag: tagId
 }
 const optionsURL= {
     'resizing_type': 'fill',
@@ -42,43 +41,30 @@ const optionsURL= {
     'gravity': 'ce'
 }
 
-let lesTarifs = []
+let lesAbonnements = []
 let typeTarif = "abonnement"
 let newTarifHoraire = {tarification: "", tarif: ""}
 let specificationMateriaux = false
 let laMachine= {
-                titre: "",
-                tag: "",
-                urlImage: "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png",
+                nom: "",
+                modele: "",
+                nomRaccourci: "",
+                illustration: "",
                 description: "",
-                lesTarifs: "",
-                largeur: "",
-                longueur: "",
-                hauteur: "",
-                tagMachine: "",
-                decoupe: "",
-                gravure: "",
+                resume: "",
+                surAbonnement: false,
+                tarifHoraire: "",
+                abonnements: null,
                 couleur: "rouge"
 }
 let laDecoupe = ""
 let laGravure = ""
-/*const optionsURL= [
-        {
-          ar: '2:1',
-          cropType: 'fill'
-        },
-        {
-          width: 'auto',
-          qualite: 'auto',
-          cropType: 'scale'
-        }
-      ]*/
 let flagSauvegardeEnCours = false;
 let flagSauvegardeSucces = false;
 let flagGetMachine = false;
 
 $: listeAbonnements().then((retour)=> {
-        lesTarifs = retour.Tarifs
+        lesAbonnements = retour.abonnements
     })
 
 $: {
@@ -87,30 +73,17 @@ $: {
         getMachineById(idMachine).then((retour)=> {
             flagGetMachine = false
             flagEdition = true
-            /*specificationMateriaux = retour.decoupe.length>0 || retour.gravure.length>0
-            laDecoupe = retour.decoupe.join(', ')
-            laGravure = retour.gravure.join(', ') */
             laMachine = retour
-            if (!laMachine.Abonnement) {
+            laMachine.illustration = laMachine.illustration.id
+            if (!laMachine.surAbonnement) {
                 typeTarif = "horaire"
             }
-            console.log('laMachine', laMachine)
+            
         })
     }
 }
 
-$: laMachine.Abonnement = typeTarif==="abonnement"
-
-function ajouterTarifHoraire() {
-    tarifsHoraire.push(newTarifHoraire)
-    newTarifHoraire = {tarification: "", tarif: ""}
-    tarifsHoraire = tarifsHoraire
-}
-
-function retirerTarifHoraire(index) {
-        tarifsHoraire.splice(index, 1)
-    tarifsHoraire = tarifsHoraire
-}
+$: laMachine.surAbonnement = typeTarif==="abonnement"
 
 function validationSauvegarde() {
     flagSauvegardeEnCours = true
@@ -148,11 +121,22 @@ function fini() {
                 />
             </div>
         </label>
+        <label for="modele" class="text-sm">
+            Modele
+            <div class="border border-bleuLBFT rounded p-1">
+                <input 
+                bind:value= {laMachine.modele}
+                class="bg-gray-800 text-base text-gray-200 focus:outline-none rounded py-1 px-1 block w-full appearance-none leading-normal"
+                type="text"
+                id="modele"
+                />
+            </div>
+        </label>
         <label for="tag" class="text-sm">
             raccourci
             <div class="border border-bleuLBFT rounded p-1">
                 <input 
-                bind:value= {laMachine.tag}
+                bind:value= {laMachine.nomRaccourci}
                 class="bg-gray-800 text-base text-gray-200 focus:outline-none rounded py-1 px-1 block w-full appearance-none leading-normal"
                 type="text"
                 id="tag"
@@ -174,10 +158,9 @@ function fini() {
             <ImageUpload
                 espaceId = {espaceId}
                 tagId = {tagId}
-                userId = {$user.id}
-                bind:urlImage={laMachine.urlImage}
+                bind:idIllustration={laMachine.illustration}
                 options = {optionsURL}
-                altImage="Illustration de l'atelier"
+                altImage="Illustration de la machine"
                 classImage="rounded border-2 border-bleuLBF w-400px h-180px" />
         </div>
         <div class="mt-4 ">
@@ -194,7 +177,7 @@ function fini() {
                 <RadioBouton mettreApres={true} cbClasses="text-gray-400" name="typeTarif" value="abonnement" bind:selected={typeTarif} label="abonnement"/>
                 <RadioBouton mettreApres={true} cbClasses="text-gray-400" name="typeTarif" value="horaire" bind:selected={typeTarif} label="tarif horaire"/>
             </div>
-            {#if laMachine.Abonnement}
+            {#if laMachine.surAbonnement}
                 <table class="mx-auto table-auto border-collapse border-2 border-gray-300 mt-3">
                     <thead>
                         <tr>
@@ -202,7 +185,7 @@ function fini() {
                         <th class="border border-gray-600 px-2 py-1 text-orangeLBF">Tarif (€)</th>
                         </tr>
                     </thead>
-                    {#each lesTarifs as abonnement, index}
+                    {#each lesAbonnements as abonnement, index}
                         <tr>
                             <td class="border border-gray-600 px-2 py-1">
                                 {abonnement.duree}
@@ -224,143 +207,8 @@ function fini() {
                     />
                     <Fa icon={faEuroSign} size="lg" class="mx-auto ml-2" />
                 </div>  
-                <!--<table class="mx-auto table-auto border-collapse border-2 border-gray-300 mt-3">
-                    <thead>
-                        <tr>
-                        <td class="border border-gray-600 px-2 py-1 text-orangeLBF">Tarif Horaire</td>
-                        <td class="border border-gray-600 px-2 py-1 text-orangeLBF">{laMachine.tarifHoraire}</td>
-                        <td class="border border-gray-600 px-2 py-1 text-orangeLBF">~</td>
-                        </tr>
-                    </thead>
-                    {#each lesTarifs as tarifHoraire, index}
-                        <tr>
-                            <td class="border border-gray-600 px-2 py-1">
-                                <input 
-                                bind:value={tarifHoraire.tarification}
-                                class="w-32 p-1 text-sm bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal text-left"
-                                type="text"
-                                />
-                            </td>
-                            <td class="border border-gray-600 px-2 py-1">
-                            <div class=" flex flex-row items-center">
-                                <input 
-                                bind:value={tarifHoraire.tarif}
-                                class="w-20 p-1 text-sm bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal text-right"
-                                type="text"
-                                />
-                                <Fa icon={faEuroSign} size="lg" class="mx-auto ml-2" />
-                            </div>    
-                            </td>
-                            <td class="border border-gray-600 px-2 py-1">
-                                <Bouton noBorder={true} largeur="w-8" couleur="text-orangeLBF border-orangeLBF" on:actionBouton={() => {retirerTarifHoraire(index)}}>
-                                    <Fa icon={faTrashAlt} size="lg" class="mx-auto" />
-                                </Bouton>
-                            </td>
-                        </tr>
-                    {/each}
-                    <tr>
-                            <td class="border border-gray-600 px-2 py-1">
-                                <input 
-                                bind:value={newTarifHoraire.tarification}
-                                class="w-32 p-1 bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal text-left"
-                                type="text"
-                                id="nouvelAbonnementPeriode"
-                                />
-                            </td>
-                            <td class="border border-gray-600 px-2 py-1">
-                                <div class=" flex flex-row items-center">
-                                    <input 
-                                    bind:value={newTarifHoraire.tarif}
-                                    class="w-20 p-1 bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal text-right"
-                                    type="text"
-                                    id="nouvelAbonnementTarif"
-                                    />
-                                    <Fa icon={faEuroSign} size="lg" class="mx-auto ml-2" />
-                                </div>  
-                            </td>
-                            <td class="border border-gray-600 px-2 py-1">
-                                <Bouton noBorder={true} largeur="w-10" couleur="text-vertLBF border-vertLBF" on:actionBouton={ajouterTarifHoraire}>
-                                    <Fa icon={faPlus} size="lg" class="mx-auto" />
-                                </Bouton>
-                            </td>
-                        </tr>
-                </table>-->
             {/if}
         </div>
-        <!--<div class="mt-4">
-            <div class="h4 font-medium text-rougeLBF">Caractéristiques</div>
-            <div class="flex flex-row justify-around">
-                <div class="flex flex-row justify-start items-end">
-                    <label for="titre" class="text-sm">
-                        longueur (mm)
-                        <div class="border border-rougeLBFT rounded p-1">
-                            <input 
-                                bind:value= {laMachine.longueur}
-                                class="w-24 bg-gray-800 text-base text-gray-200 focus:outline-none rounded py-1 px-1 block appearance-none leading-normal text-right"
-                                type="text"
-                                id="longueur"
-                            />
-                        </div>
-                    </label>
-                    <div class="mx-2 text-2xl">
-                        x
-                    </div>
-                    <label for="largeur" class="text-sm">
-                        largeur (mm)
-                        <div class="border border-rougeLBFT rounded p-1">
-                            <input 
-                                bind:value= {laMachine.largeur}
-                                class="w-24 bg-gray-800 text-base text-gray-200 focus:outline-none rounded py-1 px-1 block appearance-none leading-normal text-right"
-                                type="text"
-                                id="largeur"
-                            />
-                        </div>
-                    </label>
-                </div>
-                <label for="hauteur" class="text-sm">
-                        hauteur (mm)
-                        <div class="border border-rougeLBFT rounded p-1">
-                            <input 
-                                bind:value= {laMachine.hauteur}
-                                class="w-24 bg-gray-800 text-base text-gray-200 focus:outline-none rounded py-1 px-1 block appearance-none leading-normal text-right"
-                                type="text"
-                                id="hauteur"
-                            />
-                        </div>
-                    </label>
-            </div>
-            <div class="mt-4">
-                <CheckBox label="Spécification matériaux" cbClasses="text-grey-600" bind:checked={specificationMateriaux}/>
-            </div>
-            {#if specificationMateriaux}
-                <div class="mt-1">
-                    <div class="h5 text-rougeLBF">Matériaux adaptés</div>
-                    <div>Entrer les matériaux séparés d'une virgule</div>
-                    <label for="decoupe" class="mt-3 text-sm">
-                            Découpe
-                            <div class="border border-rougeLBFT rounded p-1">
-                                <input 
-                                    bind:value= {laDecoupe}
-                                    class="w-full bg-gray-800 text-gray-200 rounded focus:outline-none py-1 px-1 block appearance-none leading-normal"
-                                    type="text"
-                                    id="decoupe"
-                                />
-                            </div>
-                        </label>
-                        <label for="gravure" class="mt-3 text-sm">
-                            Gravure
-                            <div class="border border-rougeLBFT rounded p-1">
-                                <input 
-                                bind:value= {laGravure}
-                                class="w-full bg-gray-800 text-gray-200 rounded focus:outline-none py-1 px-1 block appearance-none leading-normal"
-                                type="text"
-                                id="gravure"
-                            />
-                            </div>
-                        </label>
-                </div>
-            {/if}
-        </div> -->
         <div class="mt-4 flex flex-row items-center justify-end">
             {#if idMachine!==""}
             <Bouton on:actionBouton={fini} largeur="w-10" couleur="text-bleuLBF border-bleuLBF">

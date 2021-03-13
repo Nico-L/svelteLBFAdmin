@@ -10,20 +10,21 @@ export function listeImages(userId, espaceId, tagId) {
     }
     if (espaceId) {
         if (flagPremierParametre) {
-            url = url + 'espaces=' + espaceId
+            url = url + 'espace=' + espaceId
         } else {
-            url = url + '&espaces=' + espaceId
+            url = url + '&espace=' + espaceId
         }
         flagPremierParametre = false
     }
     if (tagId) {
         if (flagPremierParametre) {
-            url = url + 'tags=' + tagId
+            url = url + 'tag=' + tagId
         } else {
-            url = url + '&tags=' + tagId
+            url = url + '&tag=' + tagId
         }
         flagPremierParametre = false 
     }
+    console.log('url', url)
     return verifJWT().then((token)=> 
         {
             const auth = "Bearer " + token
@@ -42,7 +43,7 @@ export function listeImages(userId, espaceId, tagId) {
 }
 
 export function getLogo() {
-   const url = "ADRESSE_CMS" + "illustrations/51"
+   const url = "ADRESSE_CMS" + "illustrations?tag.tag=logo"
     return verifJWT().then((token)=> 
         {
             const auth = "Bearer " + token
@@ -99,7 +100,7 @@ export function listeImgByEspaceEtTagEtUser(espaceId, tagId, userId) {
 }
 
 export function listeIllustrationsOrphelines(tagId, userId) {
-    const query = qs.stringify({ _where: { tags: tagId, user: userId } })
+    const query = qs.stringify({ _where: { tag: tagId, user: userId } })
     const url = "ADRESSE_CMS" + "illustrations?" + query
     return verifJWT().then((token)=> 
         {

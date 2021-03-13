@@ -15,7 +15,8 @@ var flagSuppressionImage = false;
 var suppressionId = "";
 var suppressionImageId="";
 
-export let urlImage = "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png"
+var urlImage = ""
+export let idIllustration = null
 export let dataImage
 export let options = {
     'resizing_type': 'fill',
@@ -27,16 +28,15 @@ const classSizeImg = 'w-' + options.width + 'px ' + 'h-' + options.height + 'px 
 
 export let altImage = "Une illustration";
 export let classImage = {};
-export let userId = null
+//export let userId = null
 export let espaceId = null
 export let tagId = null
+export let userId = null
 
-const dataImg = {
-    espaces: espaceId,
-    tags: tagId,
-    user: userId
+var dataImg = {
+    espace: espaceId,
+    tag: tagId
 }
-
 let flagUploadDone = true
 let flagRecupIllu = false
 const optionsULRThumbs =  {
@@ -52,22 +52,24 @@ let illustrationAEffacer = {'illustrationId': '', 'imageId': ''}
 var listeIllustrations = []
 let logo = null
 
-getLogo().then((retour) => logo = retour)
+onMount(() => {
+    getLogo().then((retour) => {
+        logo = retour[0];
+        if ((!idIllustration) && logo !== null) {urlImage = 'https://cms.labonnefabrique.fr' + logo.media.url; idIllustration = logo.id}
+        })
+})
 
-
-$: {if (flagUploadDone && userId !== null && espaceId !== null && tagId !== null && logo !== null)
-        //var dataForList = dataImg
-        flagRecupIllu = true
-        listeImages(userId, espaceId, tagId)
-            .then((lesImages)=> {
-                listeIllustrations = [
-                    logo,
-                    ...lesImages
-                ]
-                flagRecupIllu = false
-            })
-        flagUploadDone = false
+$: {
+    dataImg = {
+        user: userId,
+        espace: espaceId,
+        tag: tagId
     }
+}
+
+$: {espaceId, getListeIllustrations()}
+
+$: if (flagUploadDone && logo !== null) getListeIllustrations()
 
 function effaceImage() {
     flagSuppressionImage = true
@@ -82,36 +84,53 @@ function effaceImage() {
 
 function setImgData(url, fullDataImg) {
     urlImage = 'https://cms.labonnefabrique.fr' + url
+    idIllustration = fullDataImg.id
     dataImage = fullDataImg
-    console.log('dataImage', dataImage)
+}
+
+function getListeIllustrations() {
+    if (logo !== null) {
+       listeImages(userId, espaceId, tagId)
+        .then((lesImages)=> {
+            flagUploadDone = false
+            listeIllustrations = [
+                logo,
+                ...lesImages
+            ]
+            flagRecupIllu = false
+            urlImage = 'https://cms.labonnefabrique.fr' + listeIllustrations.filter((image) => image.id === idIllustration)[0].media.url
+        }) 
+    }
+    
 }
 
 </script>
-{#await imgProxyUrl(urlImage, options)}
-    <img
-        src="/img/svg/clock-regular.svg"
-        alt="logo"
-        class={"cursor-pointer " + classImage}
-        width={options.width}
-        height={options.height}
-        />
-{:then value}
-    <img
-        src={value.imgProxyUrl}
-        alt={altImage}
-        on:click={() => showDialog = true}
-        class={"cursor-pointer " + classImage}
-        width={options.width}
-        height={options.height}
-        />
-{/await}
-
+{#if idIllustration!== null && urlImage!==""}
+    {#await imgProxyUrl(urlImage, options)}
+        <img
+            src="/img/svg/clock-regular.svg"
+            alt="logo"
+            class={"cursor-pointer " + classImage}
+            width={options.width}
+            height={options.height}
+            />
+    {:then value}
+        <img
+            src={value.imgProxyUrl}
+            alt={altImage}
+            on:click={() => showDialog = true}
+            class={"cursor-pointer " + classImage}
+            width={options.width}
+            height={options.height}
+            />
+    {/await}
+{/if}
 <Dialog bind:visible={showDialog} on:close={() => showDialog = false}>
     <h4 slot="title">Choix Illustration</h4>
     <div class="flex flex-column flex-wrap justify-start mb-2">
         {#each listeIllustrations as illu (illu.id)}
             <div class="p-1">
-                {#await imgProxyUrl('https://cms.labonnefabrique.fr'+illu.illustration[0].url, optionsULRThumbs)} 
+                {#await imgProxyUrl('https://cms.labonnefabrique.fr'+illu.media.url, optionsULRThumbs)} 
                     <img
                         src="/img/svg/clock-regular.svg"
                         alt="logo"
@@ -121,23 +140,23 @@ function setImgData(url, fullDataImg) {
                 {:then value}
                     <img 
                         class="rounded cursor-pointer"
-                        on:click={() => {setImgData(illu.illustration[0].url, illu)}} 
+                        on:click={() => {setImgData(illu.media.url, illu)}} 
                         src={value.imgProxyUrl} 
                         width={optionsULRThumbs.width}
                         height={optionsULRThumbs.height}
                         alt={illu.name}
                         />
-                {/await}
+                {/await} 
                 <div class="flex flex-column">
-                    <div on:click={() => {setImgData(illu.illustration[0].url, illu)}} class="relative my-1 text-vertLBF cursor-pointer">
-                        {#if urlImage === 'https://cms.labonnefabrique.fr' + illu.illustration[0].url}
+                    <div on:click={() => {setImgData(illu.media.url, illu)}} class="relative my-1 text-vertLBF cursor-pointer">
+                        {#if urlImage === 'https://cms.labonnefabrique.fr' + illu.media.url}
                         <Fa icon={faDotCircle} />
                         {:else}
                         <Fa icon={faCircle} />
                         {/if}
                     </div>
-                    {#if illu.id !== 51}
-                        <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.illustration[0].id}; flagConfirmationEffacer = true}}>
+                    {#if illu.tag.tag !== "logo"}
+                        <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.media.id}; flagConfirmationEffacer = true}}>
                             <Fa icon={faTrashAlt} />
                         </div>
                     {/if}

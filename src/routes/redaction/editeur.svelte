@@ -27,7 +27,7 @@ import { faSave, faNewspaper } from '@fortawesome/free-regular-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 import {getArticleById, updateArticle} from '../../strapi/articles.js'
-import {listeIllustrationsOrphelines, effaceIllustration} from '../../strapi/illustrations.js'
+import {listeImages, effaceIllustration} from '../../strapi/illustrations.js'
 
 let editorjs;
 let editor;
@@ -68,7 +68,7 @@ var estPublie = false
 
 $: {
     if (dataArticle !== undefined && newTag !== null) {
-        dataArticle.tags_articles.push(newTag)
+        dataArticle.tags.push(newTag)
     }
     newTag = null
     }
@@ -83,7 +83,7 @@ onMount(()=> {
         dataArticle = {
             ...article
         }
-        urlBanniere = 'https://cms.labonnefabrique.fr' + article.banniere.illustration[0].url
+        //urlBanniere = 'https://cms.labonnefabrique.fr' + article.banniere.media.url
         let dataTemp
         if (article.data !== null) {
             dataTemp = article.data
@@ -122,8 +122,8 @@ onMount(()=> {
                     config: {
                         user: $user.id,
                         article: parseInt(idArticle),
-                        espaces: dataArticle.espace.id,
-                        tags: 5,
+                        espace: dataArticle.espace.id,
+                        tag: 4,
                         token: $user.jwt
                     }
                 },
@@ -298,7 +298,7 @@ function enregistreArticle(status=null) {
         flagSauvegardeSucces = false
     }
     var variables = {...dataArticle}
-    variables.illustrations = []
+    /*variables.illustrations = []
     dataArticle.data.blocks.forEach((block) => {
         if (block.type === 'galerie') {
             block.data.urls.forEach((url) => {
@@ -308,7 +308,7 @@ function enregistreArticle(status=null) {
                 }
             })
         }
-    })
+    })*/
     variables.banniere = dataArticle.banniere.id
     variables.user = $user.id
     variables.espace = dataArticle.espace.id
@@ -320,9 +320,10 @@ function enregistreArticle(status=null) {
         }
         estPublie = !estPublie
     }
+    console.log('variables article', variables)
     updateArticle(dataArticle.id, variables).then((retour)=>{
         horaireDerniereSauvegarde = (new Date()).getTime()
-        listeIllustrationsOrphelines(5, $user.id).then((listeIllustrations) => {
+        listeImages($user.id, null, 4).then((listeIllustrations) => {
             if (status) {
                 setTimeout(function(){ flagPublicationSucces = false; }, 5*1000);
                 flagPublicationEnCours = false
@@ -335,7 +336,7 @@ function enregistreArticle(status=null) {
             delta = 0
             listeIllustrations.forEach((illu) => {
                 if (illu.article === null) {
-                    effaceIllustration({illustrationId: illu.id, imageId: illu.illustration[0].id}).then((retourDelete) => {
+                    effaceIllustration({illustrationId: illu.id, imageId: illu.media.id}).then((retourDelete) => {
                     })
                 }
             })
@@ -433,9 +434,8 @@ function effacerTag(index) {
             <ImageUpload
                 userId = {dataArticle.user.id}
                 espaceId = {dataArticle.espace.id}
-                tagId = 4
-                bind:urlImage = {urlBanniere}
-                bind:dataImage = {dataArticle.banniere}
+                tagId = 3
+                bind:idIllustration= {dataArticle.banniere.id}
                 options = {optionsURL}
                 altImage="bannière article"
                 classImage="rounded border-2 border-vertLBF mx-auto w-300px h-150px" />
@@ -458,7 +458,7 @@ function effacerTag(index) {
                 dropdownClassName = "bg-gray-800 text-gray-500"
                 />
             <div class="mx-2 flex flew-row flex-wrap justify-start">
-                {#each dataArticle.tags_articles as tag, index}
+                {#each dataArticle.tags as tag, index}
                     <div class="h-6 mx-1 my-1 p-2 rounded-full text-orangeLBF border border-orangeLBF flex flex-row items-center text-sm">
                         <div class="cursor-pointer"  on:click={() => {effacerTag(index)}}><Fa icon={faTimes} /></div>
                         <span class="ml-2 font-semibold">{tag.tag}</span>

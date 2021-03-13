@@ -18,6 +18,7 @@ export let nbParticipants = ""
 export let archive = false;
 
 let lesInscrits = []
+var erreur = ""
 let classesPaires = "border border-gray-600 bg-lbfvertt-900 px-2 py-0"
 let classesImpaires = "border border-gray-600 px-2 py-0"
 let nouvelInscrit = {
@@ -38,6 +39,7 @@ let flagEnvoieMailOK = false;
 let flagSauveNouvelInscrit = false;
 let flagEffaceInscrit = [];
 let flagConfirmationEffacerInscrit = false;
+var flagconfirmationCreationUser = false
 
 $: {
     nbInscrits = lesInscrits.length
@@ -54,7 +56,7 @@ function getlisteInscrits() {
                     id: inscrit.id,
                     prenom: inscrit.prenom,
                     nom: inscrit.nom,
-                    email: inscrit.email,
+                    email: inscrit.user.email,
                     uuid: inscrit.uuid
                 }
             )
@@ -75,17 +77,25 @@ function sauveNouvelInscrit() {
     }
     lesInscrits.forEach((inscrit) => {
         if (nouvelInscrit.email===inscrit.email) {
-            console.log('bob ?')
             variables.uuid = inscrit.uuid
         }
     })
     findUser(nouvelInscrit.email)
         .then((retour) => {
-            console.log('retour user', retour)
-            if (retour.length > 0 && retour[0].id) {
+            console.log('retour findUSer', retour)
+            if (retour.length === 0 && !flagconfirmationCreationUser) {
+                erreur = "Adresse email inconnue dans la base. Veuillez dans un premier temps créer un nouvel utilisateur avec cette adresse."
+                flagSauveNouvelInscrit = false;
+                nouvelInscrit = {
+                    prenom: "",
+                    nom: "",
+                    email: ""
+                }
+                return
+            }
+            if (retour[0].id) {
                 variables.user = retour[0].id
             }
-            console.log('variables nouvel inscrit', variables)
             saveNouvelInscrit(variables).then((retour) => {
                 flagSauveNouvelInscrit = false;
                 nouvelInscrit = {
@@ -118,76 +128,77 @@ onMount(()=> {
 
 </script>
 
-<main>
-<h4>Liste des inscripts</h4>
-<table class="table-auto text-sm border-collapse border-gray-300 mb-2 mx-auto">
-  <thead>
-    <tr>
-      <th class="border border-gray-600 px-2 py-1 text-vertLBF">Prénom</th>
-      <th class="border border-gray-600 px-2 py-1 text-vertLBF">Nom</th>
-      <th class="border border-gray-600 px-2 py-1 text-vertLBF">email</th>
-      <th class="border border-gray-600 px-2 py-1 text-vertLBF">~</th>
-    </tr>
-  </thead>
-  <tbody>
-    {#each lesInscrits as inscrit, index (inscrit.id +'-' + index)}
+<main class="w-full max-w-full">
+    <h4>Liste des inscripts</h4>
+    <table class="table-auto text-sm border-collapse border-gray-300 mb-2 mx-auto">
+    <thead>
         <tr>
-            <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.prenom}</td>
-            <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.nom}</td>
-            <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.email}</td>
-            <td class={index%2===0?classesPaires:classesImpaires}>
-            {#if !archive}
-                <Bouton noBorder={true} largeur="w-8" couleur="text-orangeLBF border-orangeLBF" on:actionBouton={()=>{prepEffacerInscrit(inscrit.id)}} occupe={flagEffaceInscrit[inscrit.id]}>
-                    <Fa icon={faTrashAlt} size="lg" class="mx-auto" />
-                </Bouton>
-            {/if}
+        <th class="border border-gray-600 px-2 py-1 text-vertLBF">Prénom</th>
+        <th class="border border-gray-600 px-2 py-1 text-vertLBF">Nom</th>
+        <th class="border border-gray-600 px-2 py-1 text-vertLBF">email</th>
+        <th class="border border-gray-600 px-2 py-1 text-vertLBF">~</th>
+        </tr>
+    </thead>
+    <tbody>
+        {#each lesInscrits as inscrit, index (inscrit.id +'-' + index)}
+            <tr>
+                <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.prenom}</td>
+                <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.nom}</td>
+                <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.email}</td>
+                <td class={index%2===0?classesPaires:classesImpaires}>
+                {#if !archive}
+                    <Bouton noBorder={true} largeur="w-8" couleur="text-orangeLBF border-orangeLBF" on:actionBouton={()=>{prepEffacerInscrit(inscrit.id)}} occupe={flagEffaceInscrit[inscrit.id]}>
+                        <Fa icon={faTrashAlt} size="lg" class="mx-auto" />
+                    </Bouton>
+                {/if}
+                </td>
+            </tr>
+        {/each}
+        <!-- {#if !archive} -->
+        <tr>
+            <td class="border border-gray-600 px-2 py-1">
+                <input 
+                    bind:value={nouvelInscrit.prenom}
+                    class="w-32 p-1 text-sm bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal"
+                    type="text"
+                    id="prenomInscrit"
+                    />
+            </td>
+            <td class="border border-gray-600 px-2 py-1">
+                <input
+                    bind:value={nouvelInscrit.nom}
+                    class="w-32 p-1 text-sm bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal"
+                    type="text"
+                    id="nomInscrit"
+                    />
+            </td>
+            <td class="border border-gray-600  px-2 py-1">
+                <input
+                    bind:value={nouvelInscrit.email}
+                    class="w-full p-1 text-sm bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal"
+                    type="text"
+                    id="emailInscrit"
+                    />
+            </td>
+            <td class="border border-gray-600 px-2 py-1">
+                {#if nouvelInscrit.email!=="" && nouvelInscrit.prenom!==""}
+                    <Bouton noBorder={true} largeur="w-10" couleur="text-vertLBF border-vertLBF" on:actionBouton={sauveNouvelInscrit} occupe={flagSauveNouvelInscrit}>
+                        <Fa icon={faSave} size="lg" class="mx-auto" />
+                    </Bouton>
+                {/if}
             </td>
         </tr>
-    {/each}
-    <!-- {#if !archive} -->
-    <tr>
-        <td class="border border-gray-600 px-2 py-1">
-            <input 
-                bind:value={nouvelInscrit.prenom}
-                class="w-32 p-1 text-sm bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal"
-                type="text"
-                id="prenomInscrit"
-                />
-        </td>
-        <td class="border border-gray-600 px-2 py-1">
-            <input
-                bind:value={nouvelInscrit.nom}
-                class="w-32 p-1 text-sm bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal"
-                type="text"
-                id="nomInscrit"
-                />
-        </td>
-        <td class="border border-gray-600  px-2 py-1">
-            <input
-                bind:value={nouvelInscrit.email}
-                class="w-full p-1 text-sm bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal"
-                type="text"
-                id="emailInscrit"
-                />
-        </td>
-        <td class="border border-gray-600 px-2 py-1">
-            {#if nouvelInscrit.email!=="" && nouvelInscrit.prenom!==""}
-                <Bouton noBorder={true} largeur="w-10" couleur="text-vertLBF border-vertLBF" on:actionBouton={sauveNouvelInscrit} occupe={flagSauveNouvelInscrit}>
-                    <Fa icon={faSave} size="lg" class="mx-auto" />
-                </Bouton>
-            {/if}
-        </td>
-    </tr>
-    <!-- {/if} -->
-  </tbody>
-</table>
+        <!-- {/if} -->
+    </tbody>
+    </table>
     {#if flagComplet}
     <div class="text-rougeLBF">{warningComplet}</div>
     {/if}
-    <div class="flex flex-row justify-end items-center mt-4">
+    <div class="flex flex-row justify-between items-center mt-4 w-full">
+        <div class="text-rougeLBF text-sm w-400px">{erreur}</div>
         <Bouton largeur="w-10" couleur="text-bleuLBF border-bleuLBF" on:actionBouton={()=>{dispatch('close')}}>
             <Fa icon={faArrowLeft} size="lg"  class="mx-auto" />
-        </Bouton>
+        </Bouton>      
     </div>
 </main>
 <!-- confirme efface atelier -->

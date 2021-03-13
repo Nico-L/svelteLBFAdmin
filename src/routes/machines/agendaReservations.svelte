@@ -105,7 +105,7 @@ function getListeMachines() {
          lesMachines = liste
          filtreReservations['tous'] = true
          liste.forEach((machine)=>{
-             filtreReservations[machine.tag] = false
+             filtreReservations[machine.nomRaccourci] = false
          })
      })
 }
@@ -129,18 +129,18 @@ $: {
     if (calendar) {
         calendar.removeAllEvents()
         lesReservations.forEach((resa)=> {
-            if (filtreReservations[resa.machine.tag] || filtreReservations['tous']) {
-                const heureDebutSplit = resa.heuredebut.split(':')
+            if (filtreReservations[resa.machine.nomRaccourci] || filtreReservations['tous']) {
+                const heureDebutSplit = resa.heureDebut.split(':')
                 const debutResa = new Date(resa.date)
                 debutResa.setHours(heureDebutSplit[0])
                 debutResa.setMinutes(heureDebutSplit[1])
-                const heureFinSplit = resa.heurefin.split(':')
+                const heureFinSplit = resa.heureFin.split(':')
                 const finResa = new Date(resa.date)
                 finResa.setHours(heureFinSplit[0])
                 finResa.setMinutes(heureFinSplit[1])
                 const resaEvent = {
                     id: resa.id,
-                    title: resa.machine.tag,
+                    title: resa.machine.nomRaccourci,
                     start: debutResa,
                     end: finResa,
                     backgroundColor: tableCouleursLBF[resa.machine.couleur].numCouleur,
@@ -157,8 +157,8 @@ $: {
     testTousFiltresFalse = false
     testTousFiltresTrue = true
     lesMachines.forEach((machine)=> {
-        testTousFiltresFalse = testTousFiltresFalse || filtreReservations[machine.tag]
-        testTousFiltresTrue = testTousFiltresTrue && filtreReservations[machine.tag]
+        testTousFiltresFalse = testTousFiltresFalse || filtreReservations[machine.nomRaccourci]
+        testTousFiltresTrue = testTousFiltresTrue && filtreReservations[machine.nomRaccourci]
     })
     if (testTousFiltresTrue) {resetFiltre(true); filtreReservations['tous'] = true} else {filtreReservations['tous'] = !testTousFiltresFalse}
 
@@ -216,13 +216,13 @@ onMount(()=> {
         },
         eventResize: function(info) {
             let resa = info.event.extendedProps
-            const heuredebut = info.event.start.getHours() + ":" + (info.event.start.getMinutes() ===0 ? "00": "30") + ":00"
-            const heurefin = info.event.end.getHours() + ":" + (info.event.end.getMinutes() ===0 ? "00": "30") + ":00"
+            const heureDebut = info.event.start.getHours() + ":" + (info.event.start.getMinutes() ===0 ? "00": "30") + ":00"
+            const heureFin = info.event.end.getHours() + ":" + (info.event.end.getMinutes() ===0 ? "00": "30") + ":00"
             const dureeReservation = info.event.end.getHours() - info.event.start.getHours() + (info.event.end.getMinutes() - info.event.start.getMinutes())/60
             nouvelleReservation = {
                 id: resa.id,
-                heuredebut: heuredebut,
-                heurefin: heurefin,
+                heureDebut: heureDebut,
+                heureFin: heureFin,
                 dureeReservation: dureeReservation
             }
             updateReservation()
@@ -238,13 +238,13 @@ onMount(()=> {
                 user: resa.user.id,
                 email: resa.user.email,
                 date: resa.date,
-                heuredebut: resa.heuredebut, 
-                heurefin: resa.heurefin, 
+                heureDebut: resa.heureDebut, 
+                heureFin: resa.heureFin, 
                 machine: resa.machine.id,
                 machineReservee: resa.machine,
-                titreMachine: resa.machine.titre,
-                tag: resa.machine.tag,
-                urlImage: resa.machine.urlImage
+                titreMachine: resa.machine.nom,
+                nomRaccourci: resa.machine.nomRaccourci,
+                urlImageMachine: "https://cms.labonnefabrique.fr" + resa.machine.media.url
             }
             resaOverlap = []
             lesReservations.forEach((resa) => {
@@ -268,8 +268,8 @@ function sauverReservation() {
         if (user.length > 0) {
             nouvelleReservation.user = user[0].id
             nouvelleReservation.date = new Date(nouvelleReservation.dateDebut)
-            nouvelleReservation.heuredebut = nouvelleReservation.date.getHours() + ":" + (nouvelleReservation.date.getMinutes() === 0 ? "00":"30") + ":00"
-            nouvelleReservation.heurefin = nouvelleReservation.dateFin.getHours() + ":" + (nouvelleReservation.dateFin.getMinutes() === 0 ? "00":"30") + ":00"
+            nouvelleReservation.heureDebut = nouvelleReservation.date.getHours() + ":" + (nouvelleReservation.date.getMinutes() === 0 ? "00":"30") + ":00"
+            nouvelleReservation.heureFin = nouvelleReservation.dateFin.getHours() + ":" + (nouvelleReservation.dateFin.getMinutes() === 0 ? "00":"30") + ":00"
             nouvelleReservation.dureeReservation = nouvelleReservation.dateFin.getHours() - nouvelleReservation.date.getHours() + (nouvelleReservation.dateFin.getMinutes() - nouvelleReservation.date.getMinutes())/60
             nouvelleReservation.uuid = uuidv4()
             sauveReservation(nouvelleReservation).then((retour) => {
@@ -319,7 +319,7 @@ function finiResa() {
 function envoyerEmail() {
     if (message.sujet!=="" && message.message!=="" && message.message!=="<p><br></p>") {
         flagEnvoieMail = true
-        imgProxyUrl(nouvelleReservation.machineReservee.urlImage, optionsImg).then((retour)=>{
+        imgProxyUrl(nouvelleReservation.urlImageMachine, optionsImg).then((retour)=>{
             var infoMail = {
             sujet: message.sujet,
             message: message.message,
@@ -349,7 +349,8 @@ function mailConfirmation(uuidResa, detailsMachine) {
     let dateDebut = new Date(nouvelleReservation.dateDebut)
     let arrayMails = [];
     arrayMails.push(nouvelleReservation.email);
-    imgProxyUrl(detailsMachine.urlImage, optionsImg).then((retour)=>{
+    console.log('machine', detailsMachine)
+    imgProxyUrl("https://cms.labonnefabrique.fr" + detailsMachine.media.url, optionsImg).then((retour)=>{
         let envoiMail = {
         machine: detailsMachine.nom,
         prenom: nouvelleReservation.prenom,
@@ -376,7 +377,7 @@ function mailConfirmation(uuidResa, detailsMachine) {
 function resetFiltre(status) {
     if (status) {
         lesMachines.forEach((machine) => {
-            filtreReservations[machine.tag] = false
+            filtreReservations[machine.nomRaccourci] = false
         })
     }
 }
@@ -391,7 +392,7 @@ function resetFiltre(status) {
         </div>
         {#each lesMachines as machine}
             <div class="mr-4 text">
-                <CheckBox label={machine.tag} cbClasses={tableCouleursLBF[machine.couleur].classText} bind:checked={filtreReservations[machine.tag]} />
+                <CheckBox label={machine.nomRaccourci} cbClasses={tableCouleursLBF[machine.couleur].classText} bind:checked={filtreReservations[machine.nomRaccourci]} />
             </div>
         {/each}
     </div>
@@ -435,7 +436,7 @@ function resetFiltre(status) {
         <h4>Machine concernée</h4>
         <div class="mt-2 flex flex-row items-center">
             {#each lesMachinesFiltrees as machine}
-                <RadioBouton cbClasses={tableCouleursLBF[machine.couleur].classText} name="machineReservation" value={machine.id} bind:selected={nouvelleReservation.machine} label={machine.tag}/>
+                <RadioBouton cbClasses={tableCouleursLBF[machine.couleur].classText} name="machineReservation" value={machine.id} bind:selected={nouvelleReservation.machine} label={machine.nomRaccourci}/>
             {/each}
         </div>
     </div>

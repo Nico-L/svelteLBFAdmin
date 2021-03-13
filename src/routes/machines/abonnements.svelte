@@ -15,7 +15,7 @@
 
     function recupAbonnements() {
         listeAbonnements().then((retour)=> {
-            lesAbonnements = retour.Tarifs
+            lesAbonnements = retour.abonnements
         })
     }
 
@@ -25,6 +25,8 @@ $: {if (lesAbonnements.length > 0)
         if (derniereEntree.duree !== "" || derniereEntree.tarif !== "") {
             lesAbonnements.push({duree:"", tarif: ""})
         }
+    } else {
+        lesAbonnements.push({duree:"", tarif: ""})
     }
 }
 
@@ -55,7 +57,7 @@ function enregistrerAbonnements() {
           }
       })
       const variables = {
-            Tarifs: lesAbonnements
+            abonnements: lesAbonnements
           }
     majAbonnements(variables).then((retour) => {
         flagSauvegardeOK = true;

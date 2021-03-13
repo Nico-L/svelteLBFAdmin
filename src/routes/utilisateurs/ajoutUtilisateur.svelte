@@ -2,6 +2,7 @@
 import Bouton from '../../components/Button/Button.svelte';
 import Fa from 'svelte-fa'
 import { faSave, faSignInAlt } from '@fortawesome/free-solid-svg-icons'
+import {newUser} from '../../strapi/users.js'
 
 var occupe = false
 var succes = false
@@ -15,7 +16,7 @@ var passwordVerif = ""
 var erreur = "text-gray-200"
 var message = "Merci de renseigner les informations suivantes."
 
-function demandeLien() {
+/*function demandeLien() {
     if (email==="") {
         return
     }
@@ -42,7 +43,7 @@ function demandeLien() {
         ).catch((erreur)=>{
             console.log('une erreur a eu lieu', erreur)
         })
-    }
+    }*/
 
 function enregistrement() {
         const regexMail = /([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/i.exec(email)
@@ -77,9 +78,33 @@ function enregistrement() {
                 password: password
             })
         };
-        fetch('https://cms.labonnefabrique.fr/users', options)
+        const variables = {
+                username: userName,
+                confirmed: true,
+                email: email,
+                password: password
+            }
+        newUser(variables).then((retour) =>{
+            occupe=false
+            if (retour.statusCode && retour.statusCode === 400) {
+                if (retour.message === "missing.password") {
+                    message = "Merci de renseigner votre mot de passe"
+                    erreur = "text-rougeLBF"
+                } else if (retour.message[0] && retour.message[0].messages[0].id === "Auth.form.error.email.taken") {
+                    message = "Un compte avec cet email a déjà été créé. Vous pouvez réinitialiser votre mot de passe en cliquant sur le bouton ci-dessous"
+                    connu = true
+                } else if (retour.message[0] && retour.message[0].messages[0].id === "Auth.form.error.username.taken") {
+                    message = "Ce nom d'utilisateur est déjà pris, merci de le modifier"
+                    erreur = "text-rougeLBF"
+                }
+            } else {
+                window.location.replace(window.location.origin + '/utilisateurs/fiche?email=' + email)
+            }
+        })
+        /*fetch('https://cms.labonnefabrique.fr/users', options)
             .then((retour)=>
                 retour.json().then((retour2)=> {
+                    console.log('retour user creation', retour2)
                     occupe=false
                     if (retour2.statusCode && retour2.statusCode === 400) {
                         if (retour2.message === "missing.password") {
@@ -93,12 +118,12 @@ function enregistrement() {
                             erreur = "text-rougeLBF"
                         }
                     } else {
-                        window.location.replace(window.location.origin + '/utilisateurs/fiche?email=' + email)
+                        //window.location.replace(window.location.origin + '/utilisateurs/fiche?email=' + email)
                     }
                 })
             ).catch((erreur)=>{
                 console.log('une erreur a eu lieu', erreur)
-            })
+            }) */
     }
 
 </script>

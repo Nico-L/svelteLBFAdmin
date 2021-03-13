@@ -73,10 +73,10 @@ function effacerarticle() {
     var promises = []
     if (articleAEffacer && articleAEffacer.illustrations && articleAEffacer.illustrations.length > 0) {
         if (articleAEffacer.banniere.id !== 51 && !garderBanniere) {
-            promises.push(effaceIllustration({illustrationId: articleAEffacer.banniere.id, imageId: articleAEffacer.banniere.illustration[0].id}))
+            promises.push(effaceIllustration({illustrationId: articleAEffacer.banniere.id, imageId: articleAEffacer.banniere.media.id}))
         }
         articleAEffacer.illustrations.forEach((illu) => {
-            promises.push(effaceIllustration({illustrationId: illu.id, imageId: illu.illustration[0].id}))
+            promises.push(effaceIllustration({illustrationId: illu.id, imageId: illu.media.id}))
         })
     }
     if (promises.length > 0) {
@@ -103,7 +103,7 @@ function sendToEditor(id) {
     {#each articles as article, index}
     <div class={"flex flex-row divide-x py-2 justify-between border border-gray-900" + fondListe(index)}>
         <div class="px-4 flex-shrink-0 text-gray-700">
-            {#await imgProxyUrl("https://cms.labonnefabrique.fr" + article.banniere.illustration[0].url, optionsProxy)}
+            {#await imgProxyUrl("https://cms.labonnefabrique.fr" + article.banniere.media.url, optionsProxy)}
                 <img
                     src="/img/svg/clock-regular.svg"
                     alt="logo"

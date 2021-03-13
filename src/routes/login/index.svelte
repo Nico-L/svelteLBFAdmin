@@ -35,7 +35,6 @@
                     occupe = false
                     if (retour2.jwt && retour2.user) {
                         succes = true
-                        //localStorage.setItem('jwtLBF', retour2.jwt);
                         var userTemp = {}
                         userTemp.id = retour2.user.id
                         userTemp.username = retour2.user.username

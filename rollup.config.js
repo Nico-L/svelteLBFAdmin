@@ -27,7 +27,7 @@ export default {
 	plugins: [
         copy({
             targets: [
-                { src: './_redirects', dest: './public' },
+                { src: './_redirects', dest: './public' }
             ]
         }),
         replace({

@@ -31,15 +31,15 @@ let flagEdition = false;
 let dataAtelier = {
     id: "",
     titre:"",
-    espaceId: 4,
-    urlImage: "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png",
+    espace: {id: 2},
+    illustration:{},
     nbParticipants: 8,
     surInscription: true,
     dateDebut: new Date(),
     dateFin: new Date(),
     description: "Une description",
     inscriptions_ateliers:[],
-    lesTarifs: [ { description: "Adhérent", tarif: "10", qf: true }, { description: "Non adhérent", tarif: "15", qf: false} ]
+    tarifs: [ { description: "Adhérent", tarif: "10", qf: true }, { description: "Non adhérent", tarif: "15", qf: false} ]
 }
 
 var eventEditAdded = []
@@ -108,9 +108,10 @@ $: {
         if (elementEdit !== null) {
             elementEdit.addEventListener('click', function () {
                     flagEdition = true
-                        dataAtelier = {}
-                        dataAtelier = atelier
-                        flagDialogAtelier = true
+                    dataAtelier = {}
+                    dataAtelier = atelier
+                    console.log('dataAtelier', dataAtelier)
+                    flagDialogAtelier = true
                 })    
         }
         const usersId = 'btn-inscrits-' + atelier.id
@@ -181,8 +182,8 @@ onMount(async ()=> {
             dataAtelier = {
                 id: "",
                 titre:"",
-                espace: {id: 4},
-                urlImage: "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png",
+                espace: {id: 2},
+                illustration: {},
                 nbParticipants: 8,
                 surInscription: true,
                 date: info.start,
@@ -190,7 +191,7 @@ onMount(async ()=> {
                 fin: horaireFin.heures + ":" + horaireFin.minutes,
                 description: "Une description",
                 inscriptions_ateliers:[],
-                lesTarifs: [ { description: "Adhérent", tarif: "10", qf: true }, { description: "Non adhérent", tarif: "15", qf: false} ]
+                tarifs: [ { description: "Adhérent", tarif: "10", qf: true }, { description: "Non adhérent", tarif: "15", qf: false} ]
             }
             flagEdition = false
             flagDialogAtelier = true
@@ -241,14 +242,14 @@ onMount(async ()=> {
         },
         eventContent: function (args) {
             var listeNodes = []
-            //console.log('event extended', args.event.extendedProps)
+            const urlImage = "https://cms.labonnefabrique.fr" + args.event.extendedProps.illustration.media.url
             if (args.view.type === "timeGridWeek") {
                 const dureeEvent = getMinutes(args.event.extendedProps.fin) - getMinutes(args.event.extendedProps.debut)
                 if (dureeEvent > 90) {
                     const imageDiv = document.createElement('div')
                     imageDiv.classList.add('event-imgDiv-atelier')
                     const image = document.createElement('img')
-                    image.setAttribute('src', args.event.extendedProps.urlImage)
+                    image.setAttribute('src', urlImage)
                     image.classList.add('event-img-atelier')
                     imageDiv.appendChild(image)
                     listeNodes.push(imageDiv)
@@ -338,7 +339,7 @@ onDestroy(()=> {
 </main>
 <!-- dialog info Atelier -->
 <Dialog bind:visible={flagDialogAtelier} on:close={majListeAteliers}>
-    <FormAtelier bind:dataAtelier={dataAtelier} bind:flagEdition={flagEdition} on:close={majListeAteliers}/>
+    <FormAtelier bind:editAtelier={dataAtelier} bind:flagEdition={flagEdition} on:close={majListeAteliers}/>
 </Dialog>
 <!-- Liste des inscrits-->
 <Dialog bind:visible={flagListeInscrits} on:close={() => {flagListeInscrits=false}}>

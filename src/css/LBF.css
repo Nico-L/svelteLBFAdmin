@@ -1,5 +1,13 @@
 /* liste machines */
 @layer components {
+    .violet {
+        @apply bg-violetLBF border-2 border-violetLBF;
+    }
+
+    .txt-violet {
+        @apply text-violetLBF;
+    }
+
     .bleu {
     @apply bg-bleuLBF border-2 border-bleuLBF;
     }

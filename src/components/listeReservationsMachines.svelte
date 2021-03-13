@@ -67,7 +67,7 @@ function fondListe (index) {
     {#each reservations as reservation, index}
     <div class={"flex flex-row divide-x py-2 justify-between border border-gray-900" + fondListe(index)}>
         <div class="px-4 flex-shrink-0 text-gray-700">
-            {#await imgProxyUrl(reservation.machine.urlImage, optionsProxy)}
+            {#await imgProxyUrl(reservation.machine.illustration.media.url, optionsProxy)}
                 <img
                     src="/img/svg/clock-regular.svg"
                     alt="logo"

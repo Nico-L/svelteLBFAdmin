@@ -20,7 +20,7 @@ export function listeEspacesBF() {
 }
 
 export function listeTags() {
-    const url = "ADRESSE_CMS" + "tags"
+    const url = "ADRESSE_CMS" + "tags-illustrations"
     return verifJWT().then((token)=> 
         {
             const auth = "Bearer " + token

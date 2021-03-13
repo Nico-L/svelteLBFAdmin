@@ -10,10 +10,6 @@
     export let data = ""
 
     function onProcessFile(error, file) {
-        console.log('terminé !', pond)
-        /*dispatch('uploadDone', {
-                fileProps: {idImage: file.serverId, format: file.fileExtension}
-            });*/
         dispatch('uploadDone');
         pond.removeFile();
     }

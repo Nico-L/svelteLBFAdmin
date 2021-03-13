@@ -98,6 +98,7 @@ export function majMachine(machineId, variables) {
 }
 
 export function creerMachine(variables) {
+    console.log('variable machine', variables)
     const url = "ADRESSE_CMS" + "machines"
     return verifJWT().then((token)=> 
         {

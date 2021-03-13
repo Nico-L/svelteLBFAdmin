@@ -1,5 +1,6 @@
 <script>
 import { onMount } from "svelte";
+import { roles } from './../../stores/roles.js'
 import Bouton from './../../components/Button/Button.svelte';
 import CheckBoxAlone from './../../components/CheckBoxAlone.svelte';
 import RadioBouton from './../../components/radioButton.svelte'
@@ -22,6 +23,10 @@ var flagMAJEnCours = false
 var flagDateChoisie = false
 
 var urlModifInscription = window.location.search;
+
+const couleurRadio = [
+    "text-bleuLBF", "text-vertLBF", "text-jauneLBF", "text-orangeLBF", "text-rougeLBF", "text-violetLBF"
+]
 
 onMount(() => {
     var extracted = /\?email=([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/i.exec(urlModifInscription)
@@ -167,10 +172,15 @@ function majUtilisateur () {
                     </tr>
                 </table>
                 <div class="h4 mt-2">Role</div>
-                <div class="flex flex-row flex-wrap">
+                <!-- <div class="flex flex-row flex-wrap">
                     <RadioBouton cbClasses="text-bleuLBF" label="aucun" name="role" value={1} bind:selected={utilisateur.role} />
                     <RadioBouton cbClasses="text-vertLBF" label="atelier" name="role" value={6} bind:selected={utilisateur.role} />
                     <RadioBouton cbClasses="text-jauneLBF" label="admin" name="role" value={5} bind:selected={utilisateur.role} />
+                </div> -->
+                <div class="flex flex-row flex-wrap">
+                    {#each $roles as role, index}
+                        <RadioBouton cbClasses={couleurRadio[index % 6]} label={role.type} name="role" value={role.id} bind:selected={utilisateur.role} />
+                    {/each}
                 </div>
             </div>
             <div class="ml-4 mt-4">

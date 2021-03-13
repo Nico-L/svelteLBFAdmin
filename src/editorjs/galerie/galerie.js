@@ -1,6 +1,6 @@
 import Dropzone from '../../utils/dropzone.js'
 
-import {strapiUpload} from '../../strapi/strapiImagesServer.js'
+//import {strapiUpload} from '../../strapi/strapiImagesServer.js'
 import {effaceIllustration} from '../../strapi/illustrations.js'
 import {verifJWT} from '../../strapi/verifJWT.js'
 
@@ -86,7 +86,7 @@ export default class Gallerie {
         this.dropzone = new Dropzone(addImg, {
             url: "https://cms.labonnefabrique.fr/illustrations",
             withCredentials: false,
-            paramName: 'files.illustration',
+            paramName: 'files.media',
             uploadMultiple: false,
             parallelUploads: 5,
             headers: {
@@ -125,6 +125,7 @@ export default class Gallerie {
             formData.append('data', uploadData)
         });
         this.dropzone.on('success', (file, response) => {
+            console.log('reponse drop', response)
             this.listOfFiles.push({file: file, id: response.id})
             this.nbUploading -= 1
             if (this.nbUploading < 1) {
@@ -137,7 +138,7 @@ export default class Gallerie {
                 /*const setBusy = document.getElementById(this.idGalerie).getElementsByClassName("imageVide")[0].getElementsByClassName('busy')[0]
                 setBusy.classList.toggle('cache', true)*/
             }
-            this._addImageToList("ADRESSE_CMS" + response.illustration[0].url.substring(1), response.id, response.illustration[0].id, file)
+            this._addImageToList("ADRESSE_CMS" + response.media.url.substring(1), response.id, response.media.id, file)
         })
         this.dropzone.on('dragover', () => {
             const overZone = document.getElementById(this.idGalerie).getElementsByClassName("imageVide")[0]

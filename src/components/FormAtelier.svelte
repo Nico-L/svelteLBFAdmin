@@ -22,11 +22,11 @@ import { dateFr, dateInscription} from './../utils/dateFr.js'
 import Datepicker from './SvelteCalendar/Datepicker.svelte'
 
 export let flagEdition=false;
-export let dataAtelier = {
+export let editAtelier = {
     id: "",
     titre:"",
-    urlImage: "https://cms.labonnefabrique.fr/uploads/logo_LBF_bb0853ef96.png",
-    espace: {id: 1},
+    illustration: {},
+    espace: {id: 2},
     nbParticipants: 8,
     surInscription: true,
     date: new Date(),
@@ -34,14 +34,10 @@ export let dataAtelier = {
     fin: "12:00",
     description: "Une description",
     inscriptions_ateliers:[],
-    lesTarifs: [ { description: "Adhérent", tarif: "10", qf: true }, { description: "Non adhérent", tarif: "15", qf: false} ]
+    tarifs: [ { description: "Adhérent", tarif: "10", qf: true }, { description: "Non adhérent", tarif: "15", qf: false} ]
 }
 export let archive = false;
-
-let editAtelier = {
-    ... dataAtelier
-}
-
+console.log('editAtelier', editAtelier)
 //let espaceId = editAtelier.espace.id
 
 if (!editAtelier.dateDebut) {
@@ -87,16 +83,11 @@ let datesFormatees = ""
 let tagId;
 
 $tags.forEach((tag) => {
-    if (tag.tag==="Atelier") tagId=tag.id
+    if (tag.tag==="atelier") tagId=tag.id
 })
 /*$espacesBF.forEach((espace)=> {
     if (espace.value==="L'atelier") espaceId = espace.id
 }) */
-var dataImg = {
-    user: $user.id,
-    espaces: editAtelier.espace?editAtelier.espace.id:1,
-    tags: tagId
-}
 
 $: {
     deuxJourAvantDebut = new Date(editAtelier.date)
@@ -117,14 +108,6 @@ const optionsURL= {
     'height': 180,
     'gravity': 'ce'
 }
- 
-$: {
-     dataImg = {
-        user: $user.id,
-        espaces: editAtelier.espace?editAtelier.espace.id:1,
-        tags: tagId
-    }
- }
 
 function fini() {
     dispatch('close')
@@ -151,11 +134,12 @@ function sauveAtelier() {
         espace: editAtelier.espace.id,
         nbParticipants: editAtelier.nbParticipants,
         surInscription: editAtelier.surInscription,
-        lesTarifs: editAtelier.lesTarifs,
+        tarifs: editAtelier.tarifs,
         titre: editAtelier.titre || "Un nouvel atelier",
-        urlImage: editAtelier.urlImage,
+        illustration: editAtelier.illustration.id,
         encadrant: editAtelier.encadrant
     }
+    console.log('var atelier', variables)
     flagSauvegardeEnCours = !flagDupliquer;
     flagDuplicationEnCours = flagDupliquer
     ajouterAtelier(variables).then((result)=> {
@@ -198,9 +182,9 @@ function updateAtelier() {
         espace: editAtelier.espace.id,
         nbParticipants: editAtelier.nbParticipants,
         surInscription: editAtelier.surInscription,
-        lesTarifs: editAtelier.lesTarifs,
+        tarifs: editAtelier.tarifs,
         titre: editAtelier.titre || "Un nouvel atelier",
-        urlImage: editAtelier.urlImage,
+        illustration: editAtelier.illustration.id,
         encadrant: editAtelier.encadrant
     }
     flagSauvegardeEnCours = true;
@@ -256,12 +240,12 @@ function formatHoraire(e, horaire) {
 }
 
 function effacerTarif(index) {
-    editAtelier.lesTarifs.splice(index,1)
+    editAtelier.tarifs.splice(index,1)
     editAtelier = editAtelier
 }
 
 function ajouterTarif() {
-    editAtelier.lesTarifs.push({description: "Nouveau tarif", tarif: "10" , qf: false})
+    editAtelier.tarifs.push({description: "Nouveau tarif", tarif: "10" , qf: false})
     editAtelier = editAtelier
 }
 
@@ -315,10 +299,9 @@ function suppressionAtelier() {
     </label>
     <div class="w-5/6 mx-auto mt-3">
         <ImageUpload
-            userId={$user.id}
-            espaceId={editAtelier.espace?editAtelier.espace.id:1}
+            espaceId={editAtelier.espace.id}
             tagId={tagId}
-            bind:urlImage={editAtelier.urlImage}
+            bind:idIllustration={editAtelier.illustration.id}
             options = {optionsURL}
             altImage="Illustration de l'atelier"
             classImage="rounded border-2 border-bleuLBF w-400px h-180px" />
@@ -385,7 +368,7 @@ function suppressionAtelier() {
             <button class="text-rougeLBF border border-rougeLBF rounded-sm p-1 focus:outline-none" on:click={ajouterTarif}>Ajouter un tarif</button>
         </div>
         <div class="flex flex-row flex-wrap justify-around">
-            {#each editAtelier.lesTarifs as tarif, index}
+            {#each editAtelier.tarifs as tarif, index}
                 <div class="w-5/12 border border-rougeLBF rounded p-1 mx-2 my-2">
                     <div class="w-full flex flex-row justify-start items-center my-2">
                         <Fa icon={faEuroSign} fw size="lg" class="mx-1 w-8"/>

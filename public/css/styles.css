@@ -961,6 +961,19 @@ h6,
   }
 }
 
+.violet {
+  --tw-bg-opacity: 1;
+  background-color: rgba(94, 75, 153, var(--tw-bg-opacity));
+  --tw-border-opacity: 1;
+  border-color: rgba(94, 75, 153, var(--tw-border-opacity));
+  border-width: 2px;
+}
+
+.txt-violet {
+  --tw-text-opacity: 1;
+  color: rgba(94, 75, 153, var(--tw-text-opacity));
+}
+
 .bleu {
   --tw-bg-opacity: 1;
   background-color: rgba(75, 188, 196, var(--tw-bg-opacity));
@@ -1574,10 +1587,6 @@ h6,
   border-color: rgba(224, 41, 51, var(--tw-border-opacity));
 }
 
-.border-rougeLBFT {
-  border-color: #e0293355;
-}
-
 .border-jauneLBF {
   --tw-border-opacity: 1;
   border-color: rgba(252, 198, 45, var(--tw-border-opacity));
@@ -1778,6 +1787,10 @@ h6,
 
 .justify-evenly {
   justify-content: space-evenly;
+}
+
+.flex-auto {
+  flex: 1 1 auto;
 }
 
 .flex-grow {
@@ -2089,10 +2102,6 @@ h6,
   margin-top: 8rem;
 }
 
-.mr-px {
-  margin-right: 1px;
-}
-
 .ml-240px {
   margin-left: 240px;
 }
@@ -2107,6 +2116,10 @@ h6,
 
 .-mt-6 {
   margin-top: -1.5rem;
+}
+
+.max-w-full {
+  max-width: 100%;
 }
 
 .max-w-5\/6 {
@@ -2129,21 +2142,12 @@ h6,
   min-height: 4rem;
 }
 
-.min-w-16 {
-  min-width: 4rem;
+.min-w-full {
+  min-width: 100%;
 }
 
-.min-w-1\/3 {
-  min-width: 33%;
-}
-
-.min-w-340px {
-  min-width: 340px;
-}
-
-.object-left {
-  -o-object-position: left;
-     object-position: left;
+.min-w-5\/6 {
+  min-width: 83%;
 }
 
 .opacity-75 {
@@ -2327,11 +2331,6 @@ h6,
   text-align: justify;
 }
 
-.text-black {
-  --tw-text-opacity: 1;
-  color: rgba(0, 0, 0, var(--tw-text-opacity));
-}
-
 .text-orangeLBF {
   --tw-text-opacity: 1;
   color: rgba(238, 115, 46, var(--tw-text-opacity));
@@ -2422,10 +2421,6 @@ h6,
   vertical-align: middle;
 }
 
-.align-bottom {
-  vertical-align: bottom;
-}
-
 .visible {
   visibility: visible;
 }
@@ -2500,14 +2495,6 @@ h6,
 
 .w-720px {
   width: 720px;
-}
-
-.w-1\/3 {
-  width: 33.333333%;
-}
-
-.w-2\/3 {
-  width: 66.666667%;
 }
 
 .w-1\/6 {
@@ -2715,40 +2702,12 @@ h6,
     border-bottom-right-radius: 0.25rem;
   }
 
-  .sm\:block {
-    display: block;
-  }
-
-  .sm\:hidden {
-    display: none;
-  }
-
   .sm\:flex-row {
     flex-direction: row;
   }
 
-  .sm\:flex-col {
-    flex-direction: column;
-  }
-
-  .sm\:mt-4 {
-    margin-top: 1rem;
-  }
-
   .sm\:w-480px {
     width: 480px;
-  }
-
-  .sm\:w-2\/3 {
-    width: 66.666667%;
-  }
-
-  .sm\:w-1\/12 {
-    width: 8.333333%;
-  }
-
-  .sm\:w-full {
-    width: 100%;
   }
 }
 

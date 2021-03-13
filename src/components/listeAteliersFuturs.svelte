@@ -68,7 +68,7 @@ function fondListe (index) {
     {#each ateliers as atelier, index}
     <div class={"flex flex-row divide-x py-2 justify-between border border-gray-900" + fondListe(index)}>
         <div class="px-4 flex-shrink-0 text-gray-700">
-            {#await imgProxyUrl(atelier.urlImage, optionsProxy)}
+            {#await imgProxyUrl("https://cms.labonnefabrique.fr" + atelier.illustration.media.url, optionsProxy)}
                 <img
                     src="/img/svg/clock-regular.svg"
                     alt="logo"

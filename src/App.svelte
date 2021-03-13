@@ -101,7 +101,9 @@ const listeMachines = register({
     import {listeEspacesBF, listeTags} from './strapi/espacesEtTags.js'
     import {getTagsArticles} from './strapi/tagsArticles.js'
     import {verifJWT} from './strapi/verifJWT.js'
+    import {listeRoles} from './strapi/users.js'
 
+    import { roles } from './stores/roles.js'
     import { user } from "./stores/user.js"
     import { espacesBF } from "./stores/espacesBF.js"
     import {tags} from "./stores/tags.js"
@@ -117,7 +119,7 @@ const listeMachines = register({
     var flagTags = false
     var flagTagsArticles = false
     var flagBuildNeeded = false
-
+    var flagRoles = false
 
     $: {
         const userInfo = JSON.parse(localStorage.getItem('userInfo'))
@@ -157,6 +159,25 @@ $: {
         getTagsArticles().then((tagsArticles) => {
             tagsArticlesStore.set(tagsArticles)
             flagTagsArticles = true
+        })
+    }
+}
+
+$: {
+    if (!loginNeeded && !flagRoles) {
+        listeRoles().then((retour) => {
+            var lesRoles = []
+            retour.roles.forEach((role) => {
+                if (role.type !== "authenticated" && role.type !== "site" && role.type !== "public") {
+                    lesRoles.push(role)
+                }
+                if (role.type === "authenticated") {
+                    role.type = "aucun"
+                    lesRoles.push(role)
+                }
+            })
+            roles.set(lesRoles)
+            flagRoles = true
         })
     }
 }

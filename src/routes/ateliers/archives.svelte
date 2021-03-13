@@ -28,6 +28,8 @@ let optionsImg = {
     'gravity': 'ce'
 }
 
+$: console.log('ateliers', lesAteliers)
+
 $: if ($user) {
     listeAteliersArchives().then((retour)=> {
         lesAteliers = retour
@@ -66,7 +68,8 @@ function finEdition() {
     <div class="h-14 ml-16 flex flex-row content-center">
         <h5 class="mx-auto my-auto pl-2">{atelier.titre}</h5>
     </div>
-    {#await imgProxyUrl(atelier.urlImage, optionsImg)}
+    
+    {#await imgProxyUrl("https://cms.labonnefabrique.fr" + atelier.illustration.media.url, optionsImg)}
     <div
             class="relative h-180px bg-auto"
             style="">
@@ -111,8 +114,8 @@ function finEdition() {
                     <Fa icon={faEuroSign} size="lg" class="mx-auto"/>
                 </div>
                 <div class="mx-auto text-sm text-center">
-                {#each atelier.lesTarifs as tarif, i}
-                    {#if tarif.tarif}{tarif.tarif} € - {/if} {#if i === atelier.lesTarifs.length-1 }  {tarif.description} {:else } {tarif.description} <br /> {/if}
+                {#each atelier.tarifs as tarif, i}
+                    {#if tarif.tarif}{tarif.tarif} € - {/if} {#if i === atelier.tarifs.length-1 }  {tarif.description} {:else } {tarif.description} <br /> {/if}
                 {/each}
                 </div>
             </div>
@@ -138,5 +141,5 @@ function finEdition() {
 
 <!-- dialog info Atelier -->
 <Dialog bind:visible={flagDialogAtelier} on:close={()=>{finEdition()}}>
-    <FormAtelier dataAtelier={dataAtelier} flagEdition={true} archive={true} on:close={()=>{finEdition()}}/>
+    <FormAtelier editAtelier={dataAtelier} flagEdition={true} archive={true} on:close={()=>{finEdition()}}/>
 </Dialog>

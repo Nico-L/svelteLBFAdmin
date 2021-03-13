@@ -19,7 +19,7 @@
 
     var dataArticle = {
         titre: "",
-        espace: 4,
+        espace: 2,
     }
     const optionsURL= {
         'resizing_type': 'fill',
@@ -35,7 +35,7 @@
             titre: dataArticle.titre,
             user: $user.id,
             espace: dataArticle.espace,
-            banniere: 51,
+            banniere: 33,
             published_at: null
         }
         saveArticle(variables).then((retour) => {

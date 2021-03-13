@@ -19,6 +19,7 @@ let flagMAJ = false
 function getlistePlages() {
             lesPlages = [[], [], [], [], [], [], []]
             getListeHoraires().then((retour)=>{
+                console.log('retour plages', retour)
                 lesPlages[0] = retour.dimanche
                 lesPlages[1] = retour.lundi
                 lesPlages[2] = retour.mardi
