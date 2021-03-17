@@ -34,8 +34,10 @@ export let tagId = null
 export let userId = null
 
 var dataImg = {
+    user: userId,
     espace: espaceId,
-    tag: tagId
+    tag: tagId,
+    pixabayUser: ""
 }
 let flagUploadDone = true
 const optionsULRThumbs =  {
@@ -67,7 +69,8 @@ $: {
     dataImg = {
         user: userId,
         espace: espaceId,
-        tag: tagId
+        tag: tagId,
+        pixabayUser: ""
     }
 }
 
@@ -189,7 +192,7 @@ function getListeIllustrations() {
         </div>
         <FilePond blobImage={blobImage} data={dataImg} on:uploadDone={() => {flagUploadDone = true; blobImage = null}}/>
     {:else}
-        <QueryPixabay bind:blobImage={blobImage} />
+        <QueryPixabay bind:blobImage={blobImage} bind:pixabayUser={dataImg.pixabayUser}/>
     {/if}
   <div slot="actions">
     <Bouton on:actionBouton={() => showDialog = false} largeur="w-10" couleur="text-vertLBF border-vertLBF">

@@ -8,6 +8,7 @@ import {pixabayListe, savePixabayImage} from '../strapi/pixabay.js'
 
 var idIllustration = ""
 export let blobImage = null
+export let pixabayUser = ""
 
 var motsClefs = ""
 var listeImages = []
@@ -37,12 +38,14 @@ function fetchImages() {
     }
 }
 
-function toggle(id, url) {
+function toggle(id, url, user, user_id) {
     if (idIllustration === id) {
         idIllustration = ""
+        pixabayUser = ""
     } else {
         idIllustration = id
         urlImage = url
+        pixabayUser = user + "_" + user_id
     }
 }
 
@@ -50,7 +53,6 @@ function downloadImage() {
     flagDownloadImage = true
     savePixabayImage(urlImage).then((blob) => {
         flagDownloadImage = false
-        console.log('blob', blob)
         blobImage = blob
     })
 }
@@ -83,27 +85,31 @@ function downloadImage() {
         </Bouton>
         {/if}
     </div>
-    <div class="my-4 min-h-60px flex flex-row flex-wrap gap-1">
-            {#each listeImages as image}
-            <div on:click={() => {toggle(image.id, image.largeImageURL)}} class="flex flex-col items-end cursor-pointer">
-                <img 
-                    src="{image.webformatURL.replace("_640", "_180")}"
-                    alt="illustration Pixabay"
-                    width="180"
-                    height="135"
-                    class="object-cover w-180px h-120px"/>
-                
-                <div class="relative my-1 text-vertLBF mr-2">
-                    {#if idIllustration === image.id}
-                    <Fa icon={faCheckSquare} />
-                    {:else}
-                    <Fa icon={faSquare} />
-                    {/if}
-                </div>
+    <div class="my-4 min-h-180px flex flex-row flex-wrap gap-1 justify-center items-center">
+        {#each listeImages as image}
+        <div on:click={() => {toggle(image.id, image.largeImageURL, image.user, image.user_id)}} class="flex flex-col items-end cursor-pointer">
+            <img 
+                src="{image.webformatURL.replace("_640", "_180")}"
+                alt="illustration Pixabay"
+                width="180"
+                height="135"
+                class="object-cover w-180px h-120px rounded"/>
+            
+            <div class="relative my-1 text-vertLBF mr-2">
+                {#if idIllustration === image.id}
+                <Fa icon={faCheckSquare} />
+                {:else}
+                <Fa icon={faSquare} />
+                {/if}
             </div>
-            {:else}
-                aucun résultat
-            {/each}
+        </div>
+        {:else}
+            <div class="h-120px w-full bg-vertLBFTT rounded flex justify-center items-center text-gray-500">
+            aucun résultat
+            </div>
+        {/each}
+    </div>
+        <div>
             <div class="w-full flex flex-row justify-between border-t border-vertLBFT items-center">
                 <div class="w-300px flex items-center"><span>Propulsé par </span><a href="https://www.pixabay.com" target="_blank"><img src="/img/logos/logoPixabay.svg" alt="logo Pixabay" height="30" class="ml-2 my-1 bg-white h-30px p-1 rounded "/></a> </div>
                 {#if listeImages.length >0}
