@@ -22,12 +22,14 @@ import ImageUpload from '../../components/imageUpload.svelte';
 import Editeur from '../../components/editeur.svelte';
 import Chargement from '../../components/chargement.svelte'
 import Bouton from '../../components/Button/Button.svelte'
+import CheckBox from '../../components/CheckBox.svelte'
 import Fa from 'svelte-fa'
 import { faSave, faNewspaper } from '@fortawesome/free-regular-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 import {getArticleById, updateArticle} from '../../strapi/articles.js'
 import {listeImages, effaceIllustration} from '../../strapi/illustrations.js'
+import {pixabayListe, savePixabayImage} from '../../strapi/pixabay.js'
 
 let editorjs;
 let editor;
@@ -65,6 +67,7 @@ var urlBanniere = ""
 let autoCompleteTags
 
 var estPublie = false
+var idIllustration = ""
 
 $: {
     if (dataArticle !== undefined && newTag !== null) {
@@ -83,6 +86,8 @@ onMount(()=> {
         dataArticle = {
             ...article
         }
+        console.log('dataArticle', dataArticle)
+        idIllustration = article.banniere.id
         //urlBanniere = 'https://cms.labonnefabrique.fr' + article.banniere.media.url
         let dataTemp
         if (article.data !== null) {
@@ -297,6 +302,7 @@ function enregistreArticle(status=null) {
         flagSauvegardeEnCours = true
         flagSauvegardeSucces = false
     }
+    
     var variables = {...dataArticle}
     /*variables.illustrations = []
     dataArticle.data.blocks.forEach((block) => {
@@ -309,7 +315,7 @@ function enregistreArticle(status=null) {
             })
         }
     })*/
-    variables.banniere = dataArticle.banniere.id
+    variables.banniere = idIllustration
     variables.user = $user.id
     variables.espace = dataArticle.espace.id
     if (status && status === "publier") {
@@ -410,6 +416,7 @@ function effacerTag(index) {
                     </select>
                 </label>
             </div>
+            <CheckBox bind:checked={dataArticle.coteAdmin} label="à destination du côté admin" cbClasses="text-bleuLBF mb-1 ml-2" />
             <div class="mb-1 mr-2">
                 <span class="font-medium text-bleuLBF">Statut :</span>
                 <span>
@@ -435,7 +442,8 @@ function effacerTag(index) {
                 userId = {dataArticle.user.id}
                 espaceId = {dataArticle.espace.id}
                 tagId = 3
-                bind:idIllustration= {dataArticle.banniere.id}
+                urlImage={"https://cms.labonnefabrique.fr" + dataArticle.banniere.media.url}
+                bind:idIllustration= {idIllustration}
                 options = {optionsURL}
                 altImage="bannière article"
                 classImage="rounded border-2 border-vertLBF mx-auto w-300px h-150px" />

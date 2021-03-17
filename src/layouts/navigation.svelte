@@ -5,7 +5,7 @@
 
 <h4 class="text-orangeLBF text-center mb-2">L'atelier</h4>
 <div class="my-2 pl-2 cursor-pointer hover:bg-vertLBFT hover:text-gray-200 text-vertLBF"><Link to="/">Retour à l'accueil</Link></div>
-{#if $user.role.admin || $user.role.redacteur}
+{#if $user.role.admin || $user.role.atelier || $user.role.redacteur}
     <div class="my-2 pl-2 text-xl font-semibold cursor-pointer hover:bg-rougeLBFT hover:text-gray-200 text-rougeLBF"><Link to="/redaction">Mes articles</Link></div>
 {/if}
 

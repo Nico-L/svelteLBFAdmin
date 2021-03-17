@@ -6,8 +6,9 @@
     import FilePond from 'filepond'
 
     let inputElement;
-    var pond;
+    let pond;
     export let data = ""
+    export let blobImage = null
 
     function onProcessFile(error, file) {
         dispatch('uploadDone');
@@ -33,6 +34,15 @@
         pond.destroy()
     })
 
+$: {
+    if (blobImage !== null && pond) {
+        pond.addFile(blobImage).then((file) => {
+            pond.processFile().then((file2) => {
+                blobImage = null
+            }); 
+        })     
+    }
+}
 </script>
 
 <div>

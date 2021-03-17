@@ -3,6 +3,7 @@
 
     import Dialog from '../components/Dialog.svelte';
     import Bouton from '../components/Button/Button.svelte';
+    import CheckBox from '../components/CheckBox.svelte'
 
     import Fa from 'svelte-fa'
     import { faSave } from '@fortawesome/free-regular-svg-icons'
@@ -20,6 +21,7 @@
     var dataArticle = {
         titre: "",
         espace: 2,
+        coteAdmin: false
     }
     const optionsURL= {
         'resizing_type': 'fill',
@@ -88,8 +90,9 @@
         </label>
         <div class="ml-3">Quelques mots accrocheurs pour attirer le lecteur.</div>
     </div>
+    <CheckBox bind:checked={dataArticle.coteAdmin} label="à destination du côté admin" cbClasses="text-bleuLBF mb-6 ml-4" />
     <label for="selectEspaces" class="mb-6 flex flex-row">
-        <div class="mr-2 text-base font-medium  text-bleuLBF">Espace concerné</div>
+        <div class="ml-4 mr-2 text-base font-medium  text-bleuLBF">Espace concerné</div>
         <select bind:value={dataArticle.espace} id="selectEspaces" class="bg-gray-900 border border-bleuLBF rounded" >
 		{#each $espacesBF as espace}
 			<option value={espace.id}>

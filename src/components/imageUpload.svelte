@@ -1,7 +1,9 @@
 <script>
-import {onMount, tick } from 'svelte'
+import {onMount } from 'svelte'
 import Dialog from './Dialog.svelte';
 import Bouton from './Button/Button.svelte';
+import QueryPixabay from './queryPixabay.svelte'
+import ListeIlluInternes from './listeImagesInternes.svelte'
 import Fa from 'svelte-fa'
 import { faCircle, faDotCircle, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
@@ -15,9 +17,8 @@ var flagSuppressionImage = false;
 var suppressionId = "";
 var suppressionImageId="";
 
-var urlImage = ""
+export let urlImage = ""
 export let idIllustration = null
-export let dataImage
 export let options = {
     'resizing_type': 'fill',
     'width': 80,
@@ -28,7 +29,6 @@ const classSizeImg = 'w-' + options.width + 'px ' + 'h-' + options.height + 'px 
 
 export let altImage = "Une illustration";
 export let classImage = {};
-//export let userId = null
 export let espaceId = null
 export let tagId = null
 export let userId = null
@@ -38,7 +38,6 @@ var dataImg = {
     tag: tagId
 }
 let flagUploadDone = true
-let flagRecupIllu = false
 const optionsULRThumbs =  {
     'resizing_type': 'fill',
     'width': 80,
@@ -51,6 +50,11 @@ let illustrationAEffacer = {'illustrationId': '', 'imageId': ''}
 
 var listeIllustrations = []
 let logo = null
+var toggleTab = "fichier"
+var classTab = " border-l border-t border-r border-vertLBFT rounded-t -mb-px"
+var classTabFichier = " border-l border-t border-r border-vertLBFT rounded-t -mb-px"
+var classTabBanque = ""
+var blobImage = null
 
 onMount(() => {
     getLogo().then((retour) => {
@@ -67,6 +71,21 @@ $: {
     }
 }
 
+$: {
+    switch (toggleTab) {
+        case "fichier":
+            classTabFichier = classTab
+            classTabBanque = ""
+            break;
+        case "banque":
+            classTabFichier = ""
+            classTabBanque = classTab
+            break;
+    }
+}
+
+$: {blobImage, toggleTab = "fichier"}
+
 $: {espaceId, getListeIllustrations()}
 
 $: if (flagUploadDone && logo !== null) getListeIllustrations()
@@ -76,35 +95,34 @@ function effaceImage() {
     effaceIllustration(illustrationAEffacer)
         .then((retour)=>{
             flagSuppressionImage = false;
+            if (idIllustration === illustrationAEffacer.illustrationId) {idIllustration = logo.id}
             flagUploadDone = true;
             flagConfirmationEffacer = false
-            })
-    
+        })
 }
 
 function setImgData(url, fullDataImg) {
     urlImage = 'https://cms.labonnefabrique.fr' + url
     idIllustration = fullDataImg.id
-    dataImage = fullDataImg
 }
 
 function getListeIllustrations() {
     if (logo !== null) {
        listeImages(userId, espaceId, tagId)
         .then((lesImages)=> {
+            console.log('lesImages', lesImages)
             flagUploadDone = false
             listeIllustrations = [
                 logo,
                 ...lesImages
             ]
-            flagRecupIllu = false
             urlImage = 'https://cms.labonnefabrique.fr' + listeIllustrations.filter((image) => image.id === idIllustration)[0].media.url
         }) 
     }
-    
 }
 
 </script>
+
 {#if idIllustration!== null && urlImage!==""}
     {#await imgProxyUrl(urlImage, options)}
         <img
@@ -125,48 +143,56 @@ function getListeIllustrations() {
             />
     {/await}
 {/if}
-<Dialog bind:visible={showDialog} on:close={() => showDialog = false}>
+<Dialog bind:visible={showDialog} on:close={() => showDialog = false} minWidth="min-w-2/6">
     <h4 slot="title">Choix Illustration</h4>
-    <div class="flex flex-column flex-wrap justify-start mb-2">
-        {#each listeIllustrations as illu (illu.id)}
-            <div class="p-1">
-                {#await imgProxyUrl('https://cms.labonnefabrique.fr'+illu.media.url, optionsULRThumbs)} 
-                    <img
-                        src="/img/svg/clock-regular.svg"
-                        alt="logo"
-                        width={optionsULRThumbs.width}
-                        height={optionsULRThumbs.height}
-                        />
-                {:then value}
-                    <img 
-                        class="rounded cursor-pointer"
-                        on:click={() => {setImgData(illu.media.url, illu)}} 
-                        src={value.imgProxyUrl} 
-                        width={optionsULRThumbs.width}
-                        height={optionsULRThumbs.height}
-                        alt={illu.name}
-                        />
-                {/await} 
-                <div class="flex flex-column">
-                    <div on:click={() => {setImgData(illu.media.url, illu)}} class="relative my-1 text-vertLBF cursor-pointer">
-                        {#if urlImage === 'https://cms.labonnefabrique.fr' + illu.media.url}
-                        <Fa icon={faDotCircle} />
-                        {:else}
-                        <Fa icon={faCircle} />
+    <ul class="flex flex-row justify-start border-b border-vertLBFT my-2">
+        <li on:click={() => toggleTab="fichier"} class={"px-4 text-center h5 bg-gray-900 cursor-pointer" + classTabFichier}>Mes fichiers</li>
+        <li on:click={() => toggleTab="banque"} class={"px-4 text-center h5 bg-gray-900 cursor-pointer" + classTabBanque} >Banque d'images</li>
+    </ul>
+    {#if toggleTab==="fichier"}
+        <div class="flex flex-column flex-wrap justify-start mt-2 mb-2 w-full min-w-full">
+            {#each listeIllustrations as illu (illu.id)}
+                <div class="p-1">
+                    {#await imgProxyUrl('https://cms.labonnefabrique.fr'+illu.media.url, optionsULRThumbs)} 
+                        <img
+                            src="/img/svg/clock-regular.svg"
+                            alt="logo"
+                            width={optionsULRThumbs.width}
+                            height={optionsULRThumbs.height}
+                            />
+                    {:then value}
+                        <img 
+                            class="rounded cursor-pointer"
+                            on:click={() => {setImgData(illu.media.url, illu)}} 
+                            src={value.imgProxyUrl} 
+                            width={optionsULRThumbs.width}
+                            height={optionsULRThumbs.height}
+                            alt={illu.name}
+                            />
+                    {/await} 
+                    <div class="flex flex-column">
+                        <div on:click={() => {setImgData(illu.media.url, illu)}} class="relative my-1 text-vertLBF cursor-pointer">
+                            {#if urlImage === 'https://cms.labonnefabrique.fr' + illu.media.url}
+                            <Fa icon={faDotCircle} />
+                            {:else}
+                            <Fa icon={faCircle} />
+                            {/if}
+                        </div>
+                        {#if illu.tag.tag !== "logo"}
+                            <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.media.id}; flagConfirmationEffacer = true}}>
+                                <Fa icon={faTrashAlt} />
+                            </div>
                         {/if}
                     </div>
-                    {#if illu.tag.tag !== "logo"}
-                        <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.media.id}; flagConfirmationEffacer = true}}>
-                            <Fa icon={faTrashAlt} />
-                        </div>
-                    {/if}
                 </div>
-            </div>
-        {/each}
-  </div>
-  <FilePond data={dataImg} on:uploadDone={() => {flagUploadDone = true;}}/>
+            {/each}
+        </div>
+        <FilePond blobImage={blobImage} data={dataImg} on:uploadDone={() => {flagUploadDone = true; blobImage = null}}/>
+    {:else}
+        <QueryPixabay bind:blobImage={blobImage} />
+    {/if}
   <div slot="actions">
-    <Bouton on:actionBouton={() => showDialog = false} largeur="w-10" couleur="text-bleuLBF border-bleuLBF">
+    <Bouton on:actionBouton={() => showDialog = false} largeur="w-10" couleur="text-vertLBF border-vertLBF">
         <Fa icon={faArrowLeft} size="lg"  class="mx-auto" />
     </Bouton>
   </div>

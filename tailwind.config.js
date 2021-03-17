@@ -1,6 +1,6 @@
 module.exports = {
     purge: {
-        enabled: true,
+        enabled: false,
         content: [
             'public/index.html',
             'src/**/*.svelte',
@@ -45,11 +45,12 @@ module.exports = {
         '340px': '340px',
         '620px': '620px',
         '16': '4rem',
-        '60px': '60px'
-    },
-    minWidth: {
-        'full': '100%',
-        '5/6': '83%'
+        '60px': '60px',
+        '1/6': '17%',
+        '2/6': '33%',
+        '3/6': '50%',
+        '4/6': '66%',
+        '5/6': '83%',
     },
     maxWidth: {
         '1/4': '25%',
@@ -196,11 +197,14 @@ module.exports = {
         "1/2": "50%",
       px: "1px",
       "10px": "10px",
-      "200px": "200px",
+      "20px": "20px",
+      "30px": "30px",
       "40px": "40px",
       "60px": "60px",
+      "120px": "120px",
       "150px": "150px",
       "180px": "180px",
+      "200px": "200px",
       "240px": "240px",
       "300px": "300px",
       "340px": "340px",
@@ -270,6 +274,7 @@ module.exports = {
     backgroundColor: ["hover", "focus", "disabled"],
     display: ["responsive", "disabled"],
     maxWidth: ["responsive"],
+    minWidth: ["responsive"],
     backgroundOpacity: ['hover']
   },
   plugins: [

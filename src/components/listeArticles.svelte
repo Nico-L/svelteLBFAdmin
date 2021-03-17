@@ -48,6 +48,7 @@ switch (couleur) {
 
 onMount(() => {
     getArticlesByUser($user.id, estPublie, limiteNbArticles).then((retour) => {
+        console.log('retour articles', retour)
         articles = retour
     })
 })

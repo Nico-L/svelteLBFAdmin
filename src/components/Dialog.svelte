@@ -8,6 +8,7 @@ import { scale } from "svelte/transition";
 export let visible = false;
 export let persistant = false;
 export let opacity = 0.7;
+export let minWidth = ""
 
 let inProps = { duration: 150, easing: quadIn };
 let outProps = { duration: 150, easing: quadOut };
@@ -27,7 +28,7 @@ let transitionProps = { duration: 100, easing: quadIn, delay: 0 };
         <div
         in:scale={transitionProps}
         out:scale={transitionProps}
-        class="items-start z-50 rounded bg-gray-900 dark:bg-dark-400 p-4 elevation-4 min-w-1/3 max-w-5/6">
+        class={"items-start z-50 rounded bg-gray-900 dark:bg-dark-400 p-4 elevation-4 max-w-5/6 " + minWidth}>
         <div class="h3">
             <slot name="title" />
         </div>
