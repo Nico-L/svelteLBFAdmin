@@ -1,0 +1,30 @@
+@layer components {
+    .imagePixabay .save {
+            @apply hidden;
+        }
+
+    .imagePixabay:hover .save {
+            @apply block;
+        }
+    
+    .imagePixabay img {
+       -webkit-transition: all 200ms ease-in-out;
+        -webkit-transform: scale(1); 
+        -ms-transition: all 200ms ease-in-out;
+        -ms-transform: scale(1); 
+        -moz-transition: all 200ms ease-in-out;
+        -moz-transform: scale(1);
+        transition: all 200ms ease-in-out;
+        transform: scale(1); 
+    }
+    .imagePixabay:hover img {
+        -webkit-transition: all 200ms ease-in-out;
+        -webkit-transform: scale(1.5); 
+        -ms-transition: all 200ms ease-in-out;
+        -ms-transform: scale(1.5); 
+        -moz-transition: all 200ms ease-in-out;
+        -moz-transform: scale(1.5);
+        transition: all 200ms ease-in-out;
+        transform: scale(1.5); 
+    }
+}

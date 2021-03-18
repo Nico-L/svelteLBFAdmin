@@ -38,18 +38,10 @@ function fetchImages() {
     }
 }
 
-function toggle(id, url, user, user_id) {
-    if (idIllustration === id) {
-        idIllustration = ""
-        pixabayUser = ""
-    } else {
-        idIllustration = id
-        urlImage = url
-        pixabayUser = user + "_" + user_id
-    }
-}
-
-function downloadImage() {
+function downloadImage(id, url, user, user_id) {
+    idIllustration = id
+    urlImage = url
+    pixabayUser = user + "_" + user_id
     flagDownloadImage = true
     savePixabayImage(urlImage).then((blob) => {
         flagDownloadImage = false
@@ -79,29 +71,47 @@ function downloadImage() {
         <Bouton occupe= { occupeRecupImages } on:actionBouton={fetchImages} largeur="w-10" couleur="text-vertLBF" noBorder={true}>
                 <Fa icon={faSearch} size="2x"  class="mx-auto" />
         </Bouton>
-        {#if idIllustration !== ""}
-        <Bouton occupe= { flagDownloadImage } on:actionBouton={downloadImage} largeur="w-10" couleur="text-vertLBF" noBorder={true}>
-            <Fa icon={faSave} size="2x"  class="mx-auto" />
-        </Bouton>
-        {/if}
     </div>
-    <div class="my-4 min-h-180px flex flex-row flex-wrap gap-1 justify-center items-center">
+    <div class="my-4 min-h-180px flex flex-row flex-wrap gap-1 justify-center items-center rounded overflow-hidden">
         {#each listeImages as image}
-        <div on:click={() => {toggle(image.id, image.largeImageURL, image.user, image.user_id)}} class="flex flex-col items-end cursor-pointer">
+        <div class="flex flex-col items-end cursor-pointer relative overflow-hidden imagePixabay">
             <img 
                 src="{image.webformatURL.replace("_640", "_180")}"
                 alt="illustration Pixabay"
                 width="180"
                 height="135"
                 class="object-cover w-180px h-120px rounded"/>
-            
-            <div class="relative my-1 text-vertLBF mr-2">
+            {#if flagDownloadImage && idIllustration === image.id}
+                <div class="bg-vertLBFT h-full w-full absolute inset-0 flex justify-center items-center">
+                    <div class="w-full h-full flex justify-center items-center text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="fill-current stroke-current h-20 w-20 mx-auto" viewBox="0 0 50 50">
+                            <g fill="none" fill-rule="evenodd" stroke-width="2">
+                                <circle cx="22" cy="22" r="1">
+                                    <animate attributeName="r" begin="0s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/>
+                                    <animate attributeName="stroke-opacity" begin="0s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/>
+                                </circle>
+                                <circle cx="22" cy="22" r="1">
+                                    <animate attributeName="r" begin="-0.9s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/>
+                                    <animate attributeName="stroke-opacity" begin="-0.9s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/>
+                                </circle>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            {:else}
+                <div class="rounded bg-vertLBFT h-full w-full absolute inset-0 flex justify-center items-center save" on:click={() => downloadImage(image.id, image.largeImageURL, image.user, image.user_id)}>
+                    <div class="w-full h-full flex justify-center items-center text-gray-900">
+                        <Fa icon={faSave} size="4x"  class="mx-auto" />
+                    </div>
+                </div>
+            {/if}
+            <!-- <div class="relative my-1 text-vertLBF mr-2">
                 {#if idIllustration === image.id}
                 <Fa icon={faCheckSquare} />
                 {:else}
                 <Fa icon={faSquare} />
                 {/if}
-            </div>
+            </div> -->
         </div>
         {:else}
             <div class="h-120px w-full bg-vertLBFTT rounded flex justify-center items-center text-gray-500">

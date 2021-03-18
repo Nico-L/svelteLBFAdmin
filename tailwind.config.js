@@ -272,7 +272,7 @@ module.exports = {
   variants: {
     cursor: ["hover", "focus", "disabled"],
     backgroundColor: ["hover", "focus", "disabled"],
-    display: ["responsive", "disabled"],
+    display: ["responsive", "disabled", "hover"],
     maxWidth: ["responsive"],
     minWidth: ["responsive"],
     backgroundOpacity: ['hover']
