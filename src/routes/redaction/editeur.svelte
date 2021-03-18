@@ -351,7 +351,7 @@ function enregistreArticle(status=null) {
 }
 
 function effacerTag(index) {
-        dataArticle.tags_articles.splice(index, 1)
+        dataArticle.tags.splice(index, 1)
         dataArticle = dataArticle
     }
 
