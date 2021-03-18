@@ -173,7 +173,7 @@ $: {
                 }
                 if (role.type === "authenticated") {
                     role.type = "aucun"
-                    lesRoles.push(role)
+                    lesRoles.unshift(role)
                 }
             })
             roles.set(lesRoles)

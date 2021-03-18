@@ -90,6 +90,14 @@ function majUtilisateur () {
 
 </script>
 
+<svelte:body
+  on:keydown={(event) => {
+      if (event.keyCode === 13) {
+          chercherUtilisateur()
+        }
+    }
+  } />
+
 <main class="mt-4 mb-3 max-w-620px">
         <div class="flex flex-row items-end">
             <label for="userEmail">

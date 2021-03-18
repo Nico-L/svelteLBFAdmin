@@ -68,6 +68,14 @@ function enregistrerAbonnements() {
 
 </script>
 
+<svelte:body
+  on:keydown={(event) => {
+      if (event.keyCode === 13) {
+          enregistrerAbonnements()
+        }
+    }
+  } />
+
 <main>
 <h4>Les abonnements</h4>
 <table class="table-auto border-collapse border-2 border-gray-300 mt-3">
