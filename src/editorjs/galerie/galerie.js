@@ -25,6 +25,25 @@ export default class Gallerie {
         }
     }
 
+      renderSettings(){
+        const wrapper = document.createElement('div');
+
+        this.settings.forEach( tune => {
+            let button = document.createElement('div');
+
+            button.classList.add('cdx-settings-button');
+            button.classList.toggle('cdx-settings-button--active', this.data[tune.name]);
+            button.innerHTML = tune.icon;
+            wrapper.appendChild(button);
+
+            button.addEventListener('click', () => {
+                this._toggleTune(tune.name);
+                button.classList.toggle('cdx-settings-button--active');
+            });
+        });
+        return wrapper;
+    }
+
     constructor({data, api, config}) {
         this.data = data
         this.api = api
@@ -44,7 +63,11 @@ export default class Gallerie {
                 this.listOfFiles.push({file: mockFile, id: url.idIllu})
             })
         }
-        //this._pasteImage.bind(this)
+        this.data.stretched = data.stretched !== undefined ? data.stretched : false,
+        this.settings = [{
+            name: 'stretched',
+            icon: '<svg width="17" height="10" viewBox="0 0 17 10" xmlns="http://www.w3.org/2000/svg"><path d="M13.568 5.925H4.056l1.703 1.703a1.125 1.125 0 0 1-1.59 1.591L.962 6.014A1.069 1.069 0 0 1 .588 4.26L4.38.469a1.069 1.069 0 0 1 1.512 1.511L4.084 3.787h9.606l-1.85-1.85a1.069 1.069 0 1 1 1.512-1.51l3.792 3.791a1.069 1.069 0 0 1-.475 1.788L13.514 9.16a1.125 1.125 0 0 1-1.59-1.591l1.644-1.644z"/></svg>'
+        }];
     }
 
     render() {
@@ -449,36 +472,7 @@ export default class Gallerie {
         }
     }
 
-  /*onPaste(event) {
-    console.log('paste !', event)
-    switch(event.type) {
-      case 'tag':
-        console.log('tag',event.detail.data)
-        const element = event.detail.data; // this is <img> element
-        const mockFile = { name: "bob.jg", size: "10" }
-        this.listOfFiles.push({file: mockFile, id: this.listOfFiles.length})
-        this._addImageToList(element.src, this.listOfFiles.length, 0, mockFile)
-        break;
-        
-      case 'pattern':
-        console.log('pattern', event.detail.data)
-        const url = event.detail.data;
-        const key = event.detail.key; // equals 'image'
-
-        this.data = {
-          url: url
-        }
-        break;
-
-      case 'file':
-        console.log('file ?', event.detail.file)
-        //this.dropzone.emit("addedfile", event.detail.file)
-        //this.dropzone.emit("success", event.detail.file);
-        //this.dropzone.emit("complete", event.detail.file);
-        //this.dropzone.emit("addedfile", event.detail.file)
-        //this.dropzone.files.push(event.detail.file);
-        this.dropzone.addFile(event.detail.file);
-        break;
+    _toggleTune(tune) {
+        this.data[tune] = !this.data[tune];
     }
-  } */
 }

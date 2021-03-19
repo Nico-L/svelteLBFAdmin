@@ -248,89 +248,93 @@ $: {
                     </div>
                 </Route>
             {/if}
-            <Route path="ateliers/*">
-                <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
-                    <Header />
-                </div>
-                <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
-                    <Navigation />
-                </div>
-                <div class="ml-240px p-4 pt-20">
-                    <Router>
-                        <Route path="agenda" >
-                            <Loadable loader={agendaAteliers}>
-                                
-                            </Loadable>
-                        </Route>
-                        <Route path="archives" >
-                            <Loadable loader={archivesAteliers}>
-                                
-                            </Loadable>
-                        </Route>
-                    </Router>
-                </div>
-            </Route>
-            <Route path="machines/*">
-                <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
-                    <Header />
-                </div>
-                <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
-                    <Navigation />
-                </div>
-                <div class="ml-240px p-4 pt-20">
-                    <Router>
-                        <Route path="abonnements" >
-                            <Loadable loader={abonnementsMachines}>
-                                
-                            </Loadable>
-                        </Route>
-                        <Route path="plagesReservations" >
-                            <Loadable loader={plagesReservations}>
-                                
-                            </Loadable>
-                        </Route>
-                        <Route path="agendaReservations" >
-                            <Loadable loader={agendaReservations}>
-                                
-                            </Loadable>
-                        </Route>
-                        <Route path="nouvelleMachine" >
-                            <Loadable loader={nouvelleMachine}>
-                                
-                            </Loadable>
-                        </Route>
-                        <Route path="listeMachines" >
-                            <Loadable loader={listeMachines}>
-                                
-                            </Loadable>
-                        </Route>
-                    </Router>
-                </div>
-            </Route>
-            <Route path="redaction/*">
-                <div class="fixed w-240px h-full bg-bleuLBFTT z-50">
-                    <NavigationRedaction />
-                </div>
-                <div class="ml-240px z-30">
-                    <Router>
-                        <Route path="" >
-                            <Loadable loader={redaction} />
-                        </Route>
-                        <Route path="editeur">
-                            <Loadable loader={editeur} />
-                        </Route>
-                        <Route path="brouillons">
-                            <Loadable loader={brouillons} />
-                        </Route>
-                        <Route path="articles">
-                            <Loadable loader={articles} />
-                        </Route>
-                        <Route path="tags">
-                            <Loadable loader={tagsArticles} />
-                        </Route>
-                    </Router>
-                </div>
-            </Route>
+            {#if $user.role.admin || $user.role.atelier}
+                <Route path="ateliers/*">
+                    <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
+                        <Header />
+                    </div>
+                    <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
+                        <Navigation />
+                    </div>
+                    <div class="ml-240px p-4 pt-20">
+                        <Router>
+                            <Route path="agenda" >
+                                <Loadable loader={agendaAteliers}>
+                                    
+                                </Loadable>
+                            </Route>
+                            <Route path="archives" >
+                                <Loadable loader={archivesAteliers}>
+                                    
+                                </Loadable>
+                            </Route>
+                        </Router>
+                    </div>
+                </Route>
+                <Route path="machines/*">
+                    <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
+                        <Header />
+                    </div>
+                    <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
+                        <Navigation />
+                    </div>
+                    <div class="ml-240px p-4 pt-20">
+                        <Router>
+                            <Route path="abonnements" >
+                                <Loadable loader={abonnementsMachines}>
+                                    
+                                </Loadable>
+                            </Route>
+                            <Route path="plagesReservations" >
+                                <Loadable loader={plagesReservations}>
+                                    
+                                </Loadable>
+                            </Route>
+                            <Route path="agendaReservations" >
+                                <Loadable loader={agendaReservations}>
+                                    
+                                </Loadable>
+                            </Route>
+                            <Route path="nouvelleMachine" >
+                                <Loadable loader={nouvelleMachine}>
+                                    
+                                </Loadable>
+                            </Route>
+                            <Route path="listeMachines" >
+                                <Loadable loader={listeMachines}>
+                                    
+                                </Loadable>
+                            </Route>
+                        </Router>
+                    </div>
+                </Route>
+            {/if}
+            {#if !$user.role.aucun}
+                <Route path="redaction/*">
+                    <div class="fixed w-240px h-full bg-bleuLBFTT z-50">
+                        <NavigationRedaction />
+                    </div>
+                    <div class="ml-240px z-30">
+                        <Router>
+                            <Route path="" >
+                                <Loadable loader={redaction} />
+                            </Route>
+                            <Route path="editeur">
+                                <Loadable loader={editeur} />
+                            </Route>
+                            <Route path="brouillons">
+                                <Loadable loader={brouillons} />
+                            </Route>
+                            <Route path="articles">
+                                <Loadable loader={articles} />
+                            </Route>
+                            <Route path="tags">
+                                <Loadable loader={tagsArticles} />
+                            </Route>
+                        </Router>
+                    </div>
+                </Route>
+            {/if}
             <Route>
                 <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
                     <Header />

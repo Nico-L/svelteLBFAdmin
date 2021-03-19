@@ -78,6 +78,10 @@ $: {
 
 onMount(()=> {
     getArticleById(idArticle).then(async (article) => {
+        console.log('$user.id, article user id', $user.id, article.user.id)
+        if ($user.id !== article.user.id) {
+            //window.location.replace(window.location.origin + "/redaction")
+        }
         if (article.published_at === null) {
             estPublie = false
         } else {

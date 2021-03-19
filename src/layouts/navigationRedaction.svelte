@@ -33,27 +33,40 @@
     function enregistreArticle() {
         flagSauvegardeEnCours = true
         flagSauvegardeSucces = false
-        let variables = {
-            titre: dataArticle.titre,
-            user: $user.id,
-            espace: dataArticle.espace,
-            banniere: 33,
-            published_at: null
+        if (dataArticle.titre !== "")
+        {
+            let variables = {
+                titre: dataArticle.titre,
+                user: $user.id,
+                espace: dataArticle.espace,
+                banniere: 72,
+                published_at: null
+            }
+            saveArticle(variables).then((retour) => {
+                flagSauvegardeEnCours = false
+                flagSauvegardeSucces = true
+                showNouvelArticle = false
+                window.location.assign(window.location.origin + '/redaction/editeur?id=' + retour.id)
+            })
         }
-        saveArticle(variables).then((retour) => {
-            flagSauvegardeEnCours = false
-            flagSauvegardeSucces = true
-            showNouvelArticle = false
-            window.location.assign(window.location.origin + '/redaction/editeur?id=' + retour.id)
-        })
     }
 </script>
+
+<svelte:body
+  on:keydown={(event) => {
+      if (event.keyCode === 13) {
+          enregistreArticle()
+        }
+    }
+  } />
 
 <div class="text-gray-400">
     <img src="/img/logos/logoHBlanc.svg" class="h-16 my-auto mt-4" alt="logo Bonne Fabrique">
     <h4 class="text-orangeLBF text-center mb-2 mt-4">Espace articles</h4>
-    <div class="my-4 pl-2 cursor-pointer hover:bg-vertLBFT hover:text-gray-200 text-vertLBF"><Link to="/">Retour à l'accueil</Link></div>
-    <hr class="ml-2 my-3 w-5/6 border-vertLBFT"/>
+    {#if $user.role.admin || $user.role.atelier}
+        <div class="my-4 pl-2 cursor-pointer hover:bg-vertLBFT hover:text-gray-200 text-vertLBF"><Link to="/">Retour à l'accueil</Link></div>
+        <hr class="ml-2 my-3 w-5/6 border-vertLBFT"/>
+    {/if}
     <h5 class="ml-2">Mes articles</h5>
     <ul class="ml-2">
         <li on:click={() => {showNouvelArticle = true}} class="pl-2 cursor-pointer hover:bg-orangeLBFT">Nouvel article</li>

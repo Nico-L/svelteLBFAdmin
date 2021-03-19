@@ -1,6 +1,14 @@
 <script>
 import ListeAteliers from '../components/listeAteliersFuturs.svelte'
 import ListeReservationsMachines from '../components/listeReservationsMachines.svelte'
+import {user} from "../stores/user.js"
+
+$: { if ($user && $user.role.redacteur) {
+    window.location.replace(window.location.origin + "/redaction")
+}
+
+} 
+
 </script>
 
 <main>

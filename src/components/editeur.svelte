@@ -49,6 +49,8 @@ function strip(html)
 {
    var tmp = document.implementation.createHTMLDocument("New").body;
    tmp.innerHTML = html;
+   console.log('textContent', tmp.textContent)
+   console.log('innerText', tmp.innerText)
    return tmp.textContent || tmp.innerText || "";
 }
 

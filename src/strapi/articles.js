@@ -35,7 +35,7 @@ export function updateArticle(id, variables) {
             }
             return fetch(url, options)
                 .then((leJSON)=> {return leJSON.json()})
-                .then((retour)=> {return retour})
+                .then((retour)=> {return retour}).catch((err) => console.log('err update article', err))
         }
     )
 }
@@ -44,7 +44,6 @@ export function getArticlesByUser(userId, estPublie, limite) {
     const queryLimit = limite && limite > 0 ? "&_limit=" + limite.toString() : ""
     const typeArticle = estPublie ? "&_publicationState=live" : "&_publicationState=preview&published_at_null=true"
     const url = "ADRESSE_CMS" + "articles?user=" + userId + typeArticle + queryLimit
-    console.log('bob ?', url)
     return verifJWT().then((token)=> 
         {
             const auth = "Bearer " + token

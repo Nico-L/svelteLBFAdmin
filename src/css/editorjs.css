@@ -55,6 +55,10 @@
         @apply bg-gray-900 text-gray-500;
     }
 
+    .cdx-settings-button--active {
+        @apply text-bleuLBF;   
+    }
+
     .galerie {
         @apply my-2 border border-bleuLBF rounded-md;
         @apply p-2;
