@@ -12,6 +12,8 @@
     var erreur = "text-gray-400"
     var message = "Merci de vous identifier."
 
+    var urlRetour = window.location.origin + window.location.search.substring(1)
+
     function login() {
         if (email==="" || mdp==="") {
             return
@@ -47,7 +49,7 @@
                         }
                         userTemp.jwt = retour2.jwt
                         localStorage.setItem('userInfo', JSON.stringify(userTemp))
-                        window.location.replace(window.location.origin)
+                        window.location.replace(urlRetour)
                     } else {
                         if (retour2.data[0].messages[0].id==="Auth.form.error.invalid") {
                             message = "Email ou mot de passe invalide. Veuillez vérifier."

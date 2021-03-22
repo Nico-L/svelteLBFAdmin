@@ -1,5 +1,6 @@
 export function verifJWT () {
     const url = "ADRESSE_CMS" + "token/decrypt"
+    const redirect = window.location.pathname + window.location.search
     var userInfo = JSON.parse(localStorage.getItem('userInfo'))
     if (userInfo) {
         var entetes = new Headers({"content-type": "application/json"})
@@ -17,7 +18,7 @@ export function verifJWT () {
             .then((retourJWT)=> {
                 if (retourJWT.message === "Error: Invalid token.") {
                     localStorage.removeItem('userInfo')
-                    window.location.replace(window.location.origin + '/login')
+                    //window.location.assign(window.location.origin + '/login/?' + redirect)
                 } else {
                     return userInfo.jwt
                 }
@@ -25,6 +26,6 @@ export function verifJWT () {
             .catch((erreur) => console.log('erreur', erreur))
     } else {
         localStorage.removeItem('userInfo')
-        window.location.replace(window.location.origin + '/login')
+        //window.location.assign(window.location.origin + '/login/?' + redirect)
     }
 }

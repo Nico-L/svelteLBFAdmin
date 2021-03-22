@@ -120,6 +120,7 @@ const listeMachines = register({
     var flagTagsArticles = false
     var flagBuildNeeded = false
     var flagRoles = false
+    const redirect = window.location.pathname + window.location.search
 
     $: {
         const userInfo = JSON.parse(localStorage.getItem('userInfo'))
@@ -128,8 +129,9 @@ const listeMachines = register({
             loginNeeded = false
         } else {
             const pathName = window.location.pathname
-            if (pathName!=="/login" && pathName!=="/login/oubliMDP" && pathName!=="/login/resetMDP") {
-                window.location.replace(window.location.origin + '/login')
+            if (!pathName.includes('login')) {
+                console.log('bob ?')
+                window.location.assign(window.location.origin + '/login/?' + redirect)
             }
         }
     }
