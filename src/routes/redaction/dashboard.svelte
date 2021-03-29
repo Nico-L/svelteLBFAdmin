@@ -9,7 +9,7 @@ const limiteNbArticles = 5
 
 </script>
 
-<main class="w-720px">
+<main class="w-full max-w-720px">
     <h4 class="ml-4 mb-4 mt-0 pt-4">Liste des {limiteNbArticles} derniers brouillons</h4>
     <ListeArticles estPublie = {false} limiteNbArticles={limiteNbArticles} />
     <h4 class="ml-4 mb-4 mt-4 pt-4">Liste des {limiteNbArticles} derniers articles publiés</h4>

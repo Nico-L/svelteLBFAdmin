@@ -25,7 +25,7 @@ var articles = []
 let optionsProxy = {
     'resizing_type': 'fill',
     'width': 60,
-    'height': 60,
+    'height': 80,
     'gravity': 'ce'
 }
 var flagConfirmationEffacer = false
@@ -108,33 +108,34 @@ function sendToEditor(id) {
                 <img
                     src="/img/svg/clock-regular.svg"
                     alt="logo"
-                    class={"rounded border " + borderColore}
+                    class={"h-full object-cover rounded border " + borderColore}
                     width="60"
-                    height="60"
                     />
             {:then value}
                 <img
                     src={value.imgProxyUrl}
                     alt={article.titre}
-                    class={"rounded border cursor-pointer " + borderColore}
+                    class={"h-full object-cover rounded border cursor-pointer " + borderColore}
                     width="60"
-                    height="60"
                     on:click={() => sendToEditor(article.id)}
                     />
             {/await}
         </div>
-        <div class="px-2 flex-grow flex flex-col justify-start cursor-pointer" on:click={() => sendToEditor(article.id)}>
-            <div class="body-2 mb-1"><span class={"font-medium " + textColore}>Dernière mise à jour :</span> {dateJourMoisHeure(article.updated_at)}</div>
-            <h5 class="ml-2">{article.titre}</h5>
+        <div class="w-full flex flex-col">
+            <div class="flex flex-col justify-start cursor-pointer px-1" on:click={() => sendToEditor(article.id)}>
+                <div class="text-xs mb-1"><span class={"font-medium " + textColore}>Dernière mise à jour :</span> {dateJourMoisHeure(article.updated_at)}</div>
+                <div class="ml-2 text-lg font-medium sm:text-xl">{article.titre}</div>
+            </div>
+            <div class="flex flex-row gap-0.5 flex-shrink-0 mt-0 sm:mt-0 justify-end">
+                <Bouton on:actionBouton={() => sendToEditor(article.id)} largeur="w-6" couleur={textColore + " " + borderColore} noBorder={true}>
+                    <Fa icon={faEdit} class="mx-auto" />
+                </Bouton>
+                <Bouton on:actionBouton={() => {articleAEffacerId = article.id; flagConfirmationEffacer = true}} largeur="w-6" couleur="text-rougeLBF border-rougeLBF" noBorder={true}>
+                    <Fa icon={faTrashAlt} class="mx-auto" />
+                </Bouton>
+            </div>
         </div>
-        <div class="flex flex-row gap-1 px-2 flex-shrink-0">
-            <Bouton on:actionBouton={() => sendToEditor(article.id)} largeur="w-10" couleur={textColore + " " + borderColore}>
-                <Fa icon={faEdit} class="mx-auto" />
-            </Bouton>
-            <Bouton on:actionBouton={() => {articleAEffacerId = article.id; flagConfirmationEffacer = true}} largeur="w-10" couleur="text-rougeLBF border-rougeLBF">
-                <Fa icon={faTrashAlt} class="mx-auto" />
-            </Bouton>
-        </div>
+        
     </div>
     {:else}
     {#if estPublie}

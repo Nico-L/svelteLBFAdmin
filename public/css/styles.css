@@ -980,6 +980,11 @@ h6,
   width: 3rem;
 }
 
+.cadreBuild:hover .cadreSpinner {
+  --tw-bg-opacity: 1;
+  background-color: rgba(224, 41, 51, var(--tw-bg-opacity));
+}
+
 .spinner {
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
@@ -1006,7 +1011,7 @@ h6,
   animation: sk-bounce 2.0s infinite ease-in-out;
 }
 
-.cadreSpinner:hover .spinner .dot1, .cadreSpinner:hover .spinner .dot2 {
+.cadreBuild:hover .cadreSpinner .spinner .dot1, .cadreBuild:hover .cadreSpinner .spinner .dot2 {
   --tw-bg-opacity: 1;
   background-color: rgba(26, 32, 44, var(--tw-bg-opacity));
 }
@@ -1209,6 +1214,11 @@ h6,
   background-color: rgba(26, 32, 44, var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgba(160, 174, 192, var(--tw-text-opacity));
+}
+
+.cdx-settings-button--active {
+  --tw-text-opacity: 1;
+  color: rgba(75, 188, 196, var(--tw-text-opacity));
 }
 
 .galerie {
@@ -1500,6 +1510,36 @@ h6,
 
 .dz-preview {
   display: none;
+}
+
+.imagePixabay .save {
+  display: none;
+}
+
+.imagePixabay:hover .save {
+  display: block;
+}
+
+.imagePixabay img {
+  -webkit-transition: all 200ms ease-in-out;
+  -webkit-transform: scale(1);
+  -ms-transition: all 200ms ease-in-out;
+  -ms-transform: scale(1);
+  -moz-transition: all 200ms ease-in-out;
+  -moz-transform: scale(1);
+  transition: all 200ms ease-in-out;
+  transform: scale(1);
+}
+
+.imagePixabay:hover img {
+  -webkit-transition: all 200ms ease-in-out;
+  -webkit-transform: scale(1.5);
+  -ms-transition: all 200ms ease-in-out;
+  -ms-transform: scale(1.5);
+  -moz-transition: all 200ms ease-in-out;
+  -moz-transform: scale(1.5);
+  transition: all 200ms ease-in-out;
+  transform: scale(1.5);
 }
 
 .space-y-0 > :not([hidden]) ~ :not([hidden]) {
@@ -12458,6 +12498,82 @@ h6,
   display: none;
 }
 
+.hover\:block:hover {
+  display: block;
+}
+
+.hover\:inline-block:hover {
+  display: inline-block;
+}
+
+.hover\:inline:hover {
+  display: inline;
+}
+
+.hover\:flex:hover {
+  display: flex;
+}
+
+.hover\:inline-flex:hover {
+  display: inline-flex;
+}
+
+.hover\:table:hover {
+  display: table;
+}
+
+.hover\:table-caption:hover {
+  display: table-caption;
+}
+
+.hover\:table-cell:hover {
+  display: table-cell;
+}
+
+.hover\:table-column:hover {
+  display: table-column;
+}
+
+.hover\:table-column-group:hover {
+  display: table-column-group;
+}
+
+.hover\:table-footer-group:hover {
+  display: table-footer-group;
+}
+
+.hover\:table-header-group:hover {
+  display: table-header-group;
+}
+
+.hover\:table-row-group:hover {
+  display: table-row-group;
+}
+
+.hover\:table-row:hover {
+  display: table-row;
+}
+
+.hover\:flow-root:hover {
+  display: flow-root;
+}
+
+.hover\:grid:hover {
+  display: grid;
+}
+
+.hover\:inline-grid:hover {
+  display: inline-grid;
+}
+
+.hover\:contents:hover {
+  display: contents;
+}
+
+.hover\:hidden:hover {
+  display: none;
+}
+
 .flex-row {
   flex-direction: row;
 }
@@ -15929,6 +16045,10 @@ h6,
 
 .max-w-5\/6 {
   max-width: 83%;
+}
+
+.max-w-280px {
+  max-width: 280px;
 }
 
 .max-w-320px {
@@ -42368,6 +42488,82 @@ h6,
     display: none;
   }
 
+  .sm\:hover\:block:hover {
+    display: block;
+  }
+
+  .sm\:hover\:inline-block:hover {
+    display: inline-block;
+  }
+
+  .sm\:hover\:inline:hover {
+    display: inline;
+  }
+
+  .sm\:hover\:flex:hover {
+    display: flex;
+  }
+
+  .sm\:hover\:inline-flex:hover {
+    display: inline-flex;
+  }
+
+  .sm\:hover\:table:hover {
+    display: table;
+  }
+
+  .sm\:hover\:table-caption:hover {
+    display: table-caption;
+  }
+
+  .sm\:hover\:table-cell:hover {
+    display: table-cell;
+  }
+
+  .sm\:hover\:table-column:hover {
+    display: table-column;
+  }
+
+  .sm\:hover\:table-column-group:hover {
+    display: table-column-group;
+  }
+
+  .sm\:hover\:table-footer-group:hover {
+    display: table-footer-group;
+  }
+
+  .sm\:hover\:table-header-group:hover {
+    display: table-header-group;
+  }
+
+  .sm\:hover\:table-row-group:hover {
+    display: table-row-group;
+  }
+
+  .sm\:hover\:table-row:hover {
+    display: table-row;
+  }
+
+  .sm\:hover\:flow-root:hover {
+    display: flow-root;
+  }
+
+  .sm\:hover\:grid:hover {
+    display: grid;
+  }
+
+  .sm\:hover\:inline-grid:hover {
+    display: inline-grid;
+  }
+
+  .sm\:hover\:contents:hover {
+    display: contents;
+  }
+
+  .sm\:hover\:hidden:hover {
+    display: none;
+  }
+
   .sm\:flex-row {
     flex-direction: row;
   }
@@ -45839,6 +46035,10 @@ h6,
 
   .sm\:max-w-5\/6 {
     max-width: 83%;
+  }
+
+  .sm\:max-w-280px {
+    max-width: 280px;
   }
 
   .sm\:max-w-320px {
@@ -70992,6 +71192,82 @@ h6,
     display: none;
   }
 
+  .md\:hover\:block:hover {
+    display: block;
+  }
+
+  .md\:hover\:inline-block:hover {
+    display: inline-block;
+  }
+
+  .md\:hover\:inline:hover {
+    display: inline;
+  }
+
+  .md\:hover\:flex:hover {
+    display: flex;
+  }
+
+  .md\:hover\:inline-flex:hover {
+    display: inline-flex;
+  }
+
+  .md\:hover\:table:hover {
+    display: table;
+  }
+
+  .md\:hover\:table-caption:hover {
+    display: table-caption;
+  }
+
+  .md\:hover\:table-cell:hover {
+    display: table-cell;
+  }
+
+  .md\:hover\:table-column:hover {
+    display: table-column;
+  }
+
+  .md\:hover\:table-column-group:hover {
+    display: table-column-group;
+  }
+
+  .md\:hover\:table-footer-group:hover {
+    display: table-footer-group;
+  }
+
+  .md\:hover\:table-header-group:hover {
+    display: table-header-group;
+  }
+
+  .md\:hover\:table-row-group:hover {
+    display: table-row-group;
+  }
+
+  .md\:hover\:table-row:hover {
+    display: table-row;
+  }
+
+  .md\:hover\:flow-root:hover {
+    display: flow-root;
+  }
+
+  .md\:hover\:grid:hover {
+    display: grid;
+  }
+
+  .md\:hover\:inline-grid:hover {
+    display: inline-grid;
+  }
+
+  .md\:hover\:contents:hover {
+    display: contents;
+  }
+
+  .md\:hover\:hidden:hover {
+    display: none;
+  }
+
   .md\:flex-row {
     flex-direction: row;
   }
@@ -74463,6 +74739,10 @@ h6,
 
   .md\:max-w-5\/6 {
     max-width: 83%;
+  }
+
+  .md\:max-w-280px {
+    max-width: 280px;
   }
 
   .md\:max-w-320px {
@@ -99616,6 +99896,82 @@ h6,
     display: none;
   }
 
+  .lg\:hover\:block:hover {
+    display: block;
+  }
+
+  .lg\:hover\:inline-block:hover {
+    display: inline-block;
+  }
+
+  .lg\:hover\:inline:hover {
+    display: inline;
+  }
+
+  .lg\:hover\:flex:hover {
+    display: flex;
+  }
+
+  .lg\:hover\:inline-flex:hover {
+    display: inline-flex;
+  }
+
+  .lg\:hover\:table:hover {
+    display: table;
+  }
+
+  .lg\:hover\:table-caption:hover {
+    display: table-caption;
+  }
+
+  .lg\:hover\:table-cell:hover {
+    display: table-cell;
+  }
+
+  .lg\:hover\:table-column:hover {
+    display: table-column;
+  }
+
+  .lg\:hover\:table-column-group:hover {
+    display: table-column-group;
+  }
+
+  .lg\:hover\:table-footer-group:hover {
+    display: table-footer-group;
+  }
+
+  .lg\:hover\:table-header-group:hover {
+    display: table-header-group;
+  }
+
+  .lg\:hover\:table-row-group:hover {
+    display: table-row-group;
+  }
+
+  .lg\:hover\:table-row:hover {
+    display: table-row;
+  }
+
+  .lg\:hover\:flow-root:hover {
+    display: flow-root;
+  }
+
+  .lg\:hover\:grid:hover {
+    display: grid;
+  }
+
+  .lg\:hover\:inline-grid:hover {
+    display: inline-grid;
+  }
+
+  .lg\:hover\:contents:hover {
+    display: contents;
+  }
+
+  .lg\:hover\:hidden:hover {
+    display: none;
+  }
+
   .lg\:flex-row {
     flex-direction: row;
   }
@@ -103087,6 +103443,10 @@ h6,
 
   .lg\:max-w-5\/6 {
     max-width: 83%;
+  }
+
+  .lg\:max-w-280px {
+    max-width: 280px;
   }
 
   .lg\:max-w-320px {
@@ -128240,6 +128600,82 @@ h6,
     display: none;
   }
 
+  .xl\:hover\:block:hover {
+    display: block;
+  }
+
+  .xl\:hover\:inline-block:hover {
+    display: inline-block;
+  }
+
+  .xl\:hover\:inline:hover {
+    display: inline;
+  }
+
+  .xl\:hover\:flex:hover {
+    display: flex;
+  }
+
+  .xl\:hover\:inline-flex:hover {
+    display: inline-flex;
+  }
+
+  .xl\:hover\:table:hover {
+    display: table;
+  }
+
+  .xl\:hover\:table-caption:hover {
+    display: table-caption;
+  }
+
+  .xl\:hover\:table-cell:hover {
+    display: table-cell;
+  }
+
+  .xl\:hover\:table-column:hover {
+    display: table-column;
+  }
+
+  .xl\:hover\:table-column-group:hover {
+    display: table-column-group;
+  }
+
+  .xl\:hover\:table-footer-group:hover {
+    display: table-footer-group;
+  }
+
+  .xl\:hover\:table-header-group:hover {
+    display: table-header-group;
+  }
+
+  .xl\:hover\:table-row-group:hover {
+    display: table-row-group;
+  }
+
+  .xl\:hover\:table-row:hover {
+    display: table-row;
+  }
+
+  .xl\:hover\:flow-root:hover {
+    display: flow-root;
+  }
+
+  .xl\:hover\:grid:hover {
+    display: grid;
+  }
+
+  .xl\:hover\:inline-grid:hover {
+    display: inline-grid;
+  }
+
+  .xl\:hover\:contents:hover {
+    display: contents;
+  }
+
+  .xl\:hover\:hidden:hover {
+    display: none;
+  }
+
   .xl\:flex-row {
     flex-direction: row;
   }
@@ -131711,6 +132147,10 @@ h6,
 
   .xl\:max-w-5\/6 {
     max-width: 83%;
+  }
+
+  .xl\:max-w-280px {
+    max-width: 280px;
   }
 
   .xl\:max-w-320px {
@@ -156864,6 +157304,82 @@ h6,
     display: none;
   }
 
+  .\32xl\:hover\:block:hover {
+    display: block;
+  }
+
+  .\32xl\:hover\:inline-block:hover {
+    display: inline-block;
+  }
+
+  .\32xl\:hover\:inline:hover {
+    display: inline;
+  }
+
+  .\32xl\:hover\:flex:hover {
+    display: flex;
+  }
+
+  .\32xl\:hover\:inline-flex:hover {
+    display: inline-flex;
+  }
+
+  .\32xl\:hover\:table:hover {
+    display: table;
+  }
+
+  .\32xl\:hover\:table-caption:hover {
+    display: table-caption;
+  }
+
+  .\32xl\:hover\:table-cell:hover {
+    display: table-cell;
+  }
+
+  .\32xl\:hover\:table-column:hover {
+    display: table-column;
+  }
+
+  .\32xl\:hover\:table-column-group:hover {
+    display: table-column-group;
+  }
+
+  .\32xl\:hover\:table-footer-group:hover {
+    display: table-footer-group;
+  }
+
+  .\32xl\:hover\:table-header-group:hover {
+    display: table-header-group;
+  }
+
+  .\32xl\:hover\:table-row-group:hover {
+    display: table-row-group;
+  }
+
+  .\32xl\:hover\:table-row:hover {
+    display: table-row;
+  }
+
+  .\32xl\:hover\:flow-root:hover {
+    display: flow-root;
+  }
+
+  .\32xl\:hover\:grid:hover {
+    display: grid;
+  }
+
+  .\32xl\:hover\:inline-grid:hover {
+    display: inline-grid;
+  }
+
+  .\32xl\:hover\:contents:hover {
+    display: contents;
+  }
+
+  .\32xl\:hover\:hidden:hover {
+    display: none;
+  }
+
   .\32xl\:flex-row {
     flex-direction: row;
   }
@@ -160335,6 +160851,10 @@ h6,
 
   .\32xl\:max-w-5\/6 {
     max-width: 83%;
+  }
+
+  .\32xl\:max-w-280px {
+    max-width: 280px;
   }
 
   .\32xl\:max-w-320px {

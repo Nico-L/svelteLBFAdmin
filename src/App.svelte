@@ -313,10 +313,31 @@ $: {
             {/if}
             {#if !$user.role.aucun}
                 <Route path="redaction/*">
-                    <div class="fixed w-240px h-full bg-bleuLBFTT z-50">
-                        <NavigationRedaction />
+                    <div class="hidden sm:block">
+                        <div class="fixed w-240px h-full bg-bleuLBFTT z-50">
+                            <NavigationRedaction />
+                        </div>
+                        <div class="ml-240px z-30">
+                            <Router>
+                                <Route path="" >
+                                    <Loadable loader={redaction} />
+                                </Route>
+                                <Route path="editeur">
+                                    <Loadable loader={editeur} />
+                                </Route>
+                                <Route path="brouillons">
+                                    <Loadable loader={brouillons} />
+                                </Route>
+                                <Route path="articles">
+                                    <Loadable loader={articles} />
+                                </Route>
+                                <Route path="tags">
+                                    <Loadable loader={tagsArticles} />
+                                </Route>
+                            </Router>
+                        </div>
                     </div>
-                    <div class="ml-240px z-30">
+                    <div class="sm:hidden">
                         <Router>
                             <Route path="" >
                                 <Loadable loader={redaction} />
@@ -335,7 +356,7 @@ $: {
                             </Route>
                         </Router>
                     </div>
-                </Route>
+                </Route>    
             {/if}
             <Route>
                 <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">

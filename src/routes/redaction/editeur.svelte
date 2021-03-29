@@ -378,7 +378,7 @@ function effacerTag(index) {
 {#if !flagArticleLoading}
     <div>
         <div
-            class="bg-gray-900 text-gray-200 text-4xl w-720px appearance-none leading-normal px-4 pl-8 rounded-md focus:bg-gray-800 focus:outline-none"
+            class="bg-gray-900 text-gray-200 text-4xl m-w-720px appearance-none leading-normal px-4 pl-8 rounded-md focus:bg-gray-800 focus:outline-none"
             contenteditable="true"
             bind:innerHTML={dataArticle.titre}
         >

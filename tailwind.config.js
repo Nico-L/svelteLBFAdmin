@@ -1,6 +1,6 @@
 module.exports = {
     purge: {
-        enabled: true,
+        enabled: false,
         content: [
             'public/index.html',
             'src/**/*.svelte',
@@ -62,6 +62,7 @@ module.exports = {
         '3/6': '50%',
         '4/6': '66%',
         '5/6': '83%',
+        '280px': '280px',
         '320px': '320px',
         '480px': '480px',
         '620px': '620px',

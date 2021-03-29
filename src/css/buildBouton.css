@@ -1,5 +1,10 @@
 /* animation bouton rebuild */
 @layer components {
+
+    .cadreBuild:hover .cadreSpinner {
+        @apply bg-rougeLBF;
+    }
+
     .spinner {
         @apply my-1 mx-auto;
     width: 30px;
@@ -24,7 +29,7 @@
     animation: sk-bounce 2.0s infinite ease-in-out;
     }
 
-    .cadreSpinner:hover .spinner .dot1, .cadreSpinner:hover .spinner .dot2 {
+     .cadreBuild:hover .cadreSpinner .spinner .dot1,  .cadreBuild:hover .cadreSpinner .spinner .dot2 {
         @apply bg-gray-900;
     }
 
