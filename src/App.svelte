@@ -134,7 +134,7 @@ const listeMachines = register({
 
     $: {
         const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-        if (userInfo) {
+        if (verifJWT()) {
             user.set(userInfo)
             loginNeeded = false
         } else {
