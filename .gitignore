@@ -4,3 +4,4 @@
 /public/img/
 
 .DS_Store
+package-lock.json
