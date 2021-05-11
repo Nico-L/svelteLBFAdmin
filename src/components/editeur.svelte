@@ -12,15 +12,26 @@ let savedSelection;
 export let contenu = "";
 export let couleur = "jaune"
 
-const classeDefaut = "boutonEditeur bouton-" + couleur + "-hover"
-const classeActivee =  "bouton-" + couleur
-const classeCadre = "mt-1 border rounded p-1 border-" + couleur + "LBF"
+var classeDefaut = "boutonEditeur bouton-" + couleur + "-hover"
+var classeActivee =  "bouton-" + couleur
+var classeCadre = "mt-1 border rounded p-1 border-" + couleur + "LBF"
 var classBold=classeDefaut
 var classItalic=classeDefaut
 var classUnderline=classeDefaut
 var classUnOrdered = classeDefaut
 var classUnlink=classeDefaut
 function etatBouton(command) {return document.queryCommandState(command)}
+
+$: {
+    classeDefaut = "boutonEditeur bouton-" + couleur + "-hover"
+    classeActivee =  "bouton-" + couleur
+    classeCadre = "mt-1 border rounded p-1 border-" + couleur + "LBF"
+    classBold=classeDefaut
+    classItalic=classeDefaut
+    classUnderline=classeDefaut
+    classUnOrdered = classeDefaut
+    classUnlink=classeDefaut
+}
 
 onMount(() => {
     editeur.focus()
@@ -49,8 +60,6 @@ function strip(html)
 {
    var tmp = document.implementation.createHTMLDocument("New").body;
    tmp.innerHTML = html;
-   console.log('textContent', tmp.textContent)
-   console.log('innerText', tmp.innerText)
    return tmp.textContent || tmp.innerText || "";
 }
 

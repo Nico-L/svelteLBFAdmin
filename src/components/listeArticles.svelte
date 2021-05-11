@@ -102,47 +102,47 @@ function sendToEditor(id) {
 
 <div class="flex flex-col">
     {#each articles as article, index}
-    <div class={"flex flex-row divide-x py-2 justify-between border border-gray-900" + fondListe(index)}>
-        <div class="px-4 flex-shrink-0 text-gray-700">
-            {#await imgProxyUrl("https://cms.labonnefabrique.fr" + article.banniere.media.url, optionsProxy)}
-                <img
-                    src="/img/svg/clock-regular.svg"
-                    alt="logo"
-                    class={"h-full object-cover rounded border " + borderColore}
-                    width="60"
-                    />
-            {:then value}
-                <img
-                    src={value.imgProxyUrl}
-                    alt={article.titre}
-                    class={"h-full object-cover rounded border cursor-pointer " + borderColore}
-                    width="60"
-                    on:click={() => sendToEditor(article.id)}
-                    />
-            {/await}
-        </div>
-        <div class="w-full flex flex-col">
-            <div class="flex flex-col justify-start cursor-pointer px-1" on:click={() => sendToEditor(article.id)}>
-                <div class="text-xs mb-1"><span class={"font-medium " + textColore}>Dernière mise à jour :</span> {dateJourMoisHeure(article.updated_at)}</div>
-                <div class="ml-2 text-lg font-medium sm:text-xl">{article.titre}</div>
+        <div class={"flex flex-row divide-x py-2 justify-between border border-gray-900" + fondListe(index)}>
+            <div class="px-4 flex-shrink-0 text-gray-700">
+                {#await imgProxyUrl("https://cms.labonnefabrique.fr" + article.banniere.media.url, optionsProxy)}
+                    <img
+                        src="/img/svg/clock-regular.svg"
+                        alt="logo"
+                        class={"h-full object-cover rounded border " + borderColore}
+                        width="60"
+                        />
+                {:then value}
+                    <img
+                        src={value.imgProxyUrl}
+                        alt={article.titre}
+                        class={"h-full object-cover rounded border cursor-pointer " + borderColore}
+                        width="60"
+                        on:click={() => sendToEditor(article.id)}
+                        />
+                {/await}
             </div>
-            <div class="flex flex-row gap-0.5 flex-shrink-0 mt-0 sm:mt-0 justify-end">
-                <Bouton on:actionBouton={() => sendToEditor(article.id)} largeur="w-6" couleur={textColore + " " + borderColore} noBorder={true}>
-                    <Fa icon={faEdit} class="mx-auto" />
-                </Bouton>
-                <Bouton on:actionBouton={() => {articleAEffacerId = article.id; flagConfirmationEffacer = true}} largeur="w-6" couleur="text-rougeLBF border-rougeLBF" noBorder={true}>
-                    <Fa icon={faTrashAlt} class="mx-auto" />
-                </Bouton>
+            <div class="w-full flex flex-col">
+                <div class="flex flex-col justify-start cursor-pointer px-1" on:click={() => sendToEditor(article.id)}>
+                    <div class="text-xs mb-1"><span class={"font-medium " + textColore}>Dernière mise à jour :</span> {dateJourMoisHeure(article.updated_at)}</div>
+                    <div class="ml-2 text-lg font-medium sm:text-xl">{article.titre}</div>
+                </div>
+                <div class="flex flex-row gap-0.5 flex-shrink-0 mt-0 sm:mt-0 justify-end">
+                    <Bouton on:actionBouton={() => sendToEditor(article.id)} largeur="w-6" couleur={textColore + " " + borderColore} noBorder={true}>
+                        <Fa icon={faEdit} class="mx-auto" />
+                    </Bouton>
+                    <Bouton on:actionBouton={() => {articleAEffacerId = article.id; flagConfirmationEffacer = true}} largeur="w-6" couleur="text-rougeLBF border-rougeLBF" noBorder={true}>
+                        <Fa icon={faTrashAlt} class="mx-auto" />
+                    </Bouton>
+                </div>
             </div>
+            
         </div>
-        
-    </div>
     {:else}
-    {#if estPublie}
-        <div class="ml-6">Vous n'avez encore publié aucune article...</div>
-    {:else}
-        <div class="ml-6">Aucun brouillon n'est en cours...</div>
-    {/if}
+        {#if estPublie}
+            <div class="ml-6">Vous n'avez encore publié aucune article...</div>
+        {:else}
+            <div class="ml-6">Aucun brouillon n'est en cours...</div>
+        {/if}
     {/each}
 </div>
 

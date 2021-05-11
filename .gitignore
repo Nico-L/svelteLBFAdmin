@@ -1,4 +1,6 @@
 /node_modules/
 /public/build/
+/public/css/
+/public/img/
 
 .DS_Store

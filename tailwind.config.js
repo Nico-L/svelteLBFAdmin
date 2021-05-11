@@ -1,6 +1,6 @@
 module.exports = {
     purge: {
-        enabled: false,
+        enabled: true,
         content: [
             'public/index.html',
             'src/**/*.svelte',
@@ -208,6 +208,7 @@ module.exports = {
       "200px": "200px",
       "240px": "240px",
       "300px": "300px",
+      "320px": "320px",
       "340px": "340px",
       "400px": "400px",
       "480px": "480px",
@@ -279,6 +280,7 @@ module.exports = {
     backgroundOpacity: ['hover']
   },
   plugins: [
-        require('tailwind-scrollbar')
+        require('tailwind-scrollbar'),
+        require('@tailwindcss/line-clamp')
     ]
 };

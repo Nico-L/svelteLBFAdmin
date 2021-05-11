@@ -63,37 +63,38 @@
     }
 </script>
 
-<main class="w-720px ml-4">
-    <h4 class="ml-4 mb-4 mt-4">Liste des tags</h4>
+<main class="max-w-720px ml-4">
+    <h3 class="ml-1 mb-2 mt-4 text-lbfvert-800">Liste des tags</h3>
     <div class="mb-4">Les tags sont des mots permettant de classer les articles et de faire des recherches dans la liste des articles.</div>
     <div class="flex flex-row items-end mb-4">
         <div class="mr-4 p-1">
             <label for="tag">
-                <div class="text-bleuLBF text-lg font-medium">Ajouter un tag</div>
+                <div class="text-vertLBF text-lg font-medium">Ajouter un tag</div>
                 <input 
                     bind:value= {newTag}
-                    class="bg-gray-900 text-gray-200 focus:outline-none border border-bleuLBF rounded py-2 px-4 block w-full appearance-none leading-normal"
+                    class="bg-gray-900 text-gray-200 focus:outline-none border border-vertLBF rounded py-2 px-4 block w-full appearance-none leading-normal"
                     type="text"
                     id="tag"
                     />
             </label>
         </div>
         <div>
-            <Bouton bind:occupe={flagSauvegardeEnCours} bind:succes={flagSauvegardeSucces} on:actionBouton={ajouterTag} largeur="w-12" couleur="text-bleuLBF border-bleuLBF">
+            <Bouton bind:occupe={flagSauvegardeEnCours} bind:succes={flagSauvegardeSucces} on:actionBouton={ajouterTag} largeur="w-12" couleur="text-vertLBF border-vertLBF">
                 <Fa icon={faSave} size="lg" class="mx-auto" />
             </Bouton>
         </div>
     </div>
-    <div class="min-h-52 bg-bleuLBFTT">
+    <div class="min-h-52 p-2 border-2 rounded border-vertLBFT">
         {#if !tagsLoading}
-            <div class="grid grid-flow-col grid-cols-4 grid-rows-6 gap-2 p-4">
-                {#each lesTags as tag}
-                    <div class="h-8 mx-auto p-2 rounded-full text-vertLBF border border-vertLBF flex flex-row items-center">
-                        <div class="cursor-pointer" on:click={() => {effacerTag(tag.id)}}><Fa icon={faTimes} /></div>
-                        <span class="ml-2 font-semibold">{tag.tag}</span>
-                    </div>
-                {/each}
-            </div>
+        <div class="flex flex-wrap justify-start gap-1">
+            {#each lesTags as tag}
+                <div class="h-8 mx-auto p-2 rounded-full text-vertLBF border border-vertLBF flex flex-row items-center">
+                    <div class="cursor-pointer" on:click={() => {effacerTag(tag.id)}}><Fa icon={faTimes} /></div>
+                    <div class="ml-2 text-sm font-semibold">{tag.tag}</div>
+                </div>
+            {/each}
+        </div>
+            
         {:else}
             <Chargement />
         {/if}

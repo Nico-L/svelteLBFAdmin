@@ -7,6 +7,16 @@
         resolve: () => './notFound'
     })
 
+    const archivesGaleries = register ({
+        loader: () => import('./routes/galeries/archives.svelte'),
+        resolve: () => './archivesGaleries'
+    })
+
+    const ajoutGalerie = register ({
+        loader: () => import('./routes/galeries/mngt.svelte'),
+        resolve: () => './galeries'
+    })
+
     const tagsArticles = register ({
         loader: () => import('./routes/redaction/tags.svelte'),
         resolve: () => './tags'
@@ -130,7 +140,6 @@ const listeMachines = register({
         } else {
             const pathName = window.location.pathname
             if (!pathName.includes('login')) {
-                console.log('bob ?')
                 window.location.assign(window.location.origin + '/login/?' + redirect)
             }
         }
@@ -308,6 +317,50 @@ $: {
                                 </Loadable>
                             </Route>
                         </Router>
+                    </div>
+                </Route>
+                <Route path="galeries/:type" let:params>
+                    <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
+                        <Header />
+                    </div>
+                    <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
+                        <Navigation />
+                    </div>
+                    <div class="ml-240px p-4 pt-20">
+                        <Loadable loader={ajoutGalerie} type={params.type}></Loadable>
+                    </div>
+                </Route>
+                <Route path="galeries/edit/:id" let:params>
+                    <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
+                        <Header />
+                    </div>
+                    <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
+                        <Navigation />
+                    </div>
+                    <div class="ml-240px p-4 pt-20">
+                        <Loadable loader={ajoutGalerie} id={params.id}></Loadable>
+                    </div>
+                </Route>
+                <Route path="galeries/archives">
+                    <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
+                        <Header />
+                    </div>
+                    <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
+                        <Navigation />
+                    </div>
+                    <div class="ml-240px p-4 pt-20">
+                        <Loadable loader={archivesGaleries} ></Loadable>
+                    </div>
+                </Route>
+                <Route path="galeries/tags">
+                    <div class="fixed w-full h-20 p-22 flex flex-row bg-gray-900 z-20">
+                        <Header />
+                    </div>
+                    <div class="fixed w-240px h-full bg-gray-900 mt-20 z-20">
+                        <Navigation />
+                    </div>
+                    <div class="ml-240px p-4 pt-20">
+                        <Loadable loader={tagsArticles}></Loadable>
                     </div>
                 </Route>
             {/if}

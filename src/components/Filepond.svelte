@@ -9,6 +9,7 @@
     let pond;
     export let data = ""
     export let blobImage = null
+    export let maxFiles = null
 
     function onProcessFile(error, file) {
         dispatch('uploadDone');
@@ -27,6 +28,7 @@
                 labelFileLoadError: 'Un problème est survenu',
                 labelTapToRetry: 'Cliquez sur le cercle pour essayer à nouveau'
             } );
+            if (!maxFiles) {pond.maxFiles = parseInt(maxFiles)}
         })
     })
 
@@ -39,6 +41,7 @@ $: {
         pond.addFile(blobImage).then((file) => {
             pond.processFile().then((file2) => {
                 blobImage = null
+                console.log('retour processFile', file2)
             }); 
         })     
     }

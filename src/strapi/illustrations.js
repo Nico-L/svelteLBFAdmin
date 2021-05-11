@@ -24,7 +24,6 @@ export function listeImages(userId, espaceId, tagId) {
         }
         flagPremierParametre = false 
     }
-    console.log('url', url)
     return verifJWT().then((token)=> 
         {
             const auth = "Bearer " + token
@@ -99,6 +98,25 @@ export function listeImgByEspaceEtTagEtUser(espaceId, tagId, userId) {
     )
 }
 
+export function listeImgByUuid(uuid) {
+    const url = "ADRESSE_CMS" + "illustrations?uuid=" + uuid
+    return verifJWT().then((token)=> 
+        {
+            const auth = "Bearer " + token
+            var entetes = new Headers({"content-type": "application/json", "Authorization": auth})
+            var options = { 
+                method: 'GET',
+                headers: entetes,
+                mode: 'cors',
+                cache: 'default',
+            }
+            return fetch(url, options)
+                .then((leJSON)=> {return leJSON.json()})
+                .then((retour)=> {return retour})
+        }
+    )
+}
+
 export function listeIllustrationsOrphelines(tagId, userId) {
     const query = qs.stringify({ _where: { tag: tagId, user: userId } })
     const url = "ADRESSE_CMS" + "illustrations?" + query
@@ -132,11 +150,11 @@ export function effaceIllustration(data) {
                 mode: 'cors',
                 cache: 'default',
             }
-            return fetch(urlIllustration, options)
+            return fetch(urlImage, options)
                 .then((leJSON)=> {return leJSON.json()})
-                .then((retour)=> {return fetch(urlImage, options)})
+                .then((retour)=> { return fetch(urlIllustration, options)})
                 .then((leJSON)=> {return leJSON.json()})
-                .then((retour) => {return retour})
+                .then((retour2) => {console.log('retour efface image', retour2); return retour2})
         }
     )
 }
