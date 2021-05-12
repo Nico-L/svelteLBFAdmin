@@ -18,7 +18,7 @@
     <img src="/img/logos/logoJardin.svg" class="h-16 my-auto mr-6" alt="logo espace jardin">
     {#if $buildNeeded}
         <div
-            class="h-12 my-2 border-2 rounded border-rougeLBF cursor-pointer flex flex-row items-center overflow-hidden cadreBuild"
+            class="h-12 my-2 border-2 rounded border-rougeLBF cursor-pointer flex flex-row items-center overflow-hidden cadreBuild text-rougeLBF text-lg font-medium hover:text-black hover:bg-rougeLBF"
              on:click={lanceConstruction}
              >
             <div class="w-16 h-12 cadreSpinner flex">
@@ -27,7 +27,7 @@
                     <div class="dot2"></div>
                 </div>
             </div>
-            <div class="pr-2 text-rougeLBF text-lg font-medium">Construire le site</div>
+            <div class="pr-2 textBuild">Construire le site</div>
         </div>
     {/if}
 </div>

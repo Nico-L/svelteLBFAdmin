@@ -7,6 +7,7 @@ import {listeGaleries, deleteGalerie} from './../../strapi/galeries.js'
 import { effaceIllustration } from "../../strapi/illustrations.js"
 import {imgProxyUrl} from "./../../strapi/imgProxy.js"
 import { user } from "./../../stores/user.js"
+import {buildNeeded} from "./../../stores/build.js"
 import Fa from 'svelte-fa'
 import { faEdit, faTrashAlt, faCalendarAlt } from '@fortawesome/free-regular-svg-icons'
 import { faWrench } from '@fortawesome/free-solid-svg-icons'
@@ -70,6 +71,7 @@ function suppressionGalerie() {
             promises.push(effaceIllustration(illustrationAEffacer))
         })
         Promise.all(promises).then((retour) => {
+            buildNeeded.set(true)
             flagConfirmationEffacerGalerie = false
             busyEffacerGalerie = false
             flagRafraich = true

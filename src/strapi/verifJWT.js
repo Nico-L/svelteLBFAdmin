@@ -16,10 +16,8 @@ export function verifJWT () {
         return fetch(url, options)
             .then((leJSON) => {return leJSON.json()})
             .then((retourJWT)=> {
-                console.log('retourJWT', retourJWT)
                 if (retourJWT.message === "Error: Invalid token.") {
                     localStorage.removeItem('userInfo')
-                    //window.location.assign(window.location.origin + '/login/?' + redirect)
                 } else {
                     return userInfo.jwt
                 }
@@ -27,6 +25,5 @@ export function verifJWT () {
             .catch((erreur) => console.log('erreur', erreur))
     } else {
         localStorage.removeItem('userInfo')
-        //window.location.assign(window.location.origin + '/login/?' + redirect)
     }
 }

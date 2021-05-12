@@ -7,6 +7,7 @@
     import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
     import {tagsArticlesStore} from "../../stores/tagsArticles.js"
+    import { buildNeeded } from "../../stores/build.js"
 
     import Dialog from '../../components/Dialog.svelte';
     import Bouton from '../../components/Button/Button.svelte'
@@ -108,7 +109,6 @@ onMount(() => {
             resizeHeight: 2048,
             resizeMethod: 'contain',
             resizeQuality: 1.0,
-            maxFiles: 6,
             chunking: false
         })
         dropzone.on('sending', (file, xhr, formData) => {
@@ -208,6 +208,7 @@ function sauveGalerie() {
             currentIllustrations = []
         }
         saveGalerie(dataGalerie).then((retour) => {
+            buildNeeded.set(true)
             window.location.assign(window.location.origin + "/galeries/edit/" + retour.id)
         })
     }
@@ -221,6 +222,7 @@ function majGalerie() {
             currentIllustrations = []
         }
     updateGalerie(dataGalerie).then((retour) => {
+        buildNeeded.set(true)
         flagSauvegardeEnCours = false
     })
 }
@@ -368,11 +370,10 @@ onDestroy(()=> {
                         <div>{upload.progress} %</div>
                     </div>
                 {/each}
-            {#if dataGalerie.illustrations.length + currentIllustrations.length < 6 && !uploadInProgress}
+            {#if dataGalerie.illustrations.length + currentIllustrations.length < 6}
                 <div  class={"w-120px h-120px p-2 text-center rounded border " + couleurBordure + " " + couleurTexte}>
-                    <div bind:this={dropzoneEl} class="w-full h-full flex justify-center items-center ">{texteDropzone}</div>
+                    <div bind:this={dropzoneEl} class="w-full h-full flex justify-center items-center cursor-pointer">{texteDropzone}</div>
                 </div>
-                <!-- <FilePond data={dataImg} maxFiles="6" on:uploadDone={() => {flagUploadDone = true;}}/> -->
             {/if}
         </div>
         <div class="text-rougeLBF ml-4">
