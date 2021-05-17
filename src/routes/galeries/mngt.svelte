@@ -382,11 +382,11 @@ onDestroy(()=> {
     </div>
     <div class="flex flex-row justify-end">
         {#if dataGalerie.id}
-            <Bouton occupe={busyEffacerGalerie} on:actionBouton={() => flagConfirmationEffacerGalerie = true} largeur="w-10" couleur="text-rougeLBF border-rougeLBF">
+            <Bouton occupe={busyEffacerGalerie} on:actionBouton={() => flagConfirmationEffacerGalerie = true} largeur="w-10" couleur="text-rougeLBF border-rougeLBF hover:bg-rougeLBF hover:text-gray-900">
                 <Fa icon={faTrashAlt} size="lg"  class="mx-auto" />
             </Bouton>
         {/if}
-        <Bouton bind:occupe={flagSauvegardeEnCours} bind:succes={flagSauvegardeSucces} on:actionBouton={validationSauvegarde} largeur="w-12" couleur="text-vertLBF border-vertLBF">
+        <Bouton bind:occupe={flagSauvegardeEnCours} bind:succes={flagSauvegardeSucces} on:actionBouton={validationSauvegarde} largeur="w-12" couleur="text-vertLBF border-vertLBF hover:bg-vertLBF hover:text-gray-900">
             <Fa icon={faSave} size="lg" class="mx-auto" />
         </Bouton>
     </div>

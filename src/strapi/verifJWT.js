@@ -25,5 +25,10 @@ export function verifJWT () {
             .catch((erreur) => console.log('erreur', erreur))
     } else {
         localStorage.removeItem('userInfo')
+        const redirect = window.location.pathname + window.location.search
+        const pathName = window.location.pathname
+        if (!pathName.includes('login')) {
+            window.location.assign(window.location.origin + '/login/?' + redirect)
+        }
     }
 }

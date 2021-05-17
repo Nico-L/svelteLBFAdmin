@@ -30,7 +30,8 @@ couleur["realisation"] = {
     fond: "bg-bleuLBF",
     bordure: "border-bleuLBF",
     titre: "text-lbfbleu-700",
-    divide: "divide-bleuLBFT"
+    divide: "divide-bleuLBFT",
+    hover: " hover:bg-bleuLBF hover:text-gray-900"
 }
 
 couleur["evenement"] = {
@@ -38,7 +39,8 @@ couleur["evenement"] = {
     fond: "bg-jauneLBF",
     bordure: "border-jauneLBF",
     titre: "text-lbfjaune-700",
-    divide: "divide-jauneLBFT"
+    divide: "divide-jauneLBFT",
+    hover: " hover:bg-jauneLBF hover:text-gray-900"
 }
 
 let optionsProxy = {
@@ -218,10 +220,10 @@ $: {
                     </div>
                 </div>
                 <div class="flex flex-col flex-grow-0 flex-shrink-0 justify-center items-center">
-                    <Bouton on:actionBouton={() =>{edition(archive.id)}} largeur="w-8" couleur={couleur[archive.type].texte + " " + couleur[archive.type].bordure} noBorder={true}>
+                    <Bouton on:actionBouton={() =>{edition(archive.id)}} largeur="w-8" couleur={couleur[archive.type].texte + " " + couleur[archive.type].bordure + " " + couleur[archive.type].hover} noBorder={true}>
                         <Fa icon={faEdit} size="1.5x" class="mx-auto" />
                     </Bouton>
-                    <Bouton on:actionBouton={() => {archiveToDelete = archive; flagConfirmationEffacerGalerie = true}} largeur="w-8" couleur="text-rougeLBF border-rougeLBF hover:bg-rougeLBF" noBorder={true}>
+                    <Bouton on:actionBouton={() => {archiveToDelete = archive; flagConfirmationEffacerGalerie = true}} largeur="w-8" couleur="text-rougeLBF border-rougeLBF hover:bg-rougeLBF hover:text-gray-900" noBorder={true}>
                         <Fa icon={faTrashAlt} size="1.3x" class="mx-auto" />
                     </Bouton>
                 </div>
