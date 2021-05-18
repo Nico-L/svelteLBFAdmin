@@ -6,6 +6,7 @@ import { navigate } from "svelte-routing";
 import { user } from "./../stores/user.js"
 import {espacesBF} from './../stores/espacesBF.js'
 import { tags } from "./../stores/tags.js"
+import { buildNeeded } from "./../stores/build.js"
 import {listeAbonnements, getMachineById, majMachine, creerMachine} from './../strapi/machines.js'
 import ImageUpload from './imageUpload.svelte';
 import Editeur from './editeur.svelte';
@@ -90,12 +91,14 @@ function validationSauvegarde() {
     flagGetMachine = true
     if (idMachine==="") {
         creerMachine(laMachine).then((retour)=>{
+            buildNeeded.set(true)
             flagSauvegardeEnCours=false
             flagGetMachine = false
             navigate("/machines/listeMachines", { replace: true });
         })
     } else {
         majMachine(idMachine, laMachine).then((retour)=>{
+            buildNeeded.set(true)
             flagSauvegardeEnCours= false
             flagGetMachine = false
             dispatch('close')
