@@ -109,7 +109,7 @@ const listeMachines = register({
     import Chargement from './components/chargement.svelte'
 
     import {listeEspacesBF, listeTags} from './strapi/espacesEtTags.js'
-    import {getTagsArticles} from './strapi/tagsArticles.js'
+    import {getTagsArticles, listeCategoriesTags} from './strapi/tagsArticles.js'
     import {verifJWT} from './strapi/verifJWT.js'
     import {listeRoles} from './strapi/users.js'
 
@@ -117,7 +117,7 @@ const listeMachines = register({
     import { user } from "./stores/user.js"
     import { espacesBF } from "./stores/espacesBF.js"
     import {tags} from "./stores/tags.js"
-    import {tagsArticlesStore} from "./stores/tagsArticles.js"
+    import {tagsArticlesStore, categoriesTagsStore} from "./stores/tagsArticles.js"
     import { buildNeeded } from "./stores/build.js"
 
     import Header from './layouts/header.svelte'
@@ -169,6 +169,15 @@ $: {
     if (!loginNeeded && $tagsArticlesStore && !flagTagsArticles) {
         getTagsArticles().then((tagsArticles) => {
             tagsArticlesStore.set(tagsArticles)
+            flagTagsArticles = true
+        })
+    }
+}
+
+$: {
+    if (!loginNeeded && $categoriesTagsStore && !flagTagsArticles) {
+        listeCategoriesTags().then((categories) => {
+            categoriesTagsStore.set(categories)
             flagTagsArticles = true
         })
     }

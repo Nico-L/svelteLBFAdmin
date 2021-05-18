@@ -126,6 +126,7 @@ $: {
                         bind:selectedItem={titreFiltre}
                         labelFieldName="titre" 
                         name="titre"
+                        inputId="titre"
                         inputClassName="bg-bleuLBFTT text-gray-200 focus:outline-none border border-bleuLBFT rounded block w-full appearance-none leading-normal"
                         hideArrow="true"
                         className="w-full"
@@ -156,6 +157,7 @@ $: {
                         bind:selectedItem={tagFiltre}
                         labelFieldName="tag" 
                         name="tag"
+                        inputId="tag"
                         inputClassName="bg-bleuLBFTT text-gray-200 focus:outline-none rounded border border-bleuLBFT block w-full appearance-none leading-normal"
                         hideArrow="true"
                         className="w-full"
