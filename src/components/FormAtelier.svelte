@@ -124,12 +124,20 @@ function sauveAtelier() {
     let heureDebutTemp = heureDebut.split('h')
     jourDebut.setHours(heureDebutTemp[0])
     jourDebut.setMinutes(heureDebutTemp[1])
+    var heureDebutFormat = heureDebut.split('h').join(':') + ":00"
+    if (parseInt((heureDebut.split('h'))[0])<10) {
+        heureDebutFormat = "0"+heureDebutFormat
+    }
+    var heureFinFormat = heureFin.split('h').join(':') + ":00"
+    if (parseInt((heureFin.split('h'))[0])<10) {
+        heureFinFormat = "0"+heureFinFormat
+    }
     variables = {
         titre: editAtelier.titre || "Un nouvel atelier",
         lieu: editAtelier.lieu || "La Bonne Fabrique",
         date: new Date(jourDebut),
-        debut: heureDebut.split('h').join(':') + ":00",
-        fin: heureFin.split('h').join(':') + ":00",
+        debut: heureDebutFormat,
+        fin: heureFinFormat,
         description: editAtelier.description || "Un nouvel atelier sympa !",
         espace: editAtelier.espace.id,
         nbParticipants: editAtelier.nbParticipants,
