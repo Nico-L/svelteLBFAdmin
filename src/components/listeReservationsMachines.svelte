@@ -21,14 +21,14 @@ var borderColore = ""
 
 switch (couleur) {
     case "bleu":
-        var bgColoree = "bg-bleuLBFTT"
-        var textColore = "text-bleuLBF"
-        var borderColore = "border-bleuLBF"
+        bgColoree = "bg-bleuLBFTT"
+        textColore = "text-bleuLBF"
+        borderColore = "border-bleuLBF"
         break;
     case "vert":
-        var bgColoree = "bg-vertLBFTT"
-        var textColore = "text-vertLBF"
-        var borderColore = "border-vertLBF"
+        bgColoree = "bg-vertLBFTT"
+        textColore = "text-vertLBF"
+        borderColore = "border-vertLBF"
         break;
 }
 
