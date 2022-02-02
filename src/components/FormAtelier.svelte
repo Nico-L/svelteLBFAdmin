@@ -124,11 +124,11 @@ function sauveAtelier() {
     let heureDebutTemp = heureDebut.split('h')
     jourDebut.setHours(heureDebutTemp[0])
     jourDebut.setMinutes(heureDebutTemp[1])
-    var heureDebutFormat = heureDebut.split('h').join(':') + ":00"
+    let heureDebutFormat = heureDebut.split('h').join(':') + ":00"
     if (parseInt((heureDebut.split('h'))[0])<10) {
         heureDebutFormat = "0"+heureDebutFormat
     }
-    var heureFinFormat = heureFin.split('h').join(':') + ":00"
+    let heureFinFormat = heureFin.split('h').join(':') + ":00"
     if (parseInt((heureFin.split('h'))[0])<10) {
         heureFinFormat = "0"+heureFinFormat
     }
