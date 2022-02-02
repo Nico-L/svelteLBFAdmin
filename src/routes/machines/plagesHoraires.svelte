@@ -5,12 +5,10 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Busy from '../../components/busy.svelte'
 import {getListeHoraires, majListeHoraires} from "./../../strapi/machines.js"
-//import { auth } from "./../../stores/auth.js"
 import { user } from "./../../stores/user.js"
 
 let calendarEl;
 let calendar;
-//let selectionReservation = "plages";
 let lesPlages = [[], [], [], [], [], [], []]
 let nbPlagesJour = 4
 let hasChanged = false
@@ -19,7 +17,6 @@ let flagMAJ = false
 function getlistePlages() {
             lesPlages = [[], [], [], [], [], [], []]
             getListeHoraires().then((retour)=>{
-                console.log('retour plages', retour)
                 lesPlages[0] = retour.dimanche
                 lesPlages[1] = retour.lundi
                 lesPlages[2] = retour.mardi
@@ -39,7 +36,7 @@ $: {
 $: {
     if (calendar && hasChanged) {
         hasChanged = false
-        var horairesPourSauvegarde = {
+        let horairesPourSauvegarde = {
             dimanche: lesPlages[0],
             lundi: lesPlages[1],
             mardi: lesPlages[2],
