@@ -70,11 +70,18 @@ function updateHoraireAtelier(id, debut, fin) {
     var minFin = "30"
     if ((new Date(fin)).getMinutes()===0) minFin = "00"
     const horaireFin = (new Date(fin)).getHours() + ":" + minFin + ":00"
+    if (parseInt(horaireDebut)<10) {
+        horaireDebut = "0"+horaireDebut
+    }
+    if (parseInt(horaireFin)<10) {
+        horaireFin = "0"+horaireFin
+    }
     const variables = {
         date: new Date(debut),
         debut: horaireDebut,
         fin: horaireFin
     }
+    
     editerAtelier(id, variables).then((retour) => {
             buildNeeded.set(true)
             flagMAJAtelier = false

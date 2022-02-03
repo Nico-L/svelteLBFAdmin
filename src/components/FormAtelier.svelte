@@ -171,21 +171,20 @@ function updateAtelier() {
     let heureDebutTemp = heureDebut.split('h')
     jourDebut.setHours(heureDebutTemp[0])
     jourDebut.setMinutes(heureDebutTemp[1])
-    /*var tarifs='{'
-    editAtelier.tarifs.forEach((tarif, index) => {
-        if(index===0) {
-          tarifs = tarifs + '{'+ tarif[0] + ', ' +  tarif[1] + ', ' + tarif[2] +'}'
-        } else {
-          tarifs = tarifs + ', {'+ tarif[0] + ', ' +  tarif[1] + ', ' + tarif[2] +'}'
-        }
-      })
-    tarifs = tarifs + '}' */
+    let heureDebutFormat = heureDebut.split('h').join(':') + ":00"
+    if (parseInt((heureDebut.split('h'))[0])<10) {
+        heureDebutFormat = "0"+heureDebutFormat
+    }
+    let heureFinFormat = heureFin.split('h').join(':') + ":00"
+    if (parseInt((heureFin.split('h'))[0])<10) {
+        heureFinFormat = "0"+heureFinFormat
+    }
     variables = {
         titre: editAtelier.titre || "Un nouvel atelier",
         lieu: editAtelier.lieu || "La Bonne Fabrique",
         date: new Date(jourDebut),
-        debut: heureDebut.split('h').join(':') + ":00",
-        fin: heureFin.split('h').join(':') + ":00",
+        debut: heureDebutFormat,
+        fin: heureFinFormat,
         description: editAtelier.description || "Un nouvel atelier sympa !",
         espace: editAtelier.espace.id,
         nbParticipants: editAtelier.nbParticipants,
