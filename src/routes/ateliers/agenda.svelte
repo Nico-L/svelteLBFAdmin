@@ -66,10 +66,10 @@ function updateHoraireAtelier(id, debut, fin) {
     flagMAJAtelier = true
     var minDebut = "30"
     if ((new Date(debut)).getMinutes()===0) minDebut = "00"
-    const horaireDebut = (new Date(debut)).getHours() + ":" + minDebut + ":00"
+    var horaireDebut = (new Date(debut)).getHours() + ":" + minDebut + ":00"
     var minFin = "30"
     if ((new Date(fin)).getMinutes()===0) minFin = "00"
-    const horaireFin = (new Date(fin)).getHours() + ":" + minFin + ":00"
+    var horaireFin = (new Date(fin)).getHours() + ":" + minFin + ":00"
     if (parseInt(horaireDebut)<10) {
         horaireDebut = "0"+horaireDebut
     }
