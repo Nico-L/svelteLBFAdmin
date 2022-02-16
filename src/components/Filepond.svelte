@@ -41,7 +41,6 @@ $: {
         pond.addFile(blobImage).then((file) => {
             pond.processFile().then((file2) => {
                 blobImage = null
-                console.log('retour processFile', file2)
             }); 
         })     
     }

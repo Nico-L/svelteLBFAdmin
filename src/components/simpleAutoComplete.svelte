@@ -129,12 +129,9 @@
     return result;
   }
   function safeLabelFunction(item) {
-    // console.log("labelFunction: " + labelFunction);
-    // console.log("safeLabelFunction, item: " + item);
     return safeStringFunction(labelFunction, item);
   }
   function safeKeywordsFunction(item) {
-    // console.log("safeKeywordsFunction");
     const keywords = safeStringFunction(keywordsFunction, item);
     let result = safeStringFunction(keywordsCleanFunction, keywords);
     result = result.toLowerCase().trim();

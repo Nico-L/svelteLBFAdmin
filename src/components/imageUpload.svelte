@@ -113,7 +113,6 @@ function getListeIllustrations() {
     if (logo !== null) {
        listeImages(userId, espaceId, tagId)
         .then((lesImages)=> {
-            console.log('lesImages', lesImages)
             flagUploadDone = false
             listeIllustrations = [
                 logo,

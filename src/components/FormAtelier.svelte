@@ -37,7 +37,6 @@ export let editAtelier = {
     tarifs: [ { description: "Adhérent", tarif: "10", qf: true }, { description: "Non adhérent", tarif: "15", qf: false} ]
 }
 export let archive = false;
-console.log('editAtelier', editAtelier)
 //let espaceId = editAtelier.espace.id
 
 if (!editAtelier.dateDebut) {
@@ -66,15 +65,11 @@ let flagDupliquerMemeDate = false
 var flagEMailNonValide = false
 
 var jourDebut = new Date(editAtelier.date)
-var jourFin = new Date(editAtelier.date)
+//var jourFin = new Date(editAtelier.date)
 let deuxJourAvantDebut = new Date(editAtelier.dateDebut)
 let deuxAnsApresFin = new Date(editAtelier.date)
-var heureDebut = editAtelier.debut.split(':')[0] + "h" + (editAtelier.debut.split(':')[1] === "0" ? "00":"30")
-var heureFin = editAtelier.fin.split(':')[0] + "h" + (editAtelier.fin.split(':')[1] === "0" ? "00":"30")
-/*var heureDebut = jourDebut.getHours() + "h"
-jourDebut.getMinutes()===0? heureDebut = heureDebut + "00":heureDebut = heureDebut + jourDebut.getMinutes()
-var heureFin = jourFin.getHours() + "h"
-jourFin.getMinutes()===0? heureFin = heureFin + "00":heureFin = heureFin + jourFin.getMinutes() */
+var heureDebut = editAtelier.debut.split(':')[0] + "h" + (editAtelier.debut.split(':')[1] === "0" ||  editAtelier.debut.split(':')[1] === "00" ? "00":"30")
+var heureFin = editAtelier.fin.split(':')[0] + "h" + (editAtelier.fin.split(':')[1] === "0" ||  editAtelier.fin.split(':')[1] === "00" ? "00":"30")
 let maintenant= new Date();
 let  dateFormat = "#{l} #{j} #{F} #{Y}"
 let datesFormatees = ""
@@ -95,11 +90,9 @@ $: {
     deuxAnsApresFin = new Date(editAtelier.date)
     deuxAnsApresFin.setMonth(deuxAnsApresFin.getMonth()+24)
     let heureDebutTemp = heureDebut.split('h')
-    jourDebut.setHours(heureDebutTemp[0])
-    jourDebut.setMinutes(heureDebutTemp[1])
+    //jourDebut.setHours(heureDebutTemp[0])
+    //jourDebut.setMinutes(heureDebutTemp[1])
     let heureFinTemp = heureFin.split('h')
-    jourFin.setHours(heureFinTemp[0])
-    jourFin.setMinutes(heureFinTemp[1])
 }
 
 const optionsURL= {
@@ -122,8 +115,8 @@ function sauveAtelier() {
     }
     let variables = {}
     let heureDebutTemp = heureDebut.split('h')
-    jourDebut.setHours(heureDebutTemp[0])
-    jourDebut.setMinutes(heureDebutTemp[1])
+    //jourDebut.setHours(heureDebutTemp[0])
+    //jourDebut.setMinutes(heureDebutTemp[1])
     let heureDebutFormat = heureDebut.split('h').join(':') + ":00"
     if (parseInt((heureDebut.split('h'))[0])<10) {
         heureDebutFormat = "0"+heureDebutFormat
@@ -147,7 +140,6 @@ function sauveAtelier() {
         illustration: editAtelier.illustration.id,
         encadrant: editAtelier.encadrant
     }
-    console.log('var atelier', variables)
     flagSauvegardeEnCours = !flagDupliquer;
     flagDuplicationEnCours = flagDupliquer
     ajouterAtelier(variables).then((result)=> {
@@ -169,8 +161,8 @@ function updateAtelier() {
     }
     let variables = {}
     let heureDebutTemp = heureDebut.split('h')
-    jourDebut.setHours(heureDebutTemp[0])
-    jourDebut.setMinutes(heureDebutTemp[1])
+    //jourDebut.setHours(heureDebutTemp[0])
+    //jourDebut.setMinutes(heureDebutTemp[1])
     let heureDebutFormat = heureDebut.split('h').join(':') + ":00"
     if (parseInt((heureDebut.split('h'))[0])<10) {
         heureDebutFormat = "0"+heureDebutFormat

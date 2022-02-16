@@ -98,7 +98,7 @@ $: {
                 title: atelier.titre,
                 start: setDate(atelier.date, atelier.debut),
                 end: setDate(atelier.date, atelier.fin),
-                editable: atelier.inscriptions_ateliers.length===0,
+                //editable: atelier.inscriptions_ateliers.length===0,
                 extendedProps: atelier,
                 color: "#ee732e"
             }
@@ -117,7 +117,6 @@ $: {
                     flagEdition = true
                     dataAtelier = {}
                     dataAtelier = atelier
-                    console.log('dataAtelier', dataAtelier)
                     flagDialogAtelier = true
                 })    
         }

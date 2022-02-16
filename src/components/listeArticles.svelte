@@ -48,7 +48,6 @@ switch (couleur) {
 
 onMount(() => {
     getArticlesByUser($user.id, estPublie, limiteNbArticles).then((retour) => {
-        console.log('retour articles', retour)
         articles = retour
     })
 })
@@ -82,7 +81,7 @@ function effacerarticle() {
     }
     if (promises.length > 0) {
         Promise.all(promises).then((lesRetours) => {
-            console.log('lesRetours', lesRetours)
+            console.log('lesRetours')
         })
     }
     deleteArticle(articleAEffacerId).then((retour) => {

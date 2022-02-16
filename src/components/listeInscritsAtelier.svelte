@@ -82,7 +82,6 @@ function sauveNouvelInscrit() {
     })
     findUser(nouvelInscrit.email)
         .then((retour) => {
-            console.log('retour findUSer', retour)
             if (retour.length === 0 && !flagconfirmationCreationUser) {
                 erreur = "Adresse email inconnue dans la base. Veuillez dans un premier temps créer un nouvel utilisateur avec cette adresse."
                 flagSauveNouvelInscrit = false;
