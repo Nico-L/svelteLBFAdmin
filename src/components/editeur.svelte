@@ -6,6 +6,7 @@ import { faBold, faItalic, faUnderline, faLink, faUnlink, faCheck, faListUl } fr
 let editeur;
 let url="";
 let flagAjoutLien = false;
+let flagAjoutList = false
 let flagEstUnLien = false;
 let savedSelection;
 
@@ -40,13 +41,17 @@ onMount(() => {
 })
 
 function MEP(command, value) {
-    if (command === 'createLink') {
-        restoreSelection(editeur, savedSelection)
-        document.execCommand(command, false, value);
-        url = ""
-        flagAjoutLien = false
-    } else {
-        document.execCommand(command, false, null);
+    switch(command) {
+        case 'createLink':
+            restoreSelection(editeur, savedSelection)
+            document.execCommand(command, false, value);
+            url = ""
+            flagAjoutLien = false
+            break;
+        default:
+            document.execCommand(command, false, null);
+            contenu = contenu.replace(/<\/?span[^>]*>/g,"");
+            contenu = contenu.replace(/<\/?br[^>]*>/g, "")
     }
     verifEtatBouton()
 }

@@ -65,6 +65,12 @@
     loader: () => import('./routes/login/index.svelte'),
     resolve: () => './login'
   })
+
+  const textAccueil = register({
+    loader: () => import('./routes/ateliers/textAccueil.svelte'),
+    resolve: () => './textAccueil'
+  })
+
   const agendaAteliers = register({
     loader: () => import('./routes/ateliers/agenda.svelte'),
     resolve: () => './agendaAteliers'
@@ -278,6 +284,11 @@ $: {
                     </div>
                     <div class="ml-240px p-4 pt-20">
                         <Router>
+                            <Route path="textAccueil" >
+                                <Loadable loader={textAccueil}>
+                                    
+                                </Loadable>
+                            </Route>
                             <Route path="agenda" >
                                 <Loadable loader={agendaAteliers}>
                                     

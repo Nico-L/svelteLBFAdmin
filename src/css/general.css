@@ -59,4 +59,8 @@
     @apply pl-3 cursor-pointer;
     text-indent: -0.5rem;
     }
+
+    ul  {
+    @apply list-disc list-inside;
+    }
 }

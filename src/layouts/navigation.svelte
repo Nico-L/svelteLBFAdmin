@@ -9,6 +9,7 @@
 {#if $user.role.admin || $user.role.atelier}
     <h5 class="ml-2">Les ateliers</h5>
     <ul class="ml-2">
+        <Link to="/ateliers/textAccueil"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Texte accueil</li></Link>
         <Link to="/ateliers/agenda"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Agenda des ateliers</li></Link>
         <Link to="/ateliers/archives"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Archives</li></Link>
     </ul>
