@@ -17,6 +17,7 @@
         listeAbonnements().then((retour)=> {
             lesAbonnements = retour.abonnements
         })
+        
     }
 
 $: {if (lesAbonnements.length > 0)
@@ -36,6 +37,7 @@ $: {
 
 onMount(() => {
     recupAbonnements();
+    
 })
 
 function ajouterAbonnement() {
@@ -81,6 +83,7 @@ function enregistrerAbonnements() {
 <table class="table-auto border-collapse border-2 border-gray-300 mt-3">
   <thead>
     <tr>
+        <th class="border border-gray-600 px-2 py-1 text-vertLBF">Type</th>
       <th class="border border-gray-600 px-2 py-1 text-vertLBF">Période</th>
       <th class="border border-gray-600 px-2 py-1 text-vertLBF">Tarif</th>
       <th class="border border-gray-600 px-2 py-1 text-vertLBF">~</th>
@@ -88,6 +91,12 @@ function enregistrerAbonnements() {
   </thead>
     {#each lesAbonnements as abonnement, index}
         <tr>
+            <td class="border border-gray-600 px-2 py-1">
+                <select name="type" id="typeAbonnement" bind:value={abonnement.type} class="bg-gray-800 rounded">
+                    <option value="Particuliers">Particuliers</option>
+                    <option value="Professionnels">Professionnels</option>
+                </select>
+            </td>
             <td class="border border-gray-600 px-2 py-1">
                 <input 
                 bind:value={abonnement.duree}
