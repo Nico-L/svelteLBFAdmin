@@ -2,7 +2,6 @@
 import { onMount, createEventDispatcher} from 'svelte';
 const dispatch = createEventDispatcher();
 //import { auth } from "./../stores/auth.js"
-import { user } from "./../stores/user.js"
 import Editeur from './editeur.svelte';
 import Bouton from './Button/Button.svelte';
 import Fa from 'svelte-fa'
@@ -29,6 +28,12 @@ let message= {
 
 let flagEnvoiMail = false;
 let flagEnvoieMailOK = false;
+
+onMount(async () => {
+    listeInscrits(idAtelier).then((inscrits)=> {
+        console.log('sinscrits', inscrits)
+    })
+}) 
 
 function envoyerEmail() {
     if (message.sujet!=="" && message.corps!=="" && message.corps!=="<p><br></p>" && idAtelier!=="") {

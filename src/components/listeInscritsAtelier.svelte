@@ -56,7 +56,7 @@ function getlisteInscrits() {
                     id: inscrit.id,
                     prenom: inscrit.prenom,
                     nom: inscrit.nom,
-                    email: inscrit.user.email,
+                    email: inscrit.email,
                     uuid: inscrit.uuid
                 }
             )
