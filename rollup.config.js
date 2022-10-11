@@ -14,7 +14,6 @@ const rimraf = require('rimraf')
 // remove folders
 rimraf('./public/build', () => { console.log('public/build removed') })
 const production = !process.env.ROLLUP_WATCH;
-console.log('NODE_ENV', process.env.NODE_ENV)
 
 export default {
 	input: 'src/main.js',
@@ -31,8 +30,6 @@ export default {
             ]
         }),
         replace({
-            CLOUDINARY_API_KEY: process.env.CLOUDINARY_KEY,
-            HOOK_ATELIER: process.env.HOOK_ATELIER,
             ADRESSE_CMS: process.env.ADRESSE_CMS
         }),
         // extract fullcalendar css

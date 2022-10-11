@@ -1,9 +1,5 @@
-import {verifJWT} from "./verifJWT.js"
-
 export function buildSiteAtelier() {
-    const url = "https://api.netlify.com/build_hooks/5e1f0dc8b38f91846de6fccd"
-            /*const auth = "Bearer " + token
-            var entetes = new Headers({"content-type": "application/json", "Authorization": auth})*/
+    const url = "https://api.netlify.com/build_hooks/634559843dcbda3f09bc9689"
     var options = { 
         method: 'POST',
         mode: 'cors',
