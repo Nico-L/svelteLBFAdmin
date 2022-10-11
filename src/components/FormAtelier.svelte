@@ -66,7 +66,7 @@ var flagEMailNonValide = false
 
 var jourDebut = new Date(editAtelier.date)
 //var jourFin = new Date(editAtelier.date)
-let deuxJourAvantDebut = new Date(editAtelier.dateDebut)
+let quinzeJourAvantDebut = new Date(editAtelier.dateDebut)
 let deuxAnsApresFin = new Date(editAtelier.date)
 var heureDebut = editAtelier.debut.split(':')[0] + "h" + (editAtelier.debut.split(':')[1] === "0" ||  editAtelier.debut.split(':')[1] === "00" ? "00":"30")
 var heureFin = editAtelier.fin.split(':')[0] + "h" + (editAtelier.fin.split(':')[1] === "0" ||  editAtelier.fin.split(':')[1] === "00" ? "00":"30")
@@ -80,19 +80,12 @@ let tagId;
 $tags.forEach((tag) => {
     if (tag.tag==="atelier") tagId=tag.id
 })
-/*$espacesBF.forEach((espace)=> {
-    if (espace.value==="L'atelier") espaceId = espace.id
-}) */
 
 $: {
-    deuxJourAvantDebut = new Date(editAtelier.date)
-    deuxJourAvantDebut.setDate(deuxJourAvantDebut.getDate()-2)
+    quinzeJourAvantDebut = new Date(editAtelier.date)
+    quinzeJourAvantDebut.setDate(quinzeJourAvantDebut.getDate()-15)
     deuxAnsApresFin = new Date(editAtelier.date)
     deuxAnsApresFin.setMonth(deuxAnsApresFin.getMonth()+24)
-    let heureDebutTemp = heureDebut.split('h')
-    //jourDebut.setHours(heureDebutTemp[0])
-    //jourDebut.setMinutes(heureDebutTemp[1])
-    let heureFinTemp = heureFin.split('h')
 }
 
 const optionsURL= {
@@ -115,8 +108,8 @@ function sauveAtelier() {
     }
     let variables = {}
     let heureDebutTemp = heureDebut.split('h')
-    //jourDebut.setHours(heureDebutTemp[0])
-    //jourDebut.setMinutes(heureDebutTemp[1])
+    jourDebut.setHours(heureDebutTemp[0])
+    jourDebut.setMinutes(heureDebutTemp[1])
     let heureDebutFormat = heureDebut.split('h').join(':') + ":00"
     if (parseInt((heureDebut.split('h'))[0])<10) {
         heureDebutFormat = "0"+heureDebutFormat
@@ -161,8 +154,8 @@ function updateAtelier() {
     }
     let variables = {}
     let heureDebutTemp = heureDebut.split('h')
-    //jourDebut.setHours(heureDebutTemp[0])
-    //jourDebut.setMinutes(heureDebutTemp[1])
+    jourDebut.setHours(heureDebutTemp[0])
+    jourDebut.setMinutes(heureDebutTemp[1])
     let heureDebutFormat = heureDebut.split('h').join(':') + ":00"
     if (parseInt((heureDebut.split('h'))[0])<10) {
         heureDebutFormat = "0"+heureDebutFormat
@@ -256,6 +249,8 @@ function suppressionAtelier() {
         fini()
     })
 }
+
+//$:console.log('jour select', jourDebut, new Date(jourDebut))
 </script>
 
 <div class="w-480px p-1 bg-gray-900 flex flex-col border-gray-200">
@@ -320,7 +315,7 @@ function suppressionAtelier() {
     <div class="flex flex-col text-vertLBF mt-3">
         <div class="flex flex-row justify-center my-2">
             <Datepicker
-                start={deuxJourAvantDebut}
+                start={quinzeJourAvantDebut}
                 end={deuxAnsApresFin}
                 bind:selected={jourDebut}
                 daysOfWeek={dateFr.jours}
