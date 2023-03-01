@@ -1,10 +1,18 @@
 <script>
     import { Link } from "svelte-routing";
     import {user} from "../stores/user.js"
+    import { buildNeeded } from "./../stores/build.js"
+    import {buildSiteAtelier} from './../strapi/updateNetlify.js'
+
+    function lanceConstruction() {
+        buildSiteAtelier()
+        buildNeeded.set(false)
+    }
 </script>
 
 <h4 class="text-orangeLBF text-center mb-2">L'atelier</h4>
 <div class="my-2 pl-2 cursor-pointer hover:bg-vertLBFT hover:text-gray-200 text-vertLBF"><Link to="/">Retour à l'accueil</Link></div>
+<div class="my-2 pl-2 cursor-pointer hover:bg-rougeLBFT hover:text-gray-200 text-rougeLBF"><button on:click={lanceConstruction}>Construire le site</button></div>
 
 {#if $user.role.admin || $user.role.atelier}
     <h5 class="ml-2">Les ateliers</h5>
