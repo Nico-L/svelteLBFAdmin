@@ -24,7 +24,8 @@ let classesImpaires = "border border-gray-600 px-2 py-0"
 let nouvelInscrit = {
     prenom: "",
     nom: "",
-    email: ""
+    email: "",
+    telephone: ""
 }
 let message= {
     sujet: "",
@@ -57,6 +58,7 @@ function getlisteInscrits() {
                     prenom: inscrit.prenom,
                     nom: inscrit.nom,
                     email: inscrit.email,
+                    telephone: inscrit.telephone,
                     uuid: inscrit.uuid
                 }
             )
@@ -73,6 +75,7 @@ function sauveNouvelInscrit() {
         email: nouvelInscrit.email,
         nom: nouvelInscrit.nom,
         prenom: nouvelInscrit.prenom,
+        telephone: nouvelInscrit.telephone,
         uuid: uuidv4()
     }
     lesInscrits.forEach((inscrit) => {
@@ -80,7 +83,7 @@ function sauveNouvelInscrit() {
             variables.uuid = inscrit.uuid
         }
     })
-    findUser(nouvelInscrit.email)
+    /*findUser(nouvelInscrit.email)
         .then((retour) => {
             if (retour.length === 0 && !flagconfirmationCreationUser) {
                 erreur = "Adresse email inconnue dans la base. Veuillez dans un premier temps créer un nouvel utilisateur avec cette adresse."
@@ -88,7 +91,8 @@ function sauveNouvelInscrit() {
                 nouvelInscrit = {
                     prenom: "",
                     nom: "",
-                    email: ""
+                    email: "",
+                    telephone: ""
                 }
                 return
             }
@@ -100,11 +104,22 @@ function sauveNouvelInscrit() {
                 nouvelInscrit = {
                     prenom: "",
                     nom: "",
-                    email: ""
+                    email: "",
+                    telephone: ""
                 }
                 getlisteInscrits()
             })
-        })
+        }) */
+        saveNouvelInscrit(variables).then((retour) => {
+                flagSauveNouvelInscrit = false;
+                nouvelInscrit = {
+                    prenom: "",
+                    nom: "",
+                    email: "",
+                    telephone: ""
+                }
+                getlisteInscrits()
+            })
 }
 
 function prepEffacerInscrit(id) {
@@ -128,13 +143,14 @@ onMount(()=> {
 </script>
 
 <main class="w-full max-w-full">
-    <h4>Liste des inscripts</h4>
+    <h4>Liste des inscrits</h4>
     <table class="table-auto text-sm border-collapse border-gray-300 mb-2 mx-auto">
     <thead>
         <tr>
         <th class="border border-gray-600 px-2 py-1 text-vertLBF">Prénom</th>
         <th class="border border-gray-600 px-2 py-1 text-vertLBF">Nom</th>
         <th class="border border-gray-600 px-2 py-1 text-vertLBF">email</th>
+        <th class="border border-gray-600 px-2 py-1 text-vertLBF">téléphone</th>
         <th class="border border-gray-600 px-2 py-1 text-vertLBF">~</th>
         </tr>
     </thead>
@@ -144,6 +160,7 @@ onMount(()=> {
                 <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.prenom}</td>
                 <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.nom}</td>
                 <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.email}</td>
+                <td class={index%2===0?classesPaires:classesImpaires}>{inscrit.telephone}</td>
                 <td class={index%2===0?classesPaires:classesImpaires}>
                 {#if !archive}
                     <Bouton noBorder={true} largeur="w-8" couleur="text-orangeLBF border-orangeLBF" on:actionBouton={()=>{prepEffacerInscrit(inscrit.id)}} occupe={flagEffaceInscrit[inscrit.id]}>
@@ -177,6 +194,14 @@ onMount(()=> {
                     class="w-full p-1 text-sm bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal"
                     type="text"
                     id="emailInscrit"
+                    />
+            </td>
+            <td class="border border-gray-600  px-2 py-1">
+                <input
+                    bind:value={nouvelInscrit.telephone}
+                    class="w-full p-1 text-sm bg-gray-800 text-gray-200 rounded focus:outline-none appearance-none leading-normal"
+                    type="text"
+                    id="telephoneInscrit"
                     />
             </td>
             <td class="border border-gray-600 px-2 py-1">
