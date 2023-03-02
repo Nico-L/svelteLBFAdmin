@@ -24,6 +24,11 @@ export function listeImages(userId, espaceId, tagId) {
         }
         flagPremierParametre = false 
     }
+    if (flagPremierParametre) {
+        url = url + '_sort=updated_at:desc'
+    } else {
+        url = url + '&_sort=updated_at:desc'
+    }
     return verifJWT().then((token)=> 
         {
             const auth = "Bearer " + token
