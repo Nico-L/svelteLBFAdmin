@@ -68,7 +68,7 @@ function finEdition() {
     <div class="h-14 ml-16 flex flex-row content-center">
         <h5 class="mx-auto my-auto pl-2">{atelier.titre}</h5>
     </div>
-    
+    {#if atelier.illustration && atelier.illustration.media && atelier.illustration.media.url}
     {#await imgProxyUrl("https://cms.labonnefabrique.fr" + atelier.illustration.media.url, optionsImg)}
     <div
             class="relative h-180px bg-auto"
@@ -80,6 +80,12 @@ function finEdition() {
             style="background-image: url({value.imgProxyUrl}); background-size: cover; background-repeat: no-repeat;">
             </div>
     {/await}
+    {:else}
+    <div
+            class="relative h-180px bg-auto"
+            style="">
+            </div>
+    {/if}
     <div class="absolute top-0 left-0 bg-orangeLBF min-h-16 h-16 w-16 rounded-br mb-4">
         <div class="text-gray-900 text-3xl font-bold my-0 p-0 text-center mx-auto">{dateFr.getJour(atelier.date)}</div>
         <div class="text-gray-900 text-base font-bold my-0 p-0 text-center -mt-2 mx-auto">{dateFr.getMoisShort(atelier.date)}</div>
