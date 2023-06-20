@@ -46,7 +46,7 @@
                 <input
                     aria-label={label}
                     class="hidden"
-                    type="radio""
+                    type="radio"
                     {name}
                     selected={selected === value} />
         {/if}
