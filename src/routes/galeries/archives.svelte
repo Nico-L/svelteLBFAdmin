@@ -186,6 +186,7 @@ $: {
                                 alt={archive.titre}
                                 class={"h-full object-cover rounded cursor-pointer"}
                                 on:click={() => edition(archive.id)}
+                                on:keypress={() => edition(archive.id)}
                                 width="80"
                                 />
                         {/await}
@@ -203,6 +204,7 @@ $: {
                                 alt={archive.titre}
                                 class={"h-full object-cover rounded cursor-pointer"}
                                 on:click={() => edition(archive.id)}
+                                on:keypress={() => edition(archive.id)}
                                 width="80"
                                 />
                         {/await}

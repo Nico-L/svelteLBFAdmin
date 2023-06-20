@@ -69,7 +69,7 @@
     {/if}
     <h5 class="ml-2">Mes articles</h5>
     <ul class="ml-2">
-        <li on:click={() => {showNouvelArticle = true}} class="pl-2 cursor-pointer hover:bg-orangeLBFT">Nouvel article</li>
+        <li on:click={() => {showNouvelArticle = true}} on:keypress={() => {showNouvelArticle = true}} class="pl-2 cursor-pointer hover:bg-orangeLBFT">Nouvel article</li>
         <Link to="/redaction/brouillons"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Brouillons</li></Link>
         <Link to="/redaction/articles"><li class="pl-2 cursor-pointer hover:bg-orangeLBFT">Articles publiés</li></Link>
     </ul>

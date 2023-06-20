@@ -13,7 +13,7 @@ function check() {
 }
 </script>
 
-<div on:click={check} class={cbClasses + " w-8 flex justify-center"}>
+<div on:click={check}  on:keypress={check} class={cbClasses + " w-8 flex justify-center"}>
     <label for={label}>
             <input bind:checked class="hidden" type="checkbox" id={label}/>
             <div class="mx-auto">

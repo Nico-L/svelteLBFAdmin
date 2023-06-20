@@ -472,7 +472,11 @@ function effacerTag(index) {
             <div class="mx-2 flex flew-row flex-wrap justify-start">
                 {#each dataArticle.tags as tag, index}
                     <div class="h-6 mx-1 my-1 p-2 rounded-full text-orangeLBF border border-orangeLBF flex flex-row items-center text-sm">
-                        <div class="cursor-pointer"  on:click={() => {effacerTag(index)}}><Fa icon={faTimes} /></div>
+                        <div class="cursor-pointer"  
+                        on:click={() => {effacerTag(index)}}
+                        on:keypress={() => {effacerTag(index)}}
+                            >
+                            <Fa icon={faTimes} /></div>
                         <span class="ml-2 font-semibold">{tag.tag}</span>
                     </div>
                 {/each}

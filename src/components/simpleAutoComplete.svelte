@@ -679,7 +679,7 @@
     on:click={onInputClick}
     on:keypress={onKeyPress} />
   {#if showClear}
-    <span on:click={clear} class="autocomplete-clear-button">&#10006;</span>
+    <span on:click={clear} on:keypress={clear} class="autocomplete-clear-button">&#10006;</span>
   {/if}
 
   <div
@@ -692,6 +692,7 @@
             <div
               class="autocomplete-list-item {i === highlightIndex ? 'selected' : ''}"
               on:click={() => onListItemClick(listItem)}
+              on:keypress={() => onListItemClick(listItem)}
               on:pointerenter={() => {
                 highlightIndex = i;
               }}>

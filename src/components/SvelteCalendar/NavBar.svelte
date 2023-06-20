@@ -48,15 +48,18 @@
   <div class="heading-section">
     <div class="control" 
       class:enabled={canDecrementMonth}
-      on:click={() => dispatch('incrementMonth', -1)}>
+      on:click={() => dispatch('incrementMonth', -1)}
+      on:keypress={() => dispatch('incrementMonth', -1)}>
       <i class="arrow left"></i>
     </div>
-    <div class="label" on:click={toggleMonthSelectorOpen}>
+    <div class="label" on:click={toggleMonthSelectorOpen} on:keypress={toggleMonthSelectorOpen}>
       {monthsOfYear[month][0]} {year}
     </div> 
     <div class="control"
       class:enabled={canIncrementMonth}
-      on:click={() => dispatch('incrementMonth', 1)}>
+      on:click={() => dispatch('incrementMonth', 1)}
+      on:keypress={() => dispatch('incrementMonth', 1)}
+      >
       <i class="arrow right"></i>
     </div>
   </div>
@@ -67,6 +70,7 @@
         class:selected={index === month}
         class:selectable={monthDefinition.selectable}
         on:click={e => monthSelected(e, { m: monthDefinition, i: index })}
+        on:keypress={e => monthSelected(e, { m: monthDefinition, i: index })}
       >
         <span>{monthDefinition.abbrev}</span>
       </div>

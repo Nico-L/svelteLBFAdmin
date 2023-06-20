@@ -105,7 +105,11 @@ $: {
                 <div class="min-h-16 p-2 flex flex-wrap justify-start gap-1">
                     {#each lesTags as tag}
                         {#if tag.categorie.id == categorie.id}
-                            <div on:click={() => {effacerTag(tag.id)}} class={"cursor-pointer h-8 mx-auto p-2 rounded-full border flex flex-row items-center " + tableCouleursLBFNum[index + 1].classText + " " + tableCouleursLBFNum[index + 1].border}>
+                            <div 
+                            on:click={() => {effacerTag(tag.id)}}
+                            on:keypress={() => {effacerTag(tag.id)}} 
+                            class={"cursor-pointer h-8 mx-auto p-2 rounded-full border flex flex-row items-center " + tableCouleursLBFNum[index + 1].classText + " " + tableCouleursLBFNum[index + 1].border}
+                                >
                                 <div><Fa icon={faTimes} /></div>
                                 <div class="ml-2 text-sm font-semibold">{tag.tag}</div>
                             </div>

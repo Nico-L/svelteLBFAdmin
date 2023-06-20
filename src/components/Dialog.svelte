@@ -23,7 +23,8 @@ let transitionProps = { duration: 100, easing: quadIn, delay: 0 };
         style="opacity: {opacity}"
         in:fade={inProps}
         out:fade={outProps}
-        on:click={() => {if(visible && !persistant) {dispatch('close')}}} />
+        on:click={() => {if(visible && !persistant) {dispatch('close')}}}
+        on:keypress={() => {if(visible && !persistant) {dispatch('close')}}} />
     <div class="h-full w-full absolute flex items-start justify-center pt-12">
         <div
         in:scale={transitionProps}

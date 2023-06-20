@@ -92,9 +92,16 @@ function finEdition() {
     </div>
         {#if $user.role.admin || $user.role.atelier}
         <div class="absolute top-16 left-0 w-10 py-1 bg-orangeLBF text-gray-900 rounded-br flex flex-col">
-            <div class="mx-auto my-1 cursor-pointer" on:click={() => {editAtelier(atelier.id)}}><Fa icon={faEdit} size="lg"/></div>
+            <div class="mx-auto my-1 cursor-pointer" 
+            on:click={() => {editAtelier(atelier.id)}}
+            on:keypress={() => {editAtelier(atelier.id)}}
+                ><Fa icon={faEdit} size="lg"/></div>
             {#if atelier.inscriptions_ateliers.length===0}
-                <div class="mx-auto my-1 cursor-pointer" on:click={() => {dataAtelierEfface.id = atelier.id; flagConfirmationEffacerAtelier = true}}><Fa icon={faTrashAlt} size="lg"/></div>
+                <div class="mx-auto my-1 cursor-pointer" 
+                on:click={() => {dataAtelierEfface.id = atelier.id; flagConfirmationEffacerAtelier = true}}
+                on:keypress={() => {dataAtelierEfface.id = atelier.id; flagConfirmationEffacerAtelier = true}}
+                    >
+                        <Fa icon={faTrashAlt} size="lg"/></div>
             {/if}
         </div>
         {/if}

@@ -99,7 +99,10 @@ function downloadImage(id, url, user, user_id) {
                     </div>
                 </div>
             {:else}
-                <div class="rounded bg-vertLBFT h-full w-full absolute inset-0 flex justify-center items-center save" on:click={() => downloadImage(image.id, image.largeImageURL, image.user, image.user_id)}>
+                <div class="rounded bg-vertLBFT h-full w-full absolute inset-0 flex justify-center items-center save" 
+                on:click={() => downloadImage(image.id, image.largeImageURL, image.user, image.user_id)}
+                on:keypress={() => downloadImage(image.id, image.largeImageURL, image.user, image.user_id)}
+                    >
                     <div class="w-full h-full flex justify-center items-center text-gray-900">
                         <Fa icon={faSave} size="4x"  class="mx-auto" />
                     </div>
@@ -124,11 +127,11 @@ function downloadImage(id, url, user, user_id) {
                 <div class="w-300px flex items-center"><span>Propulsé par </span><a href="https://www.pixabay.com" target="_blank"><img src="/img/logos/logoPixabay.svg" alt="logo Pixabay" height="30" class="ml-2 my-1 bg-white h-30px p-1 rounded "/></a> </div>
                 {#if listeImages.length >0}
                     <ul class="flex flex-row gap-2 text-lg font-medium">
-                        <li class="cursor-pointer" on:click={() => {page = page - 1; if (page <1) {page = 5}; fetchImages()}}> &#60; </li>
+                        <li class="cursor-pointer" on:click={() => {page = page - 1; if (page <1) {page = 5}; fetchImages()}} on:keypress={() => {page = page - 1; if (page <1) {page = 5}; fetchImages()}}> &#60; </li>
                         {#each Array(5) as _, index}
-                            <li class="cursor-pointer" on:click={() => {page = index + 1; fetchImages()}}>{index + 1}</li>
+                            <li class="cursor-pointer" on:click={() => {page = index + 1; fetchImages()}} on:keypress={() => {page = index + 1; fetchImages()}}>{index + 1}</li>
                         {/each}
-                        <li class="cursor-pointer" on:click={() => {page = page + 1; if (page > 5) {page = 1}; fetchImages()}}> &#62; </li>
+                        <li class="cursor-pointer" on:click={() => {page = page + 1; if (page > 5) {page = 1}; fetchImages()}} on:keypress={() => {page = page + 1; if (page > 5) {page = 1}; fetchImages()}}> &#62; </li>
                     </ul>
                 {/if}
             </div>

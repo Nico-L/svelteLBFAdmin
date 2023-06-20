@@ -366,7 +366,7 @@ function suppressionAtelier() {
     <div class="mt-4 ">
         <div class="flex flex-row justify-between mb-1">
             <div class="text-xl font-medium text-rougeLBF">Tarifs :</div>
-            <button class="text-rougeLBF border border-rougeLBF rounded-sm p-1 focus:outline-none" on:click={ajouterTarif}>Ajouter un tarif</button>
+            <button class="text-rougeLBF border border-rougeLBF rounded-sm p-1 focus:outline-none" on:click={ajouterTarif} on:keypress={ajouterTarif}>Ajouter un tarif</button>
         </div>
         <div class="flex flex-row flex-wrap justify-around">
             {#each editAtelier.tarifs as tarif, index}
@@ -388,7 +388,7 @@ function suppressionAtelier() {
                     <div class="flex flex-row justify-between items-center my-2 ml-2">
                         <CheckBox label="QF ?" cbClasses="text-gray-200" bind:checked={tarif.qf}/>
                         {#if index>0}
-                            <div class="text-rougeLBF cursor-pointer focus:outline-none" on:click={() => {effacerTarif(index)}}>
+                            <div class="text-rougeLBF cursor-pointer focus:outline-none" on:click={() => {effacerTarif(index)}} on:keypress={() => {effacerTarif(index)}}>
                                 <Fa icon={faTrashAlt} size="lg"  class="mx-1 w-8" />
                             </div>
                         {/if}

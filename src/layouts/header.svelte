@@ -20,6 +20,7 @@
         <div
             class="h-12 my-2 border-2 rounded border-rougeLBF cursor-pointer flex flex-row items-center overflow-hidden cadreBuild text-rougeLBF text-lg font-medium hover:text-black hover:bg-rougeLBF"
              on:click={lanceConstruction}
+             on:keypress={lanceConstruction}
              >
             <div class="w-16 h-12 cadreSpinner flex">
                 <div class="spinner">

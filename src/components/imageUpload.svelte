@@ -139,6 +139,7 @@ function getListeIllustrations() {
             src={value.imgProxyUrl}
             alt={altImage}
             on:click={() => showDialog = true}
+            on:keypress={() => showDialog = true}
             class={"cursor-pointer " + classImage}
             width={options.width}
             height={options.height}
@@ -148,8 +149,8 @@ function getListeIllustrations() {
 <Dialog bind:visible={showDialog} on:close={() => showDialog = false} minWidth="min-w-2/6">
     <h4 slot="title">Choix Illustration</h4>
     <ul class="flex flex-row justify-start border-b border-vertLBFT my-2">
-        <li on:click={() => toggleTab="fichier"} class={"px-4 text-center h5 bg-gray-900 cursor-pointer" + classTabFichier}>Mes fichiers</li>
-        <li on:click={() => toggleTab="banque"} class={"px-4 text-center h5 bg-gray-900 cursor-pointer" + classTabBanque} >Banque d'images</li>
+        <li on:click={() => toggleTab="fichier"} on:keypress={() => toggleTab="fichier"} class={"px-4 text-center h5 bg-gray-900 cursor-pointer" + classTabFichier}>Mes fichiers</li>
+        <li on:click={() => toggleTab="banque"} on:keypress={() => toggleTab="banque"} class={"px-4 text-center h5 bg-gray-900 cursor-pointer" + classTabBanque} >Banque d'images</li>
     </ul>
     {#if toggleTab==="fichier"}
         <div class="flex flex-column flex-wrap justify-start mt-2 mb-2 w-full min-w-full">
@@ -166,6 +167,7 @@ function getListeIllustrations() {
                         <img 
                             class="rounded cursor-pointer"
                             on:click={() => {setImgData(illu.media.url, illu)}} 
+                            on:keypress={() => {setImgData(illu.media.url, illu)}} 
                             src={value.imgProxyUrl} 
                             width={optionsULRThumbs.width}
                             height={optionsULRThumbs.height}
@@ -173,7 +175,11 @@ function getListeIllustrations() {
                             />
                     {/await} 
                     <div class="flex flex-column">
-                        <div on:click={() => {setImgData(illu.media.url, illu)}} class="relative my-1 text-vertLBF cursor-pointer">
+                        <div 
+                        on:click={() => {setImgData(illu.media.url, illu)}} on:keypress={() => {setImgData(illu.media.url, illu)}}
+                        on:keypress={() => {setImgData(illu.media.url, illu)}} on:keypress={() => {setImgData(illu.media.url, illu)}}
+                        class="relative my-1 text-vertLBF cursor-pointer"
+                            >
                             {#if urlImage === 'https://cms.labonnefabrique.fr' + illu.media.url}
                             <Fa icon={faDotCircle} />
                             {:else}
@@ -181,7 +187,9 @@ function getListeIllustrations() {
                             {/if}
                         </div>
                         {#if illu.tag.tag !== "logo"}
-                            <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.media.id}; flagConfirmationEffacer = true}}>
+                            <div class="text-orangeLBF ml-1 my-1 cursor-pointer" 
+                            on:click={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.media.id}; flagConfirmationEffacer = true}} 
+                            on:keypress={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.media.id}; flagConfirmationEffacer = true}}>
                                 <Fa icon={faTrashAlt} />
                             </div>
                         {/if}

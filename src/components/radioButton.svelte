@@ -19,7 +19,6 @@
                 aria-label={label}
                 class="hidden"
                 type="radio"
-                role="radio"
                 id={value}
                 {name}
                 selected={selected === value} />

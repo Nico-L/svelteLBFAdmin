@@ -97,6 +97,7 @@ function effaceImage() {
                     <img 
                         class="rounded cursor-pointer"
                         on:click={() => {setImgData(illu.media.url, illu)}} 
+                        on:keypress={() => {setImgData(illu.media.url, illu)}} 
                         src={value.imgProxyUrl} 
                         width={optionsULRThumbs.width}
                         height={optionsULRThumbs.height}
@@ -104,7 +105,7 @@ function effaceImage() {
                         />
                 {/await} 
                 <div class="flex flex-column">
-                    <div on:click={() => {setImgData(illu.media.url, illu)}} class="relative my-1 text-vertLBF cursor-pointer">
+                    <div on:click={() => {setImgData(illu.media.url, illu)}} on:keypress={() => {setImgData(illu.media.url, illu)}} class="relative my-1 text-vertLBF cursor-pointer">
                         {#if urlImage === 'https://cms.labonnefabrique.fr' + illu.media.url}
                         <Fa icon={faDotCircle} />
                         {:else}
@@ -112,7 +113,9 @@ function effaceImage() {
                         {/if}
                     </div>
                     {#if illu.tag.tag !== "logo"}
-                        <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.media.id}; flagConfirmationEffacer = true}}>
+                        <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.media.id}; flagConfirmationEffacer = true}}
+                            on:keypress={() => {illustrationAEffacer= {'illustrationId': illu.id, 'imageId': illu.media.id}; flagConfirmationEffacer = true}}
+                            >
                             <Fa icon={faTrashAlt} />
                         </div>
                     {/if}

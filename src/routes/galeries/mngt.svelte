@@ -300,7 +300,12 @@ onDestroy(()=> {
         <div class="mx-2 mt-2 flex flew-row flex-wrap justify-start">
             {#each dataGalerie.tags as tag, index}
                 <div class={"h-6 mx-1 my-1 p-2 rounded-full border flex flex-row items-center text-sm " + couleurTexte + " " + couleurBordure}>
-                    <div class="cursor-pointer"  on:click={() => {effacerTag(index)}}><Fa icon={faTimes} /></div>
+                    <div class="cursor-pointer"  
+                        on:click={() => {effacerTag(index)}}
+                        on:keypress={() => {effacerTag(index)}}
+                        >
+                        <Fa icon={faTimes} />
+                    </div>
                     <span class="ml-2 font-semibold">{tag.tag}</span>
                 </div>
             {/each}
@@ -333,7 +338,10 @@ onDestroy(()=> {
                             />
                     {/await} 
                     <div class="flex flex-column">
-                        <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {indexToDelete = index; isCurrent = false; illustrationAEffacer= {'illustrationId': illustration.id, 'imageId': illustration.media.id}; flagConfirmationEffacer = true}}>
+                        <div class="text-orangeLBF ml-1 my-1 cursor-pointer" 
+                        on:click={() => {indexToDelete = index; isCurrent = false; illustrationAEffacer= {'illustrationId': illustration.id, 'imageId': illustration.media.id}; flagConfirmationEffacer = true}}
+                        on:keypress={() => {indexToDelete = index; isCurrent = false; illustrationAEffacer= {'illustrationId': illustration.id, 'imageId': illustration.media.id}; flagConfirmationEffacer = true}}
+                            >
                             <Fa icon={faTrashAlt} />
                         </div>
                     </div>
@@ -358,7 +366,9 @@ onDestroy(()=> {
                             />
                     {/await} 
                     <div class="flex flex-column">
-                        <div class="text-orangeLBF ml-1 my-1 cursor-pointer" on:click={() => {indexToDelete = index; isCurrent = true; illustrationAEffacer= {'illustrationId': illustration.id, 'imageId': illustration.media.id}; flagConfirmationEffacer = true}}>
+                        <div class="text-orangeLBF ml-1 my-1 cursor-pointer"
+                        on:click={() => {indexToDelete = index; isCurrent = true; illustrationAEffacer= {'illustrationId': illustration.id, 'imageId': illustration.media.id}; flagConfirmationEffacer = true}}
+                        on:keypress={() => {indexToDelete = index; isCurrent = true; illustrationAEffacer= {'illustrationId': illustration.id, 'imageId': illustration.media.id}; flagConfirmationEffacer = true}}>
                             <Fa icon={faTrashAlt} />
                         </div>
                     </div>

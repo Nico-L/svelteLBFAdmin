@@ -72,8 +72,14 @@ function fermeDialog() {
                 <div class="text-xl p-1 text-center font-bold capitalize mt-1 align-middle">{machine.nom}</div>
                 <div class="h-full text-base text-justify p-1 align-top rounded-br">{@html machine.resume}</div>
                 <div class={"my-2 flex flex-row justify-end txt-" + machine.couleur}>
-                    <div class="mr-3 cursor-pointer" on:click={()=>{idMachine=machine.id; flagConfirmationEffacerMachine = true}}><Fa icon={faTrashAlt} size="1.5x"/></div>
-                    <div class="mr-1 cursor-pointer" on:click={()=>{idMachineEdit=machine.id; flagEditMachine = true}}><Fa icon={faEdit} size="1.5x"/></div>
+                    <div class="mr-3 cursor-pointer" 
+                    on:click={()=>{idMachine=machine.id; flagConfirmationEffacerMachine = true}}
+                    on:keypress={()=>{idMachine=machine.id; flagConfirmationEffacerMachine = true}}
+                    ><Fa icon={faTrashAlt} size="1.5x"/></div>
+                    <div class="mr-1 cursor-pointer" 
+                    on:click={()=>{idMachineEdit=machine.id; flagEditMachine = true}}
+                    on:keypress={()=>{idMachineEdit=machine.id; flagEditMachine = true}}
+                        ><Fa icon={faEdit} size="1.5x"/></div>
                 </div>
             </div>
         </div>

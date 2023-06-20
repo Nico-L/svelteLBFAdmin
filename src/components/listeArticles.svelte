@@ -117,11 +117,12 @@ function sendToEditor(id) {
                         class={"h-full object-cover rounded border cursor-pointer " + borderColore}
                         width="60"
                         on:click={() => sendToEditor(article.id)}
+                        on:keypress={() => sendToEditor(article.id)}
                         />
                 {/await}
             </div>
             <div class="w-full flex flex-col">
-                <div class="flex flex-col justify-start cursor-pointer px-1" on:click={() => sendToEditor(article.id)}>
+                <div class="flex flex-col justify-start cursor-pointer px-1" on:click={() => sendToEditor(article.id)} on:keypress={() => sendToEditor(article.id)}>
                     <div class="text-xs mb-1"><span class={"font-medium " + textColore}>Dernière mise à jour :</span> {dateJourMoisHeure(article.updated_at)}</div>
                     <div class="ml-2 text-lg font-medium sm:text-xl">{article.titre}</div>
                 </div>
