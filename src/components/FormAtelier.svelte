@@ -157,13 +157,20 @@ function updateAtelier() {
     jourDebut.setHours(heureDebutTemp[0])
     jourDebut.setMinutes(heureDebutTemp[1])
     let heureDebutFormat = heureDebut.split('h').join(':') + ":00"
-    if (parseInt((heureDebut.split('h'))[0])<10) {
+    if (heureDebut.split('h')[0].length<2) {
         heureDebutFormat = "0"+heureDebutFormat
     }
+    /* if (parseInt((heureDebut.split('h'))[0])<10) {
+        heureDebutFormat = "0"+heureDebutFormat
+    } */
     let heureFinFormat = heureFin.split('h').join(':') + ":00"
-    if (parseInt((heureFin.split('h'))[0])<10) {
+    /*if (parseInt((heureFin.split('h'))[0])<10) {
+        heureFinFormat = "0"+heureFinFormat
+    } */
+    if (heureFin.split('h')[0].length<2) {
         heureFinFormat = "0"+heureFinFormat
     }
+    console.log('les horaires', jourDebut, heureDebutFormat, heureFinFormat)
     variables = {
         titre: editAtelier.titre || "Un nouvel atelier",
         lieu: editAtelier.lieu || "La Bonne Fabrique",
