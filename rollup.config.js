@@ -2,7 +2,9 @@ import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import browsersync from 'rollup-plugin-browsersync';
-import {terser} from 'rollup-plugin-terser';
+//import {terser} from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
+
 import historyApiFallback from 'connect-history-api-fallback'
 import replace from '@rollup/plugin-replace';
 import css from 'rollup-plugin-css-only'
