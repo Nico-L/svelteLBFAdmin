@@ -12,7 +12,7 @@
     export let cbClasses = "";
 </script>
 
-<div on:click={()=> {selected=value}} class="cursor-pointer mx-2">
+<div on:click={()=> {selected=value}} on:keypress={()=> {selected=value}} class="cursor-pointer mx-2">
     <label class={"flex flex-row items-center " + cbClasses} for={value}>
         {#if mettreApres}
             <input
@@ -46,8 +46,7 @@
                 <input
                     aria-label={label}
                     class="hidden"
-                    type="radio"
-                    role="radio"
+                    type="radio""
                     {name}
                     selected={selected === value} />
         {/if}
