@@ -8,6 +8,7 @@ import Fa from 'svelte-fa'
 import { faTrashAlt, faCheck, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { faSave, faEnvelope } from '@fortawesome/free-regular-svg-icons'
 import {listeInscrits} from './../strapi/ateliers.js'
+import {findIllu} from "./../strapi/illustrations.js"
 import {envoiEmail} from "./../strapi/email.js"
 import {imgProxyUrl} from "../strapi/imgProxy.js"
 import { dateLisible } from "./../utils/dateFr.js"
@@ -29,20 +30,17 @@ let message= {
 let flagEnvoiMail = false;
 let flagEnvoieMailOK = false;
 
-onMount(async () => {
-    listeInscrits(idAtelier).then((inscrits)=> {
-        console.log('sinscrits', inscrits)
-    })
-}) 
-
 function envoyerEmail() {
     if (message.sujet!=="" && message.corps!=="" && message.corps!=="<p><br></p>" && idAtelier!=="") {
         flagEnvoiMail = true
         var tableEmails = []
-        listeInscrits(idAtelier).then((inscrits)=> {
+        listeInscrits(idAtelier).then(async (inscrits)=> {
             const infoAtelier = inscrits[0].atelier
+            console.log('titre atelier', infoAtelier.titre)
+            const illu = await findIllu(infoAtelier.illustration)
+            const urlIllu = 'https://cms.labonnefabrique.fr' + illu.media.url
             tableEmails = inscrits.map( inscrit => inscrit.email)
-            imgProxyUrl(infoAtelier.urlImage, optionsImg).then((urlImage) => {
+            imgProxyUrl(urlIllu, optionsImg).then((urlImage) => {
                 var infoMail = {
                     sujet: message.sujet,
                     message: message.corps,
