@@ -31,6 +31,7 @@ export default {
             ]
         }),
         replace({
+			preventAssignment: true,
             ADRESSE_CMS: process.env.ADRESSE_CMS
         }),
         // extract fullcalendar css
