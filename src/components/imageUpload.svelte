@@ -153,6 +153,7 @@ function getListeIllustrations() {
         <li on:click={() => toggleTab="banque"} on:keypress={() => toggleTab="banque"} class={"px-4 text-center h5 bg-gray-900 cursor-pointer" + classTabBanque} >Banque d'images</li>
     </ul>
     {#if toggleTab==="fichier"}
+        <FilePond blobImage={blobImage} data={dataImg} on:uploadDone={() => {flagUploadDone = true; blobImage = null}}/>
         <div class="flex flex-column flex-wrap justify-start mt-2 mb-2 w-full min-w-full">
             {#each listeIllustrations as illu (illu.id)}
                 <div class="p-1">
@@ -197,7 +198,6 @@ function getListeIllustrations() {
                 </div>
             {/each}
         </div>
-        <FilePond blobImage={blobImage} data={dataImg} on:uploadDone={() => {flagUploadDone = true; blobImage = null}}/>
     {:else}
         <QueryPixabay bind:blobImage={blobImage} bind:pixabayUser={dataImg.pixabayUser}/>
     {/if}
