@@ -103,7 +103,7 @@ function effaceImage() {
                         height={optionsULRThumbs.height}
                         alt={illu.name}
                         />
-                {/await} 
+                {/await}
                 <div class="flex flex-column">
                     <div on:click={() => {setImgData(illu.media.url, illu)}} on:keypress={() => {setImgData(illu.media.url, illu)}} class="relative my-1 text-vertLBF cursor-pointer">
                         {#if urlImage === 'https://cms.labonnefabrique.fr' + illu.media.url}

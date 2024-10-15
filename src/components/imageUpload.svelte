@@ -126,7 +126,7 @@ function getListeIllustrations() {
 </script>
 
 {#if idIllustration!== null && urlImage!==""}
-    {#await imgProxyUrl(urlImage, options)}
+    <!-- {#await imgProxyUrl(urlImage, options)}
         <img
             src="/img/svg/clock-regular.svg"
             alt="logo"
@@ -144,7 +144,16 @@ function getListeIllustrations() {
             width={options.width}
             height={options.height}
             />
-    {/await}
+    {/await} -->
+    <img
+            src={urlImage}
+            alt={altImage}
+            on:click={() => showDialog = true}
+            on:keypress={() => showDialog = true}
+            class={"cursor-pointer " + classImage}
+            width={options.width}
+            height={options.height}
+            />
 {/if}
 <Dialog bind:visible={showDialog} on:close={() => showDialog = false} minWidth="min-w-2/6">
     <h4 slot="title">Choix Illustration</h4>
@@ -157,7 +166,7 @@ function getListeIllustrations() {
         <div class="flex flex-column flex-wrap justify-start mt-2 mb-2 w-full min-w-full">
             {#each listeIllustrations as illu (illu.id)}
                 <div class="p-1">
-                    {#await imgProxyUrl('https://cms.labonnefabrique.fr'+illu.media.url, optionsULRThumbs)} 
+                    <!-- {#await imgProxyUrl('https://cms.labonnefabrique.fr'+illu.media.url, optionsULRThumbs)} 
                         <img
                             src="/img/svg/clock-regular.svg"
                             alt="logo"
@@ -174,7 +183,16 @@ function getListeIllustrations() {
                             height={optionsULRThumbs.height}
                             alt={illu.name}
                             />
-                    {/await} 
+                    {/await} -->
+                    <img 
+                            class="rounded cursor-pointer"
+                            on:click={() => {setImgData(illu.media.url, illu)}} 
+                            on:keypress={() => {setImgData(illu.media.url, illu)}} 
+                            src={'https://cms.labonnefabrique.fr'+illu.media.url} 
+                            width={optionsULRThumbs.width}
+                            height={optionsULRThumbs.height}
+                            alt={illu.name}
+                            />
                     <div class="flex flex-column">
                         <div 
                         on:click={() => {setImgData(illu.media.url, illu)}} on:keypress={() => {setImgData(illu.media.url, illu)}}
